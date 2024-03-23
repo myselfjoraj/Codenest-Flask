@@ -1,0 +1,673 @@
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <title>Code Next | Discussions</title>
+      
+      <!-- Favicon -->
+      <link rel="shortcut icon" href="/static/assets/images/favicon.ico" />
+      
+      <link rel="stylesheet" href="/static/assets/css/backend-plugin.min.css">
+      <link rel="stylesheet" href="/static/assets/css/backend.css?v=1.0.0">
+      
+      <link rel="stylesheet" href="/static/assets/vendor/@fortawesome/fontawesome-free/css/all.min.css">
+      <link rel="stylesheet" href="/static/assets/vendor/line-awesome/dist/line-awesome/css/line-awesome.min.css">
+      <link rel="stylesheet" href="/static/assets/vendor/remixicon/fonts/remixicon.css">
+      
+      <!-- Viewer Plugin -->
+        <!--PDF-->
+        <link rel="stylesheet" href="../assets/vendor/doc-viewer/include/pdf/pdf.viewer.css">
+        <!--Docs-->
+        <!--PPTX-->
+        <link rel="stylesheet" href="../assets/vendor/doc-viewer/include/PPTXjs/css/pptxjs.css">
+        <link rel="stylesheet" href="../assets/vendor/doc-viewer/include/PPTXjs/css/nv.d3.min.css">
+        <!--All Spreadsheet -->
+        <link rel="stylesheet" href="../assets/vendor/doc-viewer/include/SheetJS/handsontable.full.min.css">
+        <!--Image viewer-->
+        <link rel="stylesheet" href="../assets/vendor/doc-viewer/include/verySimpleImageViewer/css/jquery.verySimpleImageViewer.css">
+        <!--officeToHtml-->
+       <link rel="stylesheet" href="../assets/vendor/doc-viewer/include/officeToHtml/officeToHtml.css">  </head>
+
+
+       <style>
+
+        @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+        .container{
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+        
+        /* Styling the main container */
+        .container {
+            width: 80%;
+            margin: auto;
+            margin-left: 100px;
+            margin-top: 2rem;
+            letter-spacing: 0.5px;
+            height: 80%;
+        }
+        
+        .image-holder {
+            width: 50px;
+            vertical-align: middle;
+            border-style: none;
+            border-radius: 100%;
+        }
+        /* Styling the msg-header container */
+        .msg-header {
+            border: 1px solid #ccc;
+            width: 100%;
+            height: 10%;
+            border-bottom: none;
+            display: inline-block;
+            background-color: #efefef;
+            margin: 0;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+        }
+        /* Styling the profile picture */
+        .msgimg {
+            margin-left: 2%;
+            float: left;
+        }
+        
+        .container1 {
+            width: 270px;
+            height: auto; 
+            float: left;
+            margin-left: 100px;
+        
+        }
+        
+        /* styling user-name */
+        .active1 {
+            width: 150px;
+            float: left;
+            color: black;
+            font-weight: bold;
+            margin: 0 0 0 5px;
+            height: 10%;
+         
+        }
+        /* Styling the inbox */
+        .chat-page {
+            padding: 0 0 50px 0;
+        }
+        
+        .msg-inbox {
+            overflow: hidden;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+        }
+        
+        
+        .chats {
+            padding: 30px 15px 0 25px;
+        }
+        
+        .msg-page {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        
+        /* Styling the msg-bottom container */
+         .msg-bottom {
+                border-top: 1px solid #ccc;
+                position: relative;
+                height: 11%;
+                background-color: rgb(239 239 239);
+            }
+        /* Styling the input field */
+            .input-group {
+                float: right;
+                margin-top: 13px;
+                margin-right: 20px;
+                outline: none !important;
+                border-radius: 20px;
+                width: 61% !important;
+                background-color: #fff;
+                position: relative;
+                display: flex;
+                flex-wrap: wrap;
+                align-items: stretch;
+            }
+            
+            .input-group>.form-control {
+                position: relative;
+                flex: 1 1 auto;
+                width: 1%;
+                margin-bottom: 0;
+            }
+            
+            .form-control {
+                border: none !important;
+                /*border-radius: 20px !important;*/
+                display: block;
+                height: calc(2.25rem + 2px);
+                padding: 0.375rem 0.75rem;
+                font-size: 1rem;
+                line-height: 1.5;
+                color: #495057;
+                background-color: #fff;
+                background-clip: padding-box;
+                transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+            }
+            
+            .input-group-text {
+                background: transparent !important;
+                border: none !important;
+                display: flex;
+                align-items: center;
+                padding: 0.375rem 0.75rem;
+                margin-bottom: 0;
+                font-size: 1.5rem;
+                font-weight: b;
+                line-height: 1.5;
+                color: #495057;
+                text-align: center;
+                white-space: nowrap;
+                background-color: #e9ecef;
+                border: 1px solid #ced4da;
+                border-radius: 0.25rem;
+                font-weight: bold !important;
+                cursor: pointer;
+            }
+            
+            input:focus {
+                outline: none;
+                border: none !important;
+                box-shadow: none !important;
+            }
+            
+            .send-icon {
+                font-weight: bold !important;
+            }
+        
+        /* Styling the avatar  */
+        .received-chats-img {
+            display: inline-block;
+            width: 50px;
+            float: left;
+        }
+        
+        .received-msg {
+            display: inline-block;
+            padding: 0 0 0 10px;
+            vertical-align: top;
+            width: 92%;
+        }
+        .received-msg-inbox {
+            width: 57%;
+        }
+        
+        .received-msg-inbox p {
+            background: #efefef none repeat scroll 0 0;
+            border-radius: 10px;
+            color: #646464;
+            font-size: 14px;
+            margin-left: 1rem;
+            padding: 1rem;
+            width: 100%;
+            /* box-shadow: rgb(0 0 0 / 25%) 0px 5px 5px 2px; */
+        }
+            p {
+            overflow-wrap: break-word;
+        }
+        
+        /* Styling the msg-sent time  */
+        .time {
+            color: #777;
+            display: block;
+            font-size: 12px;
+            margin: 8px 0 0;
+        }
+        .outgoing-chats {
+            overflow: hidden;
+            margin: 26px 20px;
+        }
+        
+        .outgoing-chats-msg p {
+            background-color: #46D4DA;
+            /* background-image: linear-gradient(45deg, #ee087f 0%, #DD2A7B 25%, #9858ac 50%, #8134AF 75%, #515BD4 100%); */
+            color: #fff;
+            border-radius: 10px;
+            font-size: 14px;
+            color: #fff;
+            padding: 5px 10px 5px 12px;
+            width: 100%;
+            padding: 1rem;
+            /* box-shadow: rgb(0 0 0 / 25%) 0px 2px 5px 2px; */
+        }
+        .outgoing-chats-msg {
+                float: right;
+                width: 46%;
+            }
+        
+        /* Styling the avatar */
+        .outgoing-chats-img {
+            display: inline-block;
+            width: 50px;
+            float: right;
+            margin-right: 1rem;
+        }
+        @media only screen and (max-device-width: 850px) {
+            *,
+            .time {
+                font-size: 28px;
+            }
+            img {
+                width: 65px;
+            }
+            .msg-header {
+                height: 5%;
+            }
+            .msg-page {
+                max-height: none;
+            }
+            .received-msg-inbox p {
+                font-size: 28px;
+            }
+            .outgoing-chats-msg p {
+                font-size: 28px;
+            }
+        }
+        
+        @media only screen and (max-device-width: 450px) {
+            *,
+            .time {
+                font-size: 28px;
+            }
+            img {
+                width: 65px;
+            }
+            .msg-header {
+                height: 5%;
+            }
+            .msg-page {
+                max-height: none;
+            }
+            .received-msg-inbox p {
+                font-size: 28px;
+            }
+            .outgoing-chats-msg p {
+                font-size: 28px;
+            }
+        }
+        
+        
+        
+            </style>
+
+
+  <body class="  " >
+    <!-- loader Start -->
+    <div id="loading">
+          <div id="loading-center">
+          </div>
+    </div>
+    <!-- loader END -->
+    <!-- Wrapper Start -->
+    <div class="wrapper">
+      
+      <div class="iq-sidebar  sidebar-default ">
+          <div class="iq-sidebar-logo d-flex align-items-center justify-content-between">
+              <a href="/home" class="header-logo">
+                  <img src="/static/assets/images/codenest-logo2.png" class="img-fluid rounded-normal light-logo" alt="logo">
+               </a>
+              <div class="iq-menu-bt-sidebar">
+                  <i class="las la-bars wrapper-menu"></i>
+              </div>
+          </div>
+          <div class="data-scrollbar" data-scroll="1">
+              <div class="new-create select-dropdown input-prepend input-append">
+                  <div class="btn-group">
+                      <div data-toggle="dropdown">
+                      <div class="search-query selet-caption"><i class="las la-plus pr-2"></i>Create</div><span class="search-replace"></span>
+                      <span class="caret"><!--icon--></span>
+                      </div>
+                      <ul class="dropdown-menu">
+                          <li><div class="item"><i class="ri-folder-add-line pr-3"></i>New Repository</div></li>
+                          
+                          <li><div class="item"><i class="ri-file-upload-line pr-3"></i>Upload Repository</div></li>
+                          <!--
+                            <li><div class="item"><i class="ri-folder-upload-line pr-3"></i>Upload Folders</div></li>
+                          -->
+                      </ul>
+                  </div>
+              </div>
+              <nav class="iq-sidebar-menu">
+                  <ul id="iq-sidebar-toggle" class="iq-menu">
+                       <li class="">
+                              <a href="/dashboard" class="">
+                                  <i class="las la-home iq-arrow-left"></i><span>Dashboard</span>
+                              </a>
+                          <ul id="dashboard" class="iq-submenu collapse" data-parent="#iq-sidebar-toggle">
+                          </ul>
+                       </li>
+                       
+                       <li class=" ">
+                              <a href="../backend/my-projects.html" class="">
+                                  <i class="lar la-file-alt iq-arrow-left"></i><span>My Projects</span>
+                              </a>
+                          <ul id="page-files" class="iq-submenu collapse" data-parent="#iq-sidebar-toggle">
+                          </ul>
+                       </li>
+                       <li class=" ">
+                              <a href="../backend/explore.html" class="">
+                                  <i class="las la-stopwatch iq-arrow-left"></i><span>Explore</span>
+                              </a>
+                          <ul id="page-folders" class="iq-submenu collapse" data-parent="#iq-sidebar-toggle">
+                          </ul>
+                       </li>
+                       <li class=" ">
+                              <a href="../backend/starred.html" class="">
+                                  <i class="lar la-star"></i><span>Starred Projects</span>
+                              </a>
+                          <ul id="page-fevourite" class="iq-submenu collapse" data-parent="#iq-sidebar-toggle">
+                          </ul>
+                       </li>
+                       <li class=" ">
+                              <a href="../backend/discuss.html" class="">
+                                <i class="las la-envelope-square"></i><span>Discussions</span>
+                              </a>
+                          <ul id="page-delete" class="iq-submenu collapse" data-parent="#iq-sidebar-toggle">
+                          </ul>
+                       </li>
+                       <li class="active">
+                        <a href="../backend/codenext-ai.html" class="">
+                          <i class="las la-cubes"></i><span>CodeNext Ai</span>
+                        </a>
+                    <ul id="page-delete" class="iq-submenu collapse" data-parent="#iq-sidebar-toggle">
+                    </ul>
+                 </li>                      
+                  </ul>
+              </nav>
+              <div class="sidebar-bottom">
+                  <h4 class="mb-3"><i class="las la-cloud mr-2"></i>Storage</h4>
+                  <p>17.1 / 20 GB Used</p>
+                  <div class="iq-progress-bar mb-3">
+                      <span class="bg-primary iq-progress progress-1" data-percent="67">
+                      </span>
+                  </div>
+                  <p>75% Full - 3.9 GB Free</p>
+                  <!-- <a href="#" class="btn btn-outline-primary view-more mt-4">Buy Storage</a> -->
+              </div>
+              <div class="p-3"></div>
+          </div>
+          </div>       <div class="iq-top-navbar">
+          <div class="iq-navbar-custom">
+              <nav class="navbar navbar-expand-lg navbar-light p-0">
+              <div class="iq-navbar-logo d-flex align-items-center justify-content-between">
+                  <i class="ri-menu-line wrapper-menu"></i>
+                  <a href="index.html" class="header-logo">
+                      <img src="/static/assets/images/logo.png" class="img-fluid rounded-normal light-logo" alt="logo">
+                      <img src="/static/assets/images/logo-white.png" class="img-fluid rounded-normal darkmode-logo" alt="logo">
+                  </a>
+              </div>
+                  <div class="iq-search-bar device-search">
+                      
+                      <form>
+                          <div class="input-prepend input-append">
+                              <div class="btn-group">
+                                  <label class="dropdown-toggle searchbox" data-toggle="dropdown">
+                                  <input class="dropdown-toggle search-query text search-input" type="text"  placeholder="Type here to search..."><span class="search-replace"></span>
+                                  <a class="search-link" href="#"><i class="ri-search-line"></i></a>
+                                  <span class="caret"><!--icon--></span>
+                                  </label>
+                                  <ul class="dropdown-menu">
+                                      <li><a href="#"><div class="item">My Repositories</div></a></li>
+                                      <li><a href="#"><div class="item">Code Next Repositories</div></a></li>
+                                  </ul>
+                              </div>
+                          </div>
+                      </form>
+                  </div>
+      
+                  <div class="d-flex align-items-center">
+                      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"  aria-label="Toggle navigation">
+                      <i class="ri-menu-3-line"></i>
+                      </button>
+                      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                          <ul class="navbar-nav ml-auto navbar-list align-items-center">
+                          <li class="nav-item nav-icon search-content">
+                              <a href="#" class="search-toggle rounded" id="dropdownSearch" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  <i class="ri-search-line"></i>
+                              </a>
+                              <div class="iq-search-bar iq-sub-dropdown dropdown-menu" aria-labelledby="dropdownSearch">
+                                  <form action="#" class="searchbox p-2">
+                                      <div class="form-group mb-0 position-relative">
+                                      <input type="text" class="text search-input font-size-12" placeholder="type here to search...">
+                                      <a href="#" class="search-link"><i class="las la-search"></i></a> 
+                                      </div>
+                                  </form>
+                              </div>
+                          </li> <!--
+                          <li class="nav-item nav-icon dropdown">
+                              <a href="#" class="search-toggle dropdown-toggle" id="dropdownMenuButton01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              <i class="ri-question-line"></i>
+                              </a>
+                              <div class="iq-sub-dropdown dropdown-menu" aria-labelledby="dropdownMenuButton01">
+                                  <div class="card shadow-none m-0">
+                                      <div class="card-body p-0 ">
+                                          <div class="p-3">
+                                              <a href="#" class="iq-sub-card pt-0"><i class="ri-questionnaire-line"></i>Help</a>
+                                              <a href="#" class="iq-sub-card"><i class="ri-recycle-line"></i>Training</a>
+                                              <a href="#" class="iq-sub-card"><i class="ri-refresh-line"></i>Updates</a>
+                                              <a href="#" class="iq-sub-card"><i class="ri-service-line"></i>Terms and Policy</a>
+                                              <a href="#" class="iq-sub-card"><i class="ri-feedback-line"></i>Send Feedback</a>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                          </li>-->
+                          <li class="nav-item nav-icon dropdown"> 
+                              <a href="#" class="search-toggle dropdown-toggle" id="dropdownMenuButton02" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
+                              <i class="ri-settings-3-line"></i>
+                              </a>
+                              
+                          </li>
+                          <li class="nav-item nav-icon dropdown caption-content">
+                              <a href="#" class="search-toggle dropdown-toggle" id="dropdownMenuButton03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
+                                  <div class="caption bg-primary line-height">J</div>
+                              </a>
+                              <div class="iq-sub-dropdown dropdown-menu" aria-labelledby="dropdownMenuButton03">
+                                  <div class="card mb-0">
+                                      <div class="card-header d-flex justify-content-between align-items-center mb-0">
+                                      <div class="header-title">
+                                          <h4 class="card-title mb-0">Profile</h4>
+                                      </div>
+                                      <div class="close-data text-right badge badge-primary cursor-pointer "><i class="ri-close-fill"></i></div>
+                                      </div>
+                                      <div class="card-body">
+                                          <div class="profile-header">
+                                              <div class="cover-container text-center">
+                                                  <div class="rounded-circle profile-icon bg-primary mx-auto d-block">
+                                                      JR                                                    
+                                                      <a href="">
+                                                          
+                                                      </a>
+                                                  </div>
+                                                  <div class="profile-detail mt-3">
+                                                  <h5><a href="../app/user-profile-edit.html">Joraj J R</a></h5>
+                                                  <p>contact@myselfjoraj.com</p>
+                                                  </div>
+                                                  <a href="auth-sign-in.html" class="btn btn-primary">Sign Out</a>
+                                              </div>
+                                            
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                          </li>
+                          </ul>                     
+                      </div> 
+                  </div>
+              </nav>
+          </div>
+      </div>
+
+
+      <!-- Main container -->
+    <div class="container" style="margin-left: 300px; margin-top: 90px;">
+        <!-- msg-header section starts -->
+        <div class="msg-header">
+          <div class="container1">
+            <!-- <img src="../assets/images/avatar.png" class="msgimg image-holder" /> -->
+            <div class="" hidden>
+              <p style=" margin-top: 15px; font-weight: bolder; margin-left: 5px;"># D I S C U S S I O N S</p>
+            </div>
+          </div>
+        </div>
+        <!-- msg-header section ends -->
+  
+        <!-- Chat inbox  -->
+        <div class="chat-page">
+          <div class="msg-inbox">
+            <div class="chats">
+              <!-- Message container -->
+              <div class="msg-page">
+                <!-- Incoming messages -->
+  
+                <div class="received-chats">
+                  <div class="received-chats-img">
+                    <img src="/static/assets/images/avatar.png" class="image-holder" />
+                  </div>
+                  <div class="received-msg">
+                    <div class="received-msg-inbox">
+                      <p>
+                        Hi !! This is message from Riya . Lorem ipsum, dolor sit
+                        amet consectetur adipisicing elit. Non quas nemo eum,
+                        earum sunt, nobis similique quisquam eveniet pariatur
+                        commodi modi voluptatibus iusto omnis harum illum iste
+                        distinctio expedita illo!
+                      </p>
+                      <span class="time">18:06 PM | July 24</span>
+                    </div>
+                  </div>
+                </div>
+                <!-- Outgoing messages -->
+                <div class="outgoing-chats">
+                  <div class="outgoing-chats-img">
+                    <img src="/static/assets/images/avatar.png" class="image-holder"/>
+                  </div>
+                  <div class="outgoing-msg">
+                    <div class="outgoing-chats-msg">
+                      <p class="multi-msg">
+                        Hi riya , Lorem ipsum dolor sit amet consectetur
+                        adipisicing elit. Illo nobis deleniti earum magni
+                        recusandae assumenda.
+                      </p>
+                      <p class="multi-msg">
+                        Lorem ipsum dolor sit amet consectetur.
+                      </p>
+  
+                      <span class="time">18:30 PM | July 24</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="received-chats">
+                  <div class="received-chats-img">
+                    <img src="/static/assets/images/avatar.png" class="image-holder"/>
+                  </div>
+                  <div class="received-msg">
+                    <div class="received-msg-inbox">
+                      <p class="single-msg">
+                        Hi !! This is message from John Lewis. Lorem ipsum, dolor
+                        sit amet consectetur adipisicing elit. iste distinctio
+                        expedita illo!
+                      </p>
+                      <span class="time">18:31 PM | July 24</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="outgoing-chats">
+                  <div class="outgoing-chats-img">
+                    <img src="/static/assets/images/avatar.png" class="image-holder"/>
+                  </div>
+                  <div class="outgoing-msg">
+                    <div class="outgoing-chats-msg">
+                      <p>
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                        Velit, sequi.
+                      </p>
+  
+                      <span class="time">18:34 PM | July 24</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+  
+            <!-- msg-bottom section -->
+  
+            <div class="msg-bottom">
+              <div class="input-group">
+                <input style="margin-bottom: 10px;"
+                  type="text"
+                  class="form-control"
+                  placeholder="Write message..."
+                />
+                <span class="input-group-text send-icon" style="margin-bottom: 10px;">
+                  <i class="las la-angle-right"></i>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    
+    <!-- Backend Bundle JavaScript -->
+    <script src="/static/assets/js/backend-bundle.min.js"></script>
+    
+    <!-- Chart Custom JavaScript -->
+    <script src="/static/assets/js/customizer.js"></script>
+    
+    <!-- Chart Custom JavaScript -->
+    <script src="/static/assets/js/chart-custom.js"></script>
+    
+    <!--PDF-->
+    <script src="/static/assets/vendor/doc-viewer/include/pdf/pdf.js"></script>
+    <!--Docs-->
+    <script src="/static/assets/vendor/doc-viewer/include/docx/jszip-utils.js"></script>
+    <script src="/static/assets/vendor/doc-viewer/include/docx/mammoth.browser.min.js"></script>
+    <!--PPTX-->
+    <script src="/static/assets/vendor/doc-viewer/include/PPTXjs/js/filereader.js"></script>
+    <script src="/static/assets/vendor/doc-viewer/include/PPTXjs/js/d3.min.js"></script>
+    <script src="/static/assets/vendor/doc-viewer/include/PPTXjs/js/nv.d3.min.js"></script>
+    <script src="/static/assets/vendor/doc-viewer/include/PPTXjs/js/pptxjs.js"></script>
+    <script src="/static/assets/vendor/doc-viewer/include/PPTXjs/js/divs2slides.js"></script>
+    <!--All Spreadsheet -->
+    <script src="../assets/vendor/doc-viewer/include/SheetJS/handsontable.full.min.js"></script>
+    <script src="../assets/vendor/doc-viewer/include/SheetJS/xlsx.full.min.js"></script>
+    <!--Image viewer-->
+    <script src="/static/assets/vendor/doc-viewer/include/verySimpleImageViewer/js/jquery.verySimpleImageViewer.js"></script>
+    <!--officeToHtml-->
+    <script src="../assets/vendor/doc-viewer/include/officeToHtml/officeToHtml.js"></script>
+    <script src="../assets/js/doc-viewer.js"></script>
+    <!-- app JavaScript -->
+    <script src="/static/assets/js/app.js"></script>
+     <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title">Title</h4>
+                    <div>
+                        <a class="btn" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div id="resolte-contaniner" style="height: 500px;" class="overflow-auto">
+                        File not found
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  </body>
+</html>

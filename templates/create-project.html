@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <title>Code Next | Dashboard</title>
+      
+      <!-- Favicon -->
+      <link rel="shortcut icon" href="/static/assets/images/favicon.ico" />
+      
+      <link rel="stylesheet" href="/static/assets/css/backend-plugin.min.css">
+      <link rel="stylesheet" href="/static/assets/css/backend.css?v=1.0.0">
+      
+      <link rel="stylesheet" href="/static/assets/vendor/@fortawesome/fontawesome-free/css/all.min.css">
+      <link rel="stylesheet" href="/static/assets/vendor/line-awesome/dist/line-awesome/css/line-awesome.min.css">
+      <link rel="stylesheet" href="/static/assets/vendor/remixicon/fonts/remixicon.css">
+      
+      <!-- Viewer Plugin -->
+        <!--PDF-->
+        <link rel="stylesheet" href="/static/assets/vendor/doc-viewer/include/pdf/pdf.viewer.css">
+        <!--Docs-->
+        <!--PPTX-->
+        <link rel="stylesheet" href="/static/assets/vendor/doc-viewer/include/PPTXjs/css/pptxjs.css">
+        <link rel="stylesheet" href="/static/assets/vendor/doc-viewer/include/PPTXjs/css/nv.d3.min.css">
+        <!--All Spreadsheet -->
+        <link rel="stylesheet" href="/static/assets/vendor/doc-viewer/include/SheetJS/handsontable.full.min.css">
+        <!--Image viewer-->
+        <link rel="stylesheet" href="/static/assets/vendor/doc-viewer/include/verySimpleImageViewer/css/jquery.verySimpleImageViewer.css">
+        <!--officeToHtml-->
+        <link rel="stylesheet" href="/static/assets/vendor/doc-viewer/include/officeToHtml/officeToHtml.css">  </head>
+  <body class="  ">
+    <!-- loader Start -->
+    <div id="loading">
+          <div id="loading-center">
+          </div>
+    </div>
+    <!-- loader END -->
+    <!-- Wrapper Start -->
+    <div class="wrapper">
+      
+      <div class="iq-sidebar  sidebar-default ">
+          <div class="iq-sidebar-logo d-flex align-items-center justify-content-between">
+              <a href="/dashboard" class="header-logo">
+                  <img src="/static/assets/images/codenest-logo2.png" class="img-fluid rounded-normal light-logo" alt="logo">
+               </a>
+              <div class="iq-menu-bt-sidebar">
+                  <i class="las la-bars wrapper-menu"></i>
+              </div>
+          </div>
+          <div class="data-scrollbar" data-scroll="1">
+              <div class="new-create select-dropdown input-prepend input-append">
+                  <div class="btn-group">
+                      <div data-toggle="dropdown">
+                      <div class="search-query selet-caption"><i class="las la-plus pr-2"></i>Create</div><span class="search-replace"></span>
+                      <span class="caret"><!--icon--></span>
+                      </div>
+                      <ul class="dropdown-menu">
+                          <li><div class="item"><i class="ri-folder-add-line pr-3"></i><a href="/create-project">New Repository</a></div></li>
+                          
+                          <li><div class="item"><i class="ri-file-upload-line pr-3"></i><a href="/upload-project">Upload Repository</a></div></li>
+                    
+                      </ul>
+                  </div>
+              </div>
+              <nav class="iq-sidebar-menu">
+                <ul id="iq-sidebar-toggle" class="iq-menu">
+                    <li class="active">
+                           <a href="/dashboard" class="">
+                               <i class="las la-home iq-arrow-left"></i><span>Dashboard</span>
+                           </a>
+                       <ul id="dashboard" class="iq-submenu collapse" data-parent="#iq-sidebar-toggle">
+                       </ul>
+                    </li>
+                    
+                    <li class="">
+                           <a href="/my-projects" class="">
+                               <i class="lar la-file-alt iq-arrow-left"></i><span>My Projects</span>
+                           </a>
+                       <ul id="page-files" class="iq-submenu collapse" data-parent="#iq-sidebar-toggle">
+                       </ul>
+                    </li>
+                    <li class="">
+                           <a href="/explore" class="">
+                               <i class="las la-stopwatch iq-arrow-left"></i><span>Explore</span>
+                           </a>
+                       <ul id="page-folders" class="iq-submenu collapse" data-parent="#iq-sidebar-toggle">
+                       </ul>
+                    </li>
+                    <li class=" ">
+                           <a href="/starred" class="">
+                               <i class="lar la-star"></i><span>Starred Projects</span>
+                           </a>
+                       <ul id="page-fevourite" class="iq-submenu collapse" data-parent="#iq-sidebar-toggle">
+                       </ul>
+                    </li>
+                    <li class=" ">
+                           <a href="/discussions" class="">
+                             <i class="las la-envelope-square"></i><span>Discussions</span>
+                           </a>
+                       <ul id="page-delete" class="iq-submenu collapse" data-parent="#iq-sidebar-toggle">
+                       </ul>
+                    </li>
+                    <li class=" ">
+                     <a href="/codenext-ai" class="">
+                       <i class="las la-cubes"></i><span>CodeNext Ai</span>
+                     </a>
+                 <ul id="page-delete" class="iq-submenu collapse" data-parent="#iq-sidebar-toggle">
+                    </ul>
+                 </li>
+    
+                  </ul>
+              </nav>
+              <div class="sidebar-bottom">
+                  <h4 class="mb-3"><i class="las la-cloud mr-2"></i>Storage</h4>
+                  <p>17.1 / 20 GB Used</p>
+                  <div class="iq-progress-bar mb-3">
+                      <span class="bg-primary iq-progress progress-1" data-percent="67">
+                      </span>
+                  </div>
+                  <p>75% Full - 3.9 GB Free</p>
+                  <!-- <a href="#" class="btn btn-outline-primary view-more mt-4">Buy Storage</a> -->
+              </div>
+              <div class="p-3"></div>
+          </div>
+          </div>       <div class="iq-top-navbar">
+          <div class="iq-navbar-custom">
+              <nav class="navbar navbar-expand-lg navbar-light p-0">
+              <div class="iq-navbar-logo d-flex align-items-center justify-content-between">
+                  <i class="ri-menu-line wrapper-menu"></i>
+                  <a href="/dashboard" class="header-logo">
+                      <img src="/static/assets/images/codenest-logo2.png" class="img-fluid rounded-normal light-logo" alt="logo">
+                  </a>
+              </div>
+                  <div class="iq-search-bar device-search">
+                      
+                      <form>
+                          <div class="input-prepend input-append">
+                              <div class="btn-group">
+                                  <label class="dropdown-toggle searchbox" data-toggle="dropdown">
+                                  <input class="dropdown-toggle search-query text search-input" type="text"  placeholder="Type here to search..."><span class="search-replace"></span>
+                                  <a class="search-link" href="#"><i class="ri-search-line"></i></a>
+                                  <span class="caret"><!--icon--></span>
+                                  </label>
+                                  <ul class="dropdown-menu">
+                                      <li><a href="#"><div class="item">My Repositories</div></a></li>
+                                      <li><a href="#"><div class="item">Code Next Repositories</div></a></li>
+                                  </ul>
+                              </div>
+                          </div>
+                      </form>
+                  </div>
+      
+                  <div class="d-flex align-items-center">
+                      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"  aria-label="Toggle navigation">
+                      <i class="ri-menu-3-line"></i>
+                      </button>
+                      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                          <ul class="navbar-nav ml-auto navbar-list align-items-center">
+                          <li class="nav-item nav-icon search-content">
+                              <a href="#" class="search-toggle rounded" id="dropdownSearch" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  <i class="ri-search-line"></i>
+                              </a>
+                              <div class="iq-search-bar iq-sub-dropdown dropdown-menu" aria-labelledby="dropdownSearch">
+                                  <form action="#" class="searchbox p-2">
+                                      <div class="form-group mb-0 position-relative">
+                                      <input type="text" class="text search-input font-size-12" placeholder="type here to search...">
+                                      <a href="#" class="search-link"><i class="las la-search"></i></a> 
+                                      </div>
+                                  </form>
+                              </div>
+                          </li> 
+                       
+                          <li class="nav-item nav-icon dropdown"> 
+                              <a href="/settings" class="search-toggle dropdown-toggle" id="dropdownMenuButton02" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
+                              <i class="ri-settings-3-line"></i>
+                              </a>
+                              
+                            
+                          </li>
+                          <li class="nav-item nav-icon dropdown caption-content">
+                              <a href="#" class="search-toggle dropdown-toggle" id="dropdownMenuButton03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
+                                  <div class="caption bg-primary line-height">J</div>
+                              </a>
+                              <div class="iq-sub-dropdown dropdown-menu" aria-labelledby="dropdownMenuButton03">
+                                  <div class="card mb-0">
+                                      <div class="card-header d-flex justify-content-between align-items-center mb-0">
+                                      <div class="header-title">
+                                          <h4 class="card-title mb-0">Profile</h4>
+                                      </div>
+                                      <div class="close-data text-right badge badge-primary cursor-pointer "><i class="ri-close-fill"></i></div>
+                                      </div>
+                                      <div class="card-body">
+                                          <div class="profile-header">
+                                              <div class="cover-container text-center">
+                                                  <div class="rounded-circle profile-icon bg-primary mx-auto d-block">
+                                                      JR                                                    
+                                                      <a href="">
+                                                          
+                                                      </a>
+                                                  </div>
+                                                  <div class="profile-detail mt-3">
+                                                  <h5><a href="/my-profile">Joraj J R</a></h5>
+                                                  <p>contact@myselfjoraj.com</p>
+                                                  </div>
+                                                  <a href="/logout" class="btn btn-primary">Sign Out</a>
+                                              </div>
+                                            
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                          </li>
+                          </ul>                     
+                      </div> 
+                  </div>
+              </nav>
+          </div>
+      </div>
+
+
+
+
+
+
+
+      <div class="content-page">
+      <div class="container-fluid">
+         <div class="row">
+            
+
+
+
+            <div class="col-lg-12">
+               <div class="iq-edit-list-data">
+                  <div class="tab-content">
+
+
+
+                    
+                     
+                     <div class="tab-pane fade active show" id="chang-pwd" role="tabpanel">
+                        <div class="card">
+                           <div class="card-header d-flex justify-content-between">
+                              <div class="iq-header-title">
+                                 <h4 class="card-title">Create Repository</h4>
+                              </div>
+                           </div>
+                           <div class="card-body">
+                              <form>
+                                <div class="form-group col-sm-6">
+                                    <label for="cpass">Enter The Repository Name:</label>
+                                    <input type="text" class="form-control" id="cpass" value="">
+                                    <br>
+                                    <span style="color: black;">Repository Link:</span>
+                                    <p>codenest.myselfjoraj.com/username/repository-name</p><br>
+                                 </div>
+                                 <div class="form-group col-sm-6">
+                                    <label>Repository Mode:</label>
+                                    <select class="form-control" id="exampleFormControlSelect1">
+                                       <option selected="">Private</option>
+                                       <option>Public</option>
+                                    </select>
+                                 </div><br>
+                                 <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                                 <button type="reset" class="btn iq-bg-danger">Cancel</button>
+                              </form>
+                           </div>
+                        </div>
+                     </div>
+
+
+                    
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      </div>
+    </div>
+   
+    <!-- Backend Bundle JavaScript -->
+    <script src="../assets/js/backend-bundle.min.js"></script>
+    
+    <!-- Chart Custom JavaScript -->
+    <script src="../assets/js/customizer.js"></script>
+    
+    <!-- Chart Custom JavaScript -->
+    <script src="../assets/js/chart-custom.js"></script>
+    
+    <!--PDF-->
+    <script src="../assets/vendor/doc-viewer/include/pdf/pdf.js"></script>
+    <!--Docs-->
+    <script src="../assets/vendor/doc-viewer/include/docx/jszip-utils.js"></script>
+    <script src="../assets/vendor/doc-viewer/include/docx/mammoth.browser.min.js"></script>
+    <!--PPTX-->
+    <script src="../assets/vendor/doc-viewer/include/PPTXjs/js/filereader.js"></script>
+    <script src="../assets/vendor/doc-viewer/include/PPTXjs/js/d3.min.js"></script>
+    <script src="../assets/vendor/doc-viewer/include/PPTXjs/js/nv.d3.min.js"></script>
+    <script src="../assets/vendor/doc-viewer/include/PPTXjs/js/pptxjs.js"></script>
+    <script src="../assets/vendor/doc-viewer/include/PPTXjs/js/divs2slides.js"></script>
+    <!--All Spreadsheet -->
+    <script src="../assets/vendor/doc-viewer/include/SheetJS/handsontable.full.min.js"></script>
+    <script src="../assets/vendor/doc-viewer/include/SheetJS/xlsx.full.min.js"></script>
+    <!--Image viewer-->
+    <script src="../assets/vendor/doc-viewer/include/verySimpleImageViewer/js/jquery.verySimpleImageViewer.js"></script>
+    <!--officeToHtml-->
+    <script src="../assets/vendor/doc-viewer/include/officeToHtml/officeToHtml.js"></script>
+    <script src="../assets/js/doc-viewer.js"></script>
+    <!-- app JavaScript -->
+    <script src="../assets/js/app.js"></script>
+     <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title">Title</h4>
+                    <div>
+                        <a class="btn" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div id="resolte-contaniner" style="height: 500px;" class="overflow-auto">
+                        File not found
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  </body>
+</html>
