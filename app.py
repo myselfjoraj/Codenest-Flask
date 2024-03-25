@@ -73,6 +73,12 @@ def dashboard():
         gName    = username
         storage  = 0        
         per      = 10
+        file_array = Database(mysql).FetchFiles(username)
+        array_size = 0
+        if(file_array is None):
+            array_size = 0
+        else:
+            array_size = len(file_array)
         if 'usedStorage' in session:
             storage = session['usedStorage']
             if storage is not None:
@@ -86,7 +92,9 @@ def dashboard():
             if a is not None:
                 gName = a
                 pChar = a[0]
-        return render_template("dashboard.html",storage = storage,per = per,fname = gName,uname = username,email = email,letter = pChar)
+        return render_template("dashboard.html",storage = storage,
+                               per = per,fname = gName,uname = username,
+                               email = email,letter = pChar,file_array = file_array,array_size = array_size)
     else:
         return redirect('/login')
     
@@ -113,7 +121,8 @@ def ai_chat():
 
 @app.route('/create-project')
 def create_project():
-    return;
+    username = session['username']
+    return render_template('create-project.html', username=username);
 
 @app.route('/settings')
 def my_settings():

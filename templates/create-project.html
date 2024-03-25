@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-      <title>Code Next | Dashboard</title>
+      <title>Code Next | Create Project</title>
       
       <!-- Favicon -->
       <link rel="shortcut icon" href="/static/assets/images/favicon.ico" />
@@ -251,8 +251,16 @@
                                     <label for="cpass">Enter The Repository Name:</label>
                                     <input type="text" class="form-control" id="cpass" value="">
                                     <br>
+
+                                    <script>
+                                        document.getElementById("cpass")
+                                          .addEventListener("input", (event) => {
+                                            document.getElementById("p1").innerHTML = "codenest.myselfjoraj.com/{{username}}/"+event.target.value;
+                                          });
+                                      </script>
+
                                     <span style="color: black;">Repository Link:</span>
-                                    <p>codenest.myselfjoraj.com/username/repository-name</p><br>
+                                    <p id="p1">codenest.myselfjoraj.com/{{username}}</p><br>
                                  </div>
                                  <div class="form-group col-sm-6">
                                     <label>Repository Mode:</label>
@@ -279,35 +287,35 @@
     </div>
    
     <!-- Backend Bundle JavaScript -->
-    <script src="../assets/js/backend-bundle.min.js"></script>
+    <script src="/static/assets/js/backend-bundle.min.js"></script>
     
     <!-- Chart Custom JavaScript -->
-    <script src="../assets/js/customizer.js"></script>
+    <script src=/static/assets/js/customizer.js"></script>
     
     <!-- Chart Custom JavaScript -->
-    <script src="../assets/js/chart-custom.js"></script>
+    <script src="/static/assets/js/chart-custom.js"></script>
     
     <!--PDF-->
-    <script src="../assets/vendor/doc-viewer/include/pdf/pdf.js"></script>
+    <script src="/static/assets/vendor/doc-viewer/include/pdf/pdf.js"></script>
     <!--Docs-->
-    <script src="../assets/vendor/doc-viewer/include/docx/jszip-utils.js"></script>
-    <script src="../assets/vendor/doc-viewer/include/docx/mammoth.browser.min.js"></script>
+    <script src="/static/assets/vendor/doc-viewer/include/docx/jszip-utils.js"></script>
+    <script src="/static/assets/vendor/doc-viewer/include/docx/mammoth.browser.min.js"></script>
     <!--PPTX-->
-    <script src="../assets/vendor/doc-viewer/include/PPTXjs/js/filereader.js"></script>
-    <script src="../assets/vendor/doc-viewer/include/PPTXjs/js/d3.min.js"></script>
-    <script src="../assets/vendor/doc-viewer/include/PPTXjs/js/nv.d3.min.js"></script>
-    <script src="../assets/vendor/doc-viewer/include/PPTXjs/js/pptxjs.js"></script>
-    <script src="../assets/vendor/doc-viewer/include/PPTXjs/js/divs2slides.js"></script>
+    <script src="/static/assets/vendor/doc-viewer/include/PPTXjs/js/filereader.js"></script>
+    <script src="/static/assets/vendor/doc-viewer/include/PPTXjs/js/d3.min.js"></script>
+    <script src="/static/assets/vendor/doc-viewer/include/PPTXjs/js/nv.d3.min.js"></script>
+    <script src="/static/assets/vendor/doc-viewer/include/PPTXjs/js/pptxjs.js"></script>
+    <script src="/static/assets/vendor/doc-viewer/include/PPTXjs/js/divs2slides.js"></script>
     <!--All Spreadsheet -->
-    <script src="../assets/vendor/doc-viewer/include/SheetJS/handsontable.full.min.js"></script>
-    <script src="../assets/vendor/doc-viewer/include/SheetJS/xlsx.full.min.js"></script>
+    <script src="/static/assets/vendor/doc-viewer/include/SheetJS/handsontable.full.min.js"></script>
+    <script src="/static/assets/vendor/doc-viewer/include/SheetJS/xlsx.full.min.js"></script>
     <!--Image viewer-->
-    <script src="../assets/vendor/doc-viewer/include/verySimpleImageViewer/js/jquery.verySimpleImageViewer.js"></script>
+    <script src="/static/assets/vendor/doc-viewer/include/verySimpleImageViewer/js/jquery.verySimpleImageViewer.js"></script>
     <!--officeToHtml-->
-    <script src="../assets/vendor/doc-viewer/include/officeToHtml/officeToHtml.js"></script>
-    <script src="../assets/js/doc-viewer.js"></script>
+    <script src="/static/assets/vendor/doc-viewer/include/officeToHtml/officeToHtml.js"></script>
+    <script src="/static/assets/js/doc-viewer.js"></script>
     <!-- app JavaScript -->
-    <script src="../assets/js/app.js"></script>
+    <script src="/static/assets/js/app.js"></script>
      <!-- Modal -->
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
