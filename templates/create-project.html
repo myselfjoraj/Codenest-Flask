@@ -37,6 +37,12 @@
     <!-- loader END -->
     <!-- Wrapper Start -->
     <div class="wrapper">
+
+        {% if alert is not none %}
+        <script>
+            alert(alert)
+          </script>
+        {% endif %}
       
       <div class="iq-sidebar  sidebar-default ">
           <div class="iq-sidebar-logo d-flex align-items-center justify-content-between">
@@ -246,10 +252,10 @@
                               </div>
                            </div>
                            <div class="card-body">
-                              <form>
+                              <form action="/create-repo" method="post">
                                 <div class="form-group col-sm-6">
                                     <label for="cpass">Enter The Repository Name:</label>
-                                    <input type="text" class="form-control" id="cpass" value="">
+                                    <input type="text" class="form-control" id="cpass" value="" name="repo-name">
                                     <br>
 
                                     <script>
@@ -264,7 +270,7 @@
                                  </div>
                                  <div class="form-group col-sm-6">
                                     <label>Repository Mode:</label>
-                                    <select class="form-control" id="exampleFormControlSelect1">
+                                    <select class="form-control" id="mode-select" name="mode-select">
                                        <option selected="">Private</option>
                                        <option>Public</option>
                                     </select>

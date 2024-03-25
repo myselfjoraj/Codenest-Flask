@@ -122,7 +122,11 @@ def ai_chat():
 @app.route('/create-project')
 def create_project():
     username = session['username']
-    return render_template('create-project.html', username=username);
+    alert = None
+    if 'errorInRepo' in session:
+        alert = session['errorInRepo']
+        session.pop('errorInRepo')
+    return render_template('create-project.html', username=username, alert=alert);
 
 @app.route('/settings')
 def my_settings():
@@ -168,6 +172,23 @@ def display_file():
         return render_template('display.html', file_content=file_content)
     except FileNotFoundError:
         return "File not found."
+    
+@app.route('/create-repo', methods =['GET', 'POST'])
+def create_repos():
+    if request.method == 'POST' and 'repo-name' in request.form and 'mode-select' in request.form:
+            name = request.form['repo-name']
+            mode = request.form.get('mode-select')
+            exist = Database(mysql).CheckForFolderName(session['username'],name)
+            if exist:
+                session['errorInRepo'] = "Folder already exists!"
+                return redirect('/create-project')
+            else:
+                Database(mysql).CreateRepository(name,mode)
+                session['alertInDash'] = "Repository created successfully!"
+                return redirect('/dashboard')
+    
+    else:
+        return "not found"
 
 
 def hello(): 

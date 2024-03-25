@@ -1,6 +1,8 @@
 class FileModel:
 
-    def __init__(self,file_name,timestamp,file_count,uri,modified,size,extension,mode,type):
+    def __init__(self,id,username,file_name,timestamp,file_count,uri,modified,size,extension,mode,type):
+        self.id = id
+        self.username = username
         self.file_name = file_name
         self.timestamp = timestamp
         self.file_count = file_count
