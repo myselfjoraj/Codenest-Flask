@@ -10,7 +10,7 @@ class Database:
 
     def InsertUsers(self, username, password, email):
         cursor = self.mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('INSERT INTO users VALUES (NULL, % s, % s, % s)', (username, password, email, ))
+        cursor.execute('INSERT INTO users(username,password,email) VALUES (% s, % s, % s)', (username, password, email, ))
         self.mysql.connection.commit()
 
     def CheckForUser(self, username, password):
@@ -25,7 +25,8 @@ class Database:
         primary key,password varchar(22),email varchar(22),
         first_name varchar(22),last_name varchar(22),city varchar(22),
         gender varchar(22),dob varchar(22),martial_status varchar(22),
-        age int,number varchar(22));'''
+        age int,number varchar(22),url varchar(500),
+        used_storage varchar(500));'''
     
     def getFileDetailsTableCreationStatement():
         return '''create table file_details(id int primary key auto_increment,
