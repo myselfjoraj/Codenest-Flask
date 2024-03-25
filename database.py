@@ -18,6 +18,22 @@ class Database:
         cursor.execute('SELECT * FROM users WHERE username = % s AND password = % s', (username, password, ))
         account = cursor.fetchone()
         return account
+    
+
+    def getUsersTableCreationStatement():
+        return '''create table users(username varchar(22) 
+        primary key,password varchar(22),email varchar(22),
+        first_name varchar(22),last_name varchar(22),city varchar(22),
+        gender varchar(22),dob varchar(22),martial_status varchar(22),
+        age int,number varchar(22));'''
+    
+    def getFileDetailsTableCreationStatement():
+        return '''create table file_details(id int primary key auto_increment,
+        username varchar(22),file_name varchar(22),timestamp varchar(22),
+        file_count varchar(22),uri varchar(500),modified varchar(22),
+        size varchar(22),extension varchar(22),mode varchar(22),
+        type varchar(22));'''
+        
         
 
     
