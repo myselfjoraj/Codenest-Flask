@@ -103,7 +103,16 @@ class Database:
             model_instances.append(file_instance)
         return model_instances
     
-    def FetchMessages(self, username):
+    def CreateMessage(self,message):
+        username = session['username']
+        timestamp = time.time()
+        cursor = self.mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('''INSERT INTO discussions(username,message,timestamp) VALUES 
+                       (% s, % s, % s)''', (username, message,timestamp))
+        self.mysql.connection.commit()
+    
+    def FetchMessages(self):
+        username = session['username']
         cur = self.mysql.connection.cursor()
         cur.execute("SELECT * FROM discussions;")
         data = cur.fetchall()
@@ -114,6 +123,7 @@ class Database:
             timestamp_dt = datetime.fromtimestamp(float(message_instance.timestamp))
             formatted_date = timestamp_dt.strftime("%d/%m/%Y %I:%M %p")
             message_instance.timestamp = formatted_date
+
             if message_instance.username == username:
                 message_instance.isMine = True
             else:
@@ -131,8 +141,7 @@ class Database:
         return files
     
     def getDiscussionsTableCreationStatement():
-        return ''' create table discussions(id int primary key auto_increment,username varchar(22),
-        name varchar(22),message varchar(22),timestamp varchar(22)); '''
+        return ''' create table discussions(id int primary key auto_increment,username varchar(22),message varchar(22),timestamp varchar(22)); '''
 
     def getUsersTableCreationStatement():
         return '''create table users(username varchar(22) 

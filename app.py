@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session,flash
+from flask import Flask, render_template, request, redirect, url_for, session,flash,jsonify
 from flask_mysqldb import MySQL
 import MySQLdb.cursors
 import re
@@ -299,6 +299,16 @@ def create_repos():
 @app.route('/repo/<file_name>/<no>')
 def show_folders(file_name,no):
     return render_template('folder-open.html')
+
+
+
+@app.route('/send_message', methods=['POST'])
+def send_message():
+    if request.method == 'POST':
+        message = request.form['message']
+        Database(mysql).CreateMessage(message)
+        return jsonify({'status': 'Message sent successfully'})
+    return jsonify({'status': 'Error sending message'})
 
 
 def hello(): 
