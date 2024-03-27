@@ -294,6 +294,11 @@ def create_repos():
     
     else:
         return "not found"
+    
+
+@app.route('/repo/<file_name>/<no>')
+def show_folders(file_name,no):
+    return render_template('folder-open.html')
 
 
 def hello(): 
