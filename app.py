@@ -100,19 +100,124 @@ def dashboard():
     
 @app.route('/my-projects')
 def my_projects():
-    return;
+    if 'loggedin' in session:
+        var = session['loggedin']
+    else:
+        var = False
+
+    if var:
+        username = session['username']
+        email    = session['email']
+        pChar    = username[0]
+        gName    = username
+        storage  = 0        
+        per      = 10
+        file_array = Database(mysql).FetchFiles(username)
+        array_size = 0
+        if(file_array is None):
+            array_size = 0
+        else:
+            array_size = len(file_array)
+        if 'usedStorage' in session:
+            storage = session['usedStorage']
+            if storage is not None:
+                storage = int(storage)
+                per = (storage/20)*100
+            else:
+                storage = 0
+
+        if 'first_name' in session:
+            a = session['first_name']
+            if a is not None:
+                gName = a
+                pChar = a[0]
+        return render_template("my-projects.html",storage = storage,
+                               per = per,fname = gName,uname = username,
+                               email = email,letter = pChar,file_array = file_array,array_size = array_size)
+    else:
+        return redirect('/login')
 
 @app.route('/explore')
 def explore():
-    return;
+    if 'loggedin' in session:
+        var = session['loggedin']
+    else:
+        var = False
+
+    if var:
+        username = session['username']
+        email    = session['email']
+        pChar    = username[0]
+        gName    = username
+        storage  = 0        
+        per      = 10
+        file_array = Database(mysql).FetchExplore(username)
+        array_size = 0
+        if(file_array is None):
+            array_size = 0
+        else:
+            array_size = len(file_array)
+        if 'usedStorage' in session:
+            storage = session['usedStorage']
+            if storage is not None:
+                storage = int(storage)
+                per = (storage/20)*100
+            else:
+                storage = 0
+
+        if 'first_name' in session:
+            a = session['first_name']
+            if a is not None:
+                gName = a
+                pChar = a[0]
+        return render_template("explore.html",storage = storage,
+                               per = per,fname = gName,uname = username,
+                               email = email,letter = pChar,file_array = file_array,array_size = array_size)
+    else:
+        return redirect('/login')
 
 @app.route('/starred')
 def starred_projects():
-    return;
+    if 'loggedin' in session:
+        var = session['loggedin']
+    else:
+        var = False
+
+    if var:
+        username = session['username']
+        email    = session['email']
+        pChar    = username[0]
+        gName    = username
+        storage  = 0        
+        per      = 10
+        file_array = Database(mysql).FetchStarred(username)
+        array_size = 0
+        if(file_array is None):
+            array_size = 0
+        else:
+            array_size = len(file_array)
+        if 'usedStorage' in session:
+            storage = session['usedStorage']
+            if storage is not None:
+                storage = int(storage)
+                per = (storage/20)*100
+            else:
+                storage = 0
+
+        if 'first_name' in session:
+            a = session['first_name']
+            if a is not None:
+                gName = a
+                pChar = a[0]
+        return render_template("starred.html",storage = storage,
+                               per = per,fname = gName,uname = username,
+                               email = email,letter = pChar,file_array = file_array,array_size = array_size)
+    else:
+        return redirect('/login')
 
 @app.route('/discussions')
 def discussions():
-    return;
+    return render_template('discuss.html')
     
 # CODENEXT AI PAGE ROUTER
 @app.route('/codenext-ai')

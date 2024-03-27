@@ -54,6 +54,55 @@ class Database:
             model_instances.append(file_instance)
         return model_instances
     
+    def FetchExplore(self,username):
+        cur = self.mysql.connection.cursor()
+        cur.execute("SELECT * FROM file_details where username=%s", (username,))
+        data = cur.fetchall()
+        cur.close()
+        model_instances = []
+        for row in data:
+            file_instance = FileModel.FileModel(*row)
+
+            timestamp_dt = datetime.fromtimestamp(float(file_instance.timestamp))
+            formatted_date = timestamp_dt.strftime("%d/%m/%Y %I:%M %p")
+            file_instance.timestamp = formatted_date
+
+            timestamp_dt2 = datetime.fromtimestamp(float(file_instance.modified))
+            formatted_date2 = timestamp_dt2.strftime("%d/%m/%Y %I:%M %p")
+            file_instance.modified = formatted_date2
+
+            size = int(file_instance.size);
+            size = size/(1000*1000)
+            file_instance.size = str(size)+" MB"
+
+            model_instances.append(file_instance)
+        return model_instances
+    
+    def FetchStarred(self,username):
+        cur = self.mysql.connection.cursor()
+        cur.execute("SELECT * FROM file_details where username=%s", (username,))
+        data = cur.fetchall()
+        cur.close()
+        model_instances = []
+        for row in data:
+            file_instance = FileModel.FileModel(*row)
+
+            timestamp_dt = datetime.fromtimestamp(float(file_instance.timestamp))
+            formatted_date = timestamp_dt.strftime("%d/%m/%Y %I:%M %p")
+            file_instance.timestamp = formatted_date
+
+            timestamp_dt2 = datetime.fromtimestamp(float(file_instance.modified))
+            formatted_date2 = timestamp_dt2.strftime("%d/%m/%Y %I:%M %p")
+            file_instance.modified = formatted_date2
+
+            size = int(file_instance.size);
+            size = size/(1000*1000)
+            file_instance.size = str(size)+" MB"
+
+            model_instances.append(file_instance)
+        return model_instances
+    
+    
     def CheckForFolderName(self, username, file_name):
         cursor = self.mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('SELECT * FROM file_details WHERE username = % s AND file_name= % s', (username, file_name, ))

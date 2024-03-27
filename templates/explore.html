@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-      <title>Code Next | Dashboard</title>
+      <title>Code Next | Explore</title>
       
       <!-- Favicon -->
       <link rel="shortcut icon" href="/static/assets/images/favicon.ico" />
@@ -65,7 +65,7 @@
               </div>
               <nav class="iq-sidebar-menu">
                 <ul id="iq-sidebar-toggle" class="iq-menu">
-                    <li class="active">
+                    <li class="">
                            <a href="/dashboard" class="">
                                <i class="las la-home iq-arrow-left"></i><span>Dashboard</span>
                            </a>
@@ -80,7 +80,7 @@
                        <ul id="page-files" class="iq-submenu collapse" data-parent="#iq-sidebar-toggle">
                        </ul>
                     </li>
-                    <li class="">
+                    <li class="active">
                            <a href="/explore" class="">
                                <i class="las la-stopwatch iq-arrow-left"></i><span>Explore</span>
                            </a>
@@ -232,7 +232,11 @@
                             <div class="select-dropdown input-prepend input-append">
                                 <div class="btn-group">
                                     <div data-toggle="dropdown">
-                                    <div class="dropdown-toggle search-query">Welcome {{fname}},</div><span class="search-replace"></span>
+
+
+
+
+                                    <!-- <div class="dropdown-toggle search-query">Welcome {{fname}},</div><span class="search-replace"></span> -->
                                     <span class="caret"><!--icon--></span>
                                     </div>
                                     <ul class="dropdown-menu">
@@ -278,7 +282,7 @@
                                 {% if array_size == 0 %}
                                  <h3 class="card-title" style="margin-left: 500px; margin-top: 100px;">No files available</h3>
                                  {% else %}
-                                 <h4 class="card-title">Recents,</h4>
+                                 <h4 class="card-title">Trending Projects</h4>
                                  {% endif %}
 
 
@@ -351,7 +355,7 @@
                                 <div class="card card-block card-stretch card-transparent">
                                     <div class="card-header d-flex justify-content-between pb-0">
                                         <div class="header-title">
-                                            <h4 class="card-title">All Repositories</h4>
+                                            <h4 class="card-title">CodeNext Repositories</h4>
                                         </div>
                                     </div>
                                 </div>
