@@ -3,6 +3,7 @@ from flask_mysqldb import MySQL
 import MySQLdb.cursors
 import re
 import FileModel
+import Message
 from datetime import datetime
 import time
 
@@ -102,12 +103,36 @@ class Database:
             model_instances.append(file_instance)
         return model_instances
     
+    def FetchMessages(self, username):
+        cur = self.mysql.connection.cursor()
+        cur.execute("SELECT * FROM discussions;")
+        data = cur.fetchall()
+        cur.close()
+        model_instances = []
+        for row in data:
+            message_instance = Message.Message(*row)
+            timestamp_dt = datetime.fromtimestamp(float(message_instance.timestamp))
+            formatted_date = timestamp_dt.strftime("%d/%m/%Y %I:%M %p")
+            message_instance.timestamp = formatted_date
+            if message_instance.username == username:
+                message_instance.isMine = True
+            else:
+                message_instance.isMine = False
+
+            model_instances.append(message_instance)
+
+        return model_instances
+    
     
     def CheckForFolderName(self, username, file_name):
         cursor = self.mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('SELECT * FROM file_details WHERE username = % s AND file_name= % s', (username, file_name, ))
         files = cursor.fetchone()
         return files
+    
+    def getDiscussionsTableCreationStatement():
+        return ''' create table discussions(id int primary key auto_increment,username varchar(22),
+        name varchar(22),message varchar(22),timestamp varchar(22)); '''
 
     def getUsersTableCreationStatement():
         return '''create table users(username varchar(22) 
