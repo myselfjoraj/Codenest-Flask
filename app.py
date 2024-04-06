@@ -310,7 +310,7 @@ def create_repos():
 
 @app.route('/repo/<file_name>/<no>')
 def show_folders(file_name, no):
-    return render_template('folder-open.html')
+    return render_template('folder-open.html', array_size=1)
 
 
 @app.route('/send_message', methods=['POST'])
@@ -331,6 +331,7 @@ def send_message():
 @app.route('/fetch_messages', methods=['GET', 'POST'])
 def fetch_message():
     return Database(mysql).FetchMessages()
+
 
 def hello():
     ins = Database(mysql)
