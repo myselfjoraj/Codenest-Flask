@@ -16,8 +16,10 @@ function handleInputChange() {
     // Check if the username field has any value
     if (usernameField.value.trim() !== '') {
         usernameLabel.classList.add('field--not-empty');
+            console.log("user add field triggered");
     } else {
         usernameLabel.classList.remove('field--not-empty');
+                    console.log("user remove field triggered");
     }
 
     // Check if the email field has any value
@@ -29,9 +31,11 @@ function handleInputChange() {
 
     // Check if the password field has any value
     if (passwordField.value.trim() !== '') {
+    console.log("add field triggered");
         passwordLabel.classList.add('field--not-empty');
     } else {
         passwordLabel.classList.remove('field--not-empty');
+        console.log("remove field triggered");
     }
 
 }

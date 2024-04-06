@@ -93,7 +93,6 @@
               <div class="form-group last mb-4">
                 <label for="password" id="passwordLabel">Password</label>
                 <input type="password" class="form-control" id="password" name="password">
-                
               </div>
 
               <div class="d-flex mb-5 align-items-center">
@@ -103,9 +102,39 @@
 
               <input type="submit" value="Log In" class="btn btn-block btn-primary">
 
-              
-              
             </form>
+              <script>
+    // Make sure the DOM is loaded before accessing elements
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get references to the input fields and labels
+        var usernameField = document.getElementById('username');
+        var passwordField = document.getElementById('password');
+
+        var usernameLabel = document.getElementById('unameLabel');
+        var passwordLabel = document.getElementById('passwordLabel');
+
+        // Add input event listeners to the input fields
+        usernameField.addEventListener('input', handleInputChange);
+        passwordField.addEventListener('input', handleInputChange);
+
+        // Define the function to handle input changes
+        function handleInputChange() {
+            // Check if the username field has any value
+            if (usernameField.value.trim() !== '') {
+                usernameLabel.classList.add('field--not-empty');
+            } else {
+                usernameLabel.classList.remove('field--not-empty');
+            }
+
+            // Check if the password field has any value
+            if (passwordField.value.trim() !== '') {
+                passwordLabel.classList.add('field--not-empty');
+            } else {
+                passwordLabel.classList.remove('field--not-empty');
+            }
+        }
+    });
+</script>
             </div>
           </div>
           
