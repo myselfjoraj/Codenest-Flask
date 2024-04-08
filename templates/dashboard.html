@@ -9,8 +9,12 @@
       <!-- Favicon -->
       <link rel="shortcut icon" href="/static/assets/images/favicon.ico" />
 
-      <script src="https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.10.0/firebase-storage.js"></script>
+      <<script type="module" src="https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js"></script>
+
+<!-- Add Firebase products that you want to use -->
+<script type="module" src="https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js"></script>
+<script type="module" src="https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore.js"></script>
+<script type="module" src="https://www.gstatic.com/firebasejs/10.10.0/firebase-analytics.js"></script>
       
       <link rel="stylesheet" href="/static/assets/css/backend-plugin.min.css">
       <link rel="stylesheet" href="/static/assets/css/backend.css?v=1.0.0">
@@ -32,6 +36,9 @@
         <link rel="stylesheet" href="/static/assets/vendor/doc-viewer/include/verySimpleImageViewer/css/jquery.verySimpleImageViewer.css">
         <!--officeToHtml-->
         <link rel="stylesheet" href="/static/assets/vendor/doc-viewer/include/officeToHtml/officeToHtml.css">  </head>
+
+      <script  src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+
   <body class="  ">
     <!-- loader Start -->
     <div id="loading">
@@ -58,80 +65,12 @@
                       <div class="search-query selet-caption"><i class="las la-plus pr-2"></i>Create</div><span class="search-replace"></span>
                       <span class="caret"><!--icon--></span>
                       </div>
-                      <input type="file" id="fileInput" directory="directory"
-      multiple
-      webkitdirectory="webkitdirectory" style="display: none;">
+                      <input type="file" id="fileInput" directory="directory" multiple webkitdirectory="webkitdirectory" style="display: none;">
                       <ul class="dropdown-menu">
                           <li><div class="item"><i class="ri-folder-add-line pr-3"></i><a href="/create-project">New Repository</a></div></li>
 
-                          <li><div class="item" onclick="selectFiles()"><i class="ri-file-upload-line pr-3"></i>Upload Repository</div></li>
+                          <li><div class="item" id="upload-repo" ><i class="ri-file-upload-line pr-3"></i>Upload Repository</div></li>
 
-                          <script>
-
-                              import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js'
-
-    // If you enabled Analytics in your project, add the Firebase SDK for Google Analytics
-    import { getAnalytics } from 'https://www.gstatic.com/firebasejs/10.10.0/firebase-analytics.js'
-
-    // Add Firebase products that you want to use
-    import { getAuth } from 'https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js'
-    import { getFirestore } from 'https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore.js'
-
-                               const firebaseConfig = {
-  apiKey: "AIzaSyDfIDzvzac0QBt0UEkHO-kdghfm1FY3KkU",
-  authDomain: "codenext-d476c.firebaseapp.com",
-  projectId: "codenext-d476c",
-  storageBucket: "codenext-d476c.appspot.com",
-  messagingSenderId: "4961609776",
-  appId: "1:4961609776:web:5bfcf749f094132372e5f5",
-  measurementId: "G-K5M1LL0795"
-};
-
-// Initialize Firebase
-const app = firebase.initializeApp(firebaseConfig);
-const analytics = firebase.getAnalytics(app);
-
-
-
-                              function selectFiles() {
-            // Trigger click event on the file input element
-            document.getElementById('fileInput').click();
-        }
-
-        // Add event listener to handle file selection
-        document.getElementById('fileInput').addEventListener('change', function(event) {
-            const files = event.target.files; // Get the selected files
-            if (files && files.length > 0) {
-                // Perform actions with the selected files, such as uploading to the server
-                console.log('Selected files:', files);
-                uploadFiles(files);
-            } else {
-                console.log('No files selected.');
-            }
-        });
-
-        function uploadFiles(files) {
-            uploadFilesToFirebase(files)
-        }
-
-
-
-                              function uploadFilesToFirebase(files) {
-            const storageRef = firebase.storage().ref();
-            files.forEach(file => {
-                // Create a reference to the file in Firebase Storage
-                const fileRef = storageRef.child(file.name);
-                // Upload the file to Firebase Storage
-                fileRef.put(file).then(snapshot => {
-                    console.log('Uploaded file:', snapshot.metadata.name);
-                }).catch(error => {
-                    console.error('Error uploading file:', error);
-                });
-            });
-        }
-
-
-    </script>
                     
                       </ul>
                   </div>
@@ -538,6 +477,8 @@ const analytics = firebase.getAnalytics(app);
     <script src="/static/assets/js/doc-viewer.js"></script>
     <!-- app JavaScript -->
     <script src="/static/assets/js/app.js"></script>
+
+    <script type="module"  src="/static/main/js/selectupload.js"></script>
      <!-- Modal -->
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-xl" role="document">

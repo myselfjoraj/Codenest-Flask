@@ -3,6 +3,10 @@ from flask_mysqldb import MySQL
 import MySQLdb.cursors
 import re
 
+import firebase_admin
+from firebase_admin import credentials, storage
+from werkzeug.utils import secure_filename
+
 import constants as ckey
 
 from database import Database
@@ -17,7 +21,15 @@ app.config['MYSQL_USER'] = ckey.getSqlUser()
 app.config['MYSQL_PASSWORD'] = ckey.getSqlPassword()
 app.config['MYSQL_DB'] = ckey.getSqlMainDatabase()
 
-mysql = MySQL(app);
+mysql = MySQL(app)
+
+
+cred = credentials.Certificate("servicekey.json")
+firebase_admin.initialize_app(cred, {
+    'storageBucket': 'codenext-d476c.appspot.com'
+})
+
+bucket = storage.bucket()
 
 
 # LANDING PAGE ROUTER
@@ -331,6 +343,21 @@ def send_message():
 @app.route('/fetch_messages', methods=['GET', 'POST'])
 def fetch_message():
     return Database(mysql).FetchMessages()
+
+
+@app.route('/upload', methods=['POST'])
+def upload_file():
+    if 'files[]' not in request.files:
+        return jsonify({'error': 'No files found in request'}), 400
+
+    files = request.files.getlist('files[]')
+
+    for file in files:
+        # Upload file to Firebase Storage
+        blob = bucket.blob(file.filename)
+        blob.upload_from_file(file)
+
+    return jsonify({'message': 'Files uploaded successfully'}), 200
 
 
 def hello():
