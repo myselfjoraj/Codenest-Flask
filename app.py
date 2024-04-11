@@ -354,7 +354,8 @@ def upload_file():
 
     for file in files:
         # Upload file to Firebase Storage
-        blob = bucket.blob(file.filename)
+        my_path = session['username']
+        blob = bucket.blob(f'{my_path}/{file.filename}')
         blob.upload_from_file(file)
 
     return jsonify({'message': 'Files uploaded successfully'}), 200
