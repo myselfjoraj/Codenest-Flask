@@ -23,7 +23,6 @@ app.config['MYSQL_DB'] = ckey.getSqlMainDatabase()
 
 mysql = MySQL(app)
 
-
 cred = credentials.Certificate("servicekey.json")
 firebase_admin.initialize_app(cred, {
     'storageBucket': 'codenext-d476c.appspot.com'
@@ -318,6 +317,11 @@ def create_repos():
 
     else:
         return "not found"
+
+
+@app.route('/upload-repository')
+def upload_repository():
+    return render_template('upload-repository.html')
 
 
 @app.route('/repo/<file_name>/<no>')
