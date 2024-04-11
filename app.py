@@ -1,3 +1,6 @@
+import datetime
+import time
+
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 from flask_mysqldb import MySQL
 import MySQLdb.cursors
@@ -361,12 +364,16 @@ def upload_file():
     name.replace(" ", "-")
 
     print(paths)
-
+    i = 0
     for file in files:
         # Upload file to Firebase Storage
         my_path = session['username'] + "/" + name
         blob = bucket.blob(f'{my_path}/{file.filename}')
         blob.upload_from_file(file)
+        expiration_time = datetime.datetime.now() + datetime.timedelta(days=365)  # Set expiration to 1 year from now
+        url = blob.generate_signed_url(expiration=expiration_time)
+        Database(mysql).InsertUploadRepo(name, file.filename, paths[i], url, "Private")
+        i = i+1
 
     return jsonify({'message': 'Files uploaded successfully'}), 200
 

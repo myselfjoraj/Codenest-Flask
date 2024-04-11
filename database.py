@@ -29,9 +29,19 @@ class Database:
         username = session['username']
         timestamp = time.time()
         cursor = self.mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('''INSERT INTO file_details(username,file_name,timestamp,file_count,modified,size,extension,mode,type) VALUES 
-                       (% s, % s, % s, % s, % s, % s, % s, % s, % s)''',
-                       (username, file_name, timestamp, "1", timestamp, "1000", "folder", mode, "folder"))
+        cursor.execute('''INSERT INTO file_details(username,file_name,repo_name,timestamp,file_count,modified,size,
+        extension, mode,type) VALUES (% s, % s, % s,% s, % s, % s, % s, % s, % s, % s)''',
+                       (username, file_name, file_name, timestamp, "1", timestamp, "1000", "folder", mode, "folder"))
+        self.mysql.connection.commit()
+
+    def InsertUploadRepo(self, repo_name, file_name, path, uri, mode):
+        username = session['username']
+        timestamp = time.time()
+        cursor = self.mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('''INSERT INTO file_details(username,file_name,repo_name,timestamp,uri,file_count,path,modified,
+        size,extension,mode,type) VALUES (% s, % s, % s,% s,% s,% s, % s, % s, % s, % s, % s, % s)''',
+                       (username, file_name, repo_name, timestamp, uri, "1", path, timestamp, "1000", "file", mode,
+                        "files"))
         self.mysql.connection.commit()
 
     def FetchFiles(self, username):
@@ -136,7 +146,7 @@ class Database:
         messages_dict = [message.to_dict() for message in model_instances]
         json_data = json.dumps(messages_dict)
 
-        #return model_instances
+        # return model_instances
         return json_data
 
     def CheckForFolderName(self, username, file_name):
@@ -158,7 +168,7 @@ class Database:
 
     def getFileDetailsTableCreationStatement():
         return '''create table file_details(id int primary key auto_increment,
-        username varchar(22),file_name varchar(22),timestamp varchar(22),
-        file_count varchar(22),uri varchar(500),modified varchar(22),
-        size varchar(22),extension varchar(22),mode varchar(22),
+        username varchar(22),file_name TEXT,repo_name TEXT,timestamp varchar(22),
+        file_count varchar(22),path TEXT,uri TEXT,modified varchar(22),
+        size TEXT,extension TEXT,mode varchar(22),
         type varchar(22));'''
