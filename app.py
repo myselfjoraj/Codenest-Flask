@@ -321,7 +321,8 @@ def create_repos():
 
 @app.route('/upload-repository')
 def upload_repository():
-    return render_template('upload-repository.html')
+    username = session['username']
+    return render_template('upload-repository.html', username=username)
 
 
 @app.route('/repo/<file_name>/<no>')
@@ -355,10 +356,15 @@ def upload_file():
         return jsonify({'error': 'No files found in request'}), 400
 
     files = request.files.getlist('files[]')
+    paths = request.form.getlist('filepath[]')
+    name = request.form.get('repo-name')
+    name.replace(" ", "-")
+
+    print(paths)
 
     for file in files:
         # Upload file to Firebase Storage
-        my_path = session['username']
+        my_path = session['username'] + "/" + name
         blob = bucket.blob(f'{my_path}/{file.filename}')
         blob.upload_from_file(file)
 
