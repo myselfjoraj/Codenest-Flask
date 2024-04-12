@@ -40,7 +40,7 @@ class Database:
         cursor = self.mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('''INSERT INTO file_details(username,file_name,repo_name,timestamp,uri,file_count,path,modified,
         size,extension,mode,type) VALUES (% s, % s, % s,% s,% s,% s, % s, % s, % s, % s, % s, % s)''',
-                       (username, file_name, repo_name, timestamp, uri, "1", path, timestamp, "1000", "file", mode,
+                       (username, file_name, repo_name.replace(" ","-"), timestamp, uri, "1", path, timestamp, "1000", "file", mode,
                         "files"))
         self.mysql.connection.commit()
 
@@ -61,9 +61,9 @@ class Database:
             formatted_date2 = timestamp_dt2.strftime("%d/%m/%Y %I:%M %p")
             file_instance.modified = formatted_date2
 
-            size = int(file_instance.size);
+            size = int(file_instance.size)
             size = size / (1000 * 1000)
-            file_instance.size = str(size) + " MB"
+            file_instance.size = str(size)
 
             model_instances.append(file_instance)
         return model_instances
@@ -151,7 +151,7 @@ class Database:
 
     def CheckForFolderName(self, username, file_name):
         cursor = self.mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM file_details WHERE username = % s AND file_name= % s', (username, file_name,))
+        cursor.execute('SELECT * FROM file_details WHERE username = % s AND repo_name= % s', (username, file_name,))
         files = cursor.fetchone()
         return files
 

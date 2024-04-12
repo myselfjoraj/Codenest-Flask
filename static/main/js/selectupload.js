@@ -34,14 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Add event listener to handle file selection
     document.getElementById('btn-primary').addEventListener('click', function(event) {
-        if (files && files.length > 0) {
-            // Perform actions with the selected files, such as uploading to the server
-            console.log('Selected files:', files);
-            document.getElementById("full-screen").setAttribute("style","display:visible;")
-            uploadFiles(files);
-        } else {
-            console.log('No files selected.');
-        }
+        validate();
     });
 
     // Add event listener to handle file selection
@@ -83,6 +76,44 @@ document.addEventListener('DOMContentLoaded', function() {
         })
             .catch(error => {
             console.error('Error uploading files:', error);
+        });
+    }
+
+    function validate(){
+        if (!reponame || reponame.length == 0){
+            alert('Please enter a valid repository name.')
+            return false;
+        }else if (!files || files.length == 0){
+            alert('Please select files to upload.')
+            return false;
+        }else{
+            checkRepoAndUpload()
+        }
+
+    }
+
+    function checkRepoAndUpload(){
+        fetch('/check-repo-exists/'+reponame, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ message: "message" })
+        })
+            .then(response => {
+            if(response.ok){
+                console.log('Selected files:', files);
+                document.getElementById("full-screen").setAttribute("style","display:visible;")
+                uploadFiles(files);
+            }else{
+                alert('Repository already exists!')
+            }
+        })
+            .then(data => {
+
+        })
+            .catch(error => {
+            alert('Repository already exists!')
         });
     }
 

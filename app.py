@@ -10,6 +10,7 @@ import firebase_admin
 from firebase_admin import credentials, storage
 from werkzeug.utils import secure_filename
 
+import ParseFileData
 import constants as ckey
 
 from database import Database
@@ -88,11 +89,12 @@ def dashboard():
         storage = 0
         per = 10
         file_array = Database(mysql).FetchFiles(username)
+        file_map = ParseFileData.ParseFileData().remake(file_array)
         array_size = 0
-        if (file_array is None):
+        if file_array is None:
             array_size = 0
         else:
-            array_size = len(file_array)
+            array_size = file_map.size()
         if 'usedStorage' in session:
             storage = session['usedStorage']
             if storage is not None:
@@ -108,7 +110,7 @@ def dashboard():
                 pChar = a[0]
         return render_template("dashboard.html", storage=storage,
                                per=per, fname=gName, uname=username,
-                               email=email, letter=pChar, file_array=file_array, array_size=array_size)
+                               email=email, letter=pChar, file_map=file_map, array_size=array_size)
     else:
         return redirect('/login')
 
@@ -129,7 +131,7 @@ def my_projects():
         per = 10
         file_array = Database(mysql).FetchFiles(username)
         array_size = 0
-        if (file_array is None):
+        if file_array is None:
             array_size = 0
         else:
             array_size = len(file_array)
@@ -168,11 +170,16 @@ def explore():
         storage = 0
         per = 10
         file_array = Database(mysql).FetchExplore(username)
+        file_map = ParseFileData.ParseFileData().remake(file_array)
         array_size = 0
+        if file_array is None:
+            array_size = 0
+        else:
+            array_size = file_map.size()
         if (file_array is None):
             array_size = 0
         else:
-            array_size = len(file_array)
+            array_size = file_map.size()
         if 'usedStorage' in session:
             storage = session['usedStorage']
             if storage is not None:
@@ -188,7 +195,7 @@ def explore():
                 pChar = a[0]
         return render_template("explore.html", storage=storage,
                                per=per, fname=gName, uname=username,
-                               email=email, letter=pChar, file_array=file_array, array_size=array_size)
+                               email=email, letter=pChar, file_map=file_map, array_size=array_size)
     else:
         return redirect('/login')
 
@@ -322,6 +329,15 @@ def create_repos():
         return "not found"
 
 
+@app.route('/check-repo-exists/<name>', methods=['GET', 'POST'])
+def check_repo_existence(name):
+    exist = Database(mysql).CheckForFolderName(session['username'], name)
+    if exist:
+        return jsonify({'status': 'Folder exists'}), 400
+    else:
+        return jsonify({'status': 'Folder does not exists'}), 200
+
+
 @app.route('/upload-repository')
 def upload_repository():
     username = session['username']
@@ -373,7 +389,7 @@ def upload_file():
         expiration_time = datetime.datetime.now() + datetime.timedelta(days=365)  # Set expiration to 1 year from now
         url = blob.generate_signed_url(expiration=expiration_time)
         Database(mysql).InsertUploadRepo(name, file.filename, paths[i], url, "Private")
-        i = i+1
+        i = i + 1
 
     return jsonify({'message': 'Files uploaded successfully'}), 200
 

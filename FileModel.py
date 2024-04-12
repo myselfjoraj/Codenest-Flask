@@ -19,3 +19,4 @@ class FileModel:
     @staticmethod
     def from_tuple(data_tuple):
         return FileModel(*data_tuple)
+

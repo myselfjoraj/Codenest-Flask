@@ -256,7 +256,9 @@ input, button, select, textarea {
 		<script>
 			document.getElementById("cpass")
 				.addEventListener("input", (event) => {
-				document.getElementById("p1").innerHTML = "codenext.com/{{username}}/"+event.target.value;
+				const n = event.target.value;
+				const changed = n.replace(/\s/g, '-')
+				document.getElementById("p1").innerHTML = "codenext.com/{{username}}/"+changed;
 			});
 		</script>
 

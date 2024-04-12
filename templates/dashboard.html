@@ -314,14 +314,14 @@
                 </div>
 
                
-                {% for file_model in file_array %}
+                {% for key, values in file_map.map.items() %}
 
 
                 <div class="col-md-6 col-sm-6 col-lg-3">
                     <div class="card card-block card-stretch card-height">
                         <div class="card-body">                            
                                 <div class="d-flex justify-content-between">
-                                    <a href="/repo/{{file_model.file_name}}/1" class="folder">
+                                    <a href="/repo/{{key}}/1" class="folder">
                                         <div class="icon-small bg-danger rounded mb-4">
                                             <i class="ri-file-copy-line"></i>
                                         </div>
@@ -340,10 +340,10 @@
                                         </div>
                                     </div>
                                 </div>
-                                <a href="/repo/{{file_model.file_name}}/1" class="folder">
-                                    <h5 class="mb-2">{{file_model.repo_name}}</h5>
-                                    <p class="mb-2"><i class="lar la-clock text-danger mr-2 font-size-20"></i> {{file_model.timestamp}}</p>
-                                    <p class="mb-0"><i class="las la-file-alt text-danger mr-2 font-size-20"></i>{{file_model.file_count}} Files</p>
+                                <a href="/repo/{{key}}/1" class="folder">
+                                    <h5 class="mb-2">{{key}}</h5>
+                                    <p class="mb-2"><i class="lar la-clock text-danger mr-2 font-size-20"></i> {{values[2].timestamp}}</p>
+                                    <p class="mb-0"><i class="las la-file-alt text-danger mr-2 font-size-20"></i>{{values[0]}} Files</p>
                                 </a>
                         </div>
                     </div>
@@ -381,7 +381,7 @@
                                 </thead>
                                 <tbody>
                                     
-                                    {% for file_model in file_array %}
+                                    {% for key, values in file_map.map.items() %}
 
                                     <tr>
                                         <td>
@@ -389,15 +389,12 @@
                                                 <div class="icon-small bg-danger rounded mr-3">
                                                     <i class="ri-file-excel-line"></i>
                                                 </div>
-                                                <a href="/repo/{{file_model.file_name}}/1">{{file_model.repo_name}}</a></div>
-                                                <!-- <div data-load-file="file" data-load-target="#resolte-contaniner" data-url="../assets/vendor/doc-viewer/files/demo.pdf" 
-                                                data-toggle="modal" data-target="#exampleModal" data-title="alexa5.pdf" style="cursor: pointer;">
-                                                <a href="/repo/{{file_model.file_name}}/1">{{file_model.file_name}}</a></div>
-                                            </div> -->
+                                                <a href="/repo/{{key}}/1">{{key}}</a></div>
+
                                         </td>
                                         <td>Me</td>
-                                        <td>{{file_model.modified}}</td>
-                                        <td>{{file_model.size}}</td>
+                                        <td>{{values[2].modified}}</td>
+                                        <td>{{values[1]}} MB</td>
                                         <td>
                                             <div class="dropdown">
                                                 <span class="dropdown-toggle" id="dropdownMenuButton10" data-toggle="dropdown">
