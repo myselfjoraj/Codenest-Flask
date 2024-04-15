@@ -34,14 +34,14 @@ class Database:
                        (username, file_name, file_name, timestamp, "1", timestamp, "1000", "folder", mode, "folder"))
         self.mysql.connection.commit()
 
-    def InsertUploadRepo(self, repo_name, file_name, path, uri, mode):
+    def InsertUploadRepo(self, repo_name, file_name, path, uri, size, extension, mode):
         username = session['username']
         timestamp = time.time()
         cursor = self.mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('''INSERT INTO file_details(username,file_name,repo_name,timestamp,uri,file_count,path,modified,
         size,extension,mode,type) VALUES (% s, % s, % s,% s,% s,% s, % s, % s, % s, % s, % s, % s)''',
-                       (username, file_name, repo_name.replace(" ","-"), timestamp, uri, "1", path, timestamp, "1000", "file", mode,
-                        "files"))
+                       (username, file_name, repo_name.replace(" ", "-"), timestamp, uri, "1", path, timestamp, size,
+                        extension, mode, "files"))
         self.mysql.connection.commit()
 
     def FetchFiles(self, username):
@@ -61,9 +61,31 @@ class Database:
             formatted_date2 = timestamp_dt2.strftime("%d/%m/%Y %I:%M %p")
             file_instance.modified = formatted_date2
 
-            size = int(file_instance.size)
-            size = size / (1000 * 1000)
-            file_instance.size = str(size)
+            size = float(file_instance.size)
+            #file_instance.size = str(size)
+
+            model_instances.append(file_instance)
+        return model_instances
+
+    def FetchFilesByRepo(self, username, repo):
+        cur = self.mysql.connection.cursor()
+        cur.execute("SELECT * FROM file_details where username=%s and repo_name=%s", (username,repo,))
+        data = cur.fetchall()
+        cur.close()
+        model_instances = []
+        for row in data:
+            file_instance = FileModel.FileModel(*row)
+
+            timestamp_dt = datetime.fromtimestamp(float(file_instance.timestamp))
+            formatted_date = timestamp_dt.strftime("%d/%m/%Y %I:%M %p")
+            file_instance.timestamp = formatted_date
+
+            timestamp_dt2 = datetime.fromtimestamp(float(file_instance.modified))
+            formatted_date2 = timestamp_dt2.strftime("%d/%m/%Y %I:%M %p")
+            file_instance.modified = formatted_date2
+
+            size = float(file_instance.size)
+            #file_instance.size = str(size)
 
             model_instances.append(file_instance)
         return model_instances
@@ -85,7 +107,7 @@ class Database:
             formatted_date2 = timestamp_dt2.strftime("%d/%m/%Y %I:%M %p")
             file_instance.modified = formatted_date2
 
-            size = int(file_instance.size);
+            size = float(file_instance.size);
             size = size / (1000 * 1000)
             file_instance.size = str(size) + " MB"
 
@@ -154,6 +176,23 @@ class Database:
         cursor.execute('SELECT * FROM file_details WHERE username = % s AND repo_name= % s', (username, file_name,))
         files = cursor.fetchone()
         return files
+
+    # FILE OPERATIONS ///
+    def CreateStarred(self, repo_name):
+        username = session['username']
+        cursor = self.mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('''UPDATE file_details SET type= 'star' WHERE username = %s and repo_name = %s''',
+                       (username, repo_name,))
+        self.mysql.connection.commit()
+
+    def RemoveStarred(self, repo_name):
+        username = session['username']
+        cursor = self.mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('''UPDATE file_details SET type= 'notstar' WHERE username = %s and repo_name = %s''',
+                       (username, repo_name,))
+        self.mysql.connection.commit()
+
+
 
     def getDiscussionsTableCreationStatement():
         return ''' create table discussions(id int primary key auto_increment,username varchar(22),message varchar(22),timestamp varchar(22)); '''

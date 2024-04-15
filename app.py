@@ -1,10 +1,15 @@
 import datetime
 import time
+from urllib.parse import urlparse, quote
 
+import requests
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 from flask_mysqldb import MySQL
 import MySQLdb.cursors
 import re
+import urllib.request
+import ssl
+import tempfile
 
 import firebase_admin
 from firebase_admin import credentials, storage
@@ -12,6 +17,7 @@ from werkzeug.utils import secure_filename
 
 import ParseFileData
 import constants as ckey
+from Extras import get_media_type
 
 from database import Database
 from login_system import LoginSystem
@@ -90,6 +96,7 @@ def dashboard():
         per = 10
         file_array = Database(mysql).FetchFiles(username)
         file_map = ParseFileData.ParseFileData().remake(file_array)
+        #print(file_map.get("a-repo"))
         array_size = 0
         if file_array is None:
             array_size = 0
@@ -170,16 +177,14 @@ def explore():
         storage = 0
         per = 10
         file_array = Database(mysql).FetchExplore(username)
+        print(file_array[-1].file_name)
         file_map = ParseFileData.ParseFileData().remake(file_array)
         array_size = 0
         if file_array is None:
             array_size = 0
         else:
             array_size = file_map.size()
-        if (file_array is None):
-            array_size = 0
-        else:
-            array_size = file_map.size()
+
         if 'usedStorage' in session:
             storage = session['usedStorage']
             if storage is not None:
@@ -258,7 +263,7 @@ def create_project():
     if 'errorInRepo' in session:
         alert = session['errorInRepo']
         session.pop('errorInRepo')
-    return render_template('create-project.html', username=username, alert=alert);
+    return render_template('create-project.html', username=username, alert=alert)
 
 
 @app.route('/settings')
@@ -273,11 +278,6 @@ def my_profile():
 
 @app.route('/search')
 def search():
-    return;
-
-
-@app.route('/view')
-def preview_file():
     return;
 
 
@@ -299,16 +299,41 @@ def logout():
     return redirect('/home')
 
 
-@app.route('/display')
-def display_file():
-    file_path = "D:\\PebbleNew\\app\\google-services.json"  # Replace with the actual path to your file
-
+@app.route('/view/<file_name>/<path:link>')
+def display_file(file_name, link):
+    type_media = "application"
+    tm_link = link
     try:
-        with open(file_path, 'r') as file:
-            file_content = file.read()
-        return render_template('display.html', file_content=file_content)
-    except FileNotFoundError:
-        return "File not found."
+        expires = request.args.get('Expires')
+        google_access_id = request.args.get('GoogleAccessId')
+        signature = request.args.get('Signature')
+        signature = quote(signature, safe='')
+        tm_link = f"{link}?Expires={expires}&GoogleAccessId={google_access_id}&Signature={signature}"
+        parsed_url = urlparse(link)
+        file_path = parsed_url.path
+        file_path = file_path.replace("/codenext-d476c.appspot.com/", "")
+        print("File path:", file_path)
+        blob = bucket.blob(file_path)
+        # Save the file to a temporary location
+        media_type = get_media_type(file_path)
+        if media_type is not None:
+            media_type = media_type.split("/")[0]
+            print("Media Type:", media_type)
+            type_media = media_type
+        temp_file = tempfile.NamedTemporaryFile(delete=False)
+        blob.download_to_filename(temp_file.name)
+        # Open the file using the appropriate module or library based on the file type
+        # For example, if it's a text file, you can open it using the following code:
+        with open(temp_file.name, 'r') as f:
+            content = f.read()
+            print(content)
+            return render_template('display.html', file_content=content, file_name=file_name, file_link=tm_link,
+                                   media_type=media_type)
+    except Exception as e:
+        print("Error:", e)
+        content = "Raw file cannot be displayed"
+        return render_template('display.html', file_content=content, file_name=file_name, file_link=tm_link,
+                               media_type=type_media)
 
 
 @app.route('/create-repo', methods=['GET', 'POST'])
@@ -324,7 +349,6 @@ def create_repos():
             Database(mysql).CreateRepository(name, mode)
             session['alertInDash'] = "Repository created successfully!"
             return redirect('/dashboard')
-
     else:
         return "not found"
 
@@ -344,9 +368,35 @@ def upload_repository():
     return render_template('upload-repository.html', username=username)
 
 
-@app.route('/repo/<file_name>/<no>')
-def show_folders(file_name, no):
-    return render_template('folder-open.html', array_size=1)
+@app.route('/repo/<repo_name>')
+def show_folders(repo_name):
+    username = session['username']
+    file_array = Database(mysql).FetchFilesByRepo(username, repo_name)
+    file_map = ParseFileData.ParseFileData().remakeRepo(file_array, 1)
+    # print(file_map.get("a-repo"))
+    array_size = 0
+    if file_array is None:
+        array_size = 0
+    else:
+        array_size = file_map.size()
+
+    return render_template('folder-open.html', file_map=file_map, array_size=array_size, repo_name=repo_name, f_no=2)
+
+
+@app.route('/repo/<repo_name>/<file_name>/<no>')
+def show_folder_files(repo_name, file_name, no):
+    username = session['username']
+    file_array = Database(mysql).FetchFilesByRepo(username, repo_name)
+    file_map = ParseFileData.ParseFileData().remakeRepoByName(file_array, file_name, int(no))
+    # print(file_map.get("a-repo"))
+    array_size = 0
+    if file_array is None:
+        array_size = 0
+    else:
+        array_size = file_map.size()
+
+    return render_template('folder-open.html', file_map=file_map, array_size=array_size, repo_name=repo_name,
+                           f_no=int(no) + 1)
 
 
 @app.route('/send_message', methods=['POST'])
@@ -376,6 +426,9 @@ def upload_file():
 
     files = request.files.getlist('files[]')
     paths = request.form.getlist('filepath[]')
+    names = request.form.getlist('filename[]')
+    sizes = request.form.getlist('filesize[]')
+    extes = request.form.getlist('fileextension[]')
     name = request.form.get('repo-name')
     name.replace(" ", "-")
 
@@ -388,10 +441,21 @@ def upload_file():
         blob.upload_from_file(file)
         expiration_time = datetime.datetime.now() + datetime.timedelta(days=365)  # Set expiration to 1 year from now
         url = blob.generate_signed_url(expiration=expiration_time)
-        Database(mysql).InsertUploadRepo(name, file.filename, paths[i], url, "Private")
+        Database(mysql).InsertUploadRepo(name, names[i], paths[i], url, sizes[i], extes[i], "Private")
         i = i + 1
 
     return jsonify({'message': 'Files uploaded successfully'}), 200
+
+
+@app.route('/star/<repo_name>/<st>', methods=['POST'])
+def star_a_file(repo_name, st):
+    if st == 'star':
+        Database(mysql).RemoveStarred(repo_name)
+        print('made star')
+    else:
+        Database(mysql).CreateStarred(repo_name)
+        print('removed star')
+    return "success", 200
 
 
 def hello():

@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById("cpass").addEventListener("input", (event) => {
         //document.getElementById("p1").innerHTML = "codenext.com/{{username}}/"+event.target.value;
         reponame = event.target.value;
+        reponame = reponame.replace(/\s/g, '-');
     });
 
     // Add event listener to handle file selection
@@ -39,14 +40,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Add event listener to handle file selection
     document.getElementById('btn-secondary').addEventListener('click', function(event) {
-        window.href = "/dashboard"
+        location.href = "/dashboard"
     });
 
     function uploadFiles(files) {
         const formData = new FormData();
         for (const file of files) {
+            const fileName = file.name;
+            const fileSize = (file.size/(1000));
             formData.append('files[]', file);
             formData.append('filepath[]', file.webkitRelativePath);
+            formData.append('filename[]', file.name);
+            formData.append('filesize[]', fileSize);
+            formData.append('fileextension[]', fileName.split('.').pop());
         }
 
         formData.append('repo-name',reponame);
@@ -105,7 +111,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.log('Selected files:', files);
                 document.getElementById("full-screen").setAttribute("style","display:visible;")
                 uploadFiles(files);
+                console.log('triggered ok')
             }else{
+                console.log('triggered else')
+                document.getElementById("full-screen").setAttribute("style","display:none;")
                 alert('Repository already exists!')
             }
         })
@@ -113,7 +122,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
         })
             .catch(error => {
+            document.getElementById("full-screen").setAttribute("style","display:none;")
             alert('Repository already exists!')
+            console.log('triggered error')
+            console.error(error)
         });
     }
 
