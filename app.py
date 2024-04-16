@@ -3,7 +3,7 @@ import time
 from urllib.parse import urlparse, quote
 
 import requests
-from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
+from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify, send_file
 from flask_mysqldb import MySQL
 import MySQLdb.cursors
 import re
@@ -17,7 +17,7 @@ from werkzeug.utils import secure_filename
 
 import ParseFileData
 import constants as ckey
-from Extras import get_media_type
+from Extras import get_media_type, download_folder_from_firebase
 
 from database import Database
 from login_system import LoginSystem
@@ -449,13 +449,35 @@ def upload_file():
 
 @app.route('/star/<repo_name>/<st>', methods=['POST'])
 def star_a_file(repo_name, st):
-    if st == 'star':
-        Database(mysql).RemoveStarred(repo_name)
-        print('made star')
-    else:
-        Database(mysql).CreateStarred(repo_name)
-        print('removed star')
+    Database(mysql).ChangeStarred(repo_name, st)
     return "success", 200
+
+
+@app.route('/chmod/<repo_name>/<st>', methods=['POST'])
+def mode_a_file(repo_name, st):
+    Database(mysql).MakePrivatePublic(repo_name, st)
+    return "success", 200
+
+
+@app.route('/delete/<repo_name>', methods=['POST'])
+def delete_a_repo(repo_name):
+    print("triggered delete for " + repo_name)
+    Database(mysql).DeleteRepo(repo_name)
+    return "success", 200
+
+
+@app.route('/download-folder/<path:folder_path>')
+def download_folder(folder_path):
+    try:
+        # Download the folder from Firebase Storage
+        zip_file_path = download_folder_from_firebase(bucket,  folder_path)
+
+        # Return the ZIP archive as a downloadable file
+        return send_file(zip_file_path, as_attachment=True)
+
+    except Exception as e:
+        print("Error:", e)
+        return "Error downloading folder"
 
 
 def hello():

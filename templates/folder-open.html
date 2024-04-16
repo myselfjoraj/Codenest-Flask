@@ -322,9 +322,16 @@
                                     <tr>
                                         <td>
                                             <div class="d-flex align-items-center">
-                                                <div class="icon-small bg-danger rounded mr-3">
+
+                                                {% if values[2].file_name == key %}
+                                                    <div class="icon-small bg-primary rounded mr-3">
+                                                    <i class="ri-file-download-line"></i>
+                                                </div>
+                                                {% else %}
+                                                    <div class="icon-small bg-danger rounded mr-3">
                                                     <i class="ri-file-excel-line"></i>
                                                 </div>
+                                                {% endif %}
                                                 {% if values[2].file_name == key %}
                                                     <a href="/view/{{key}}/{{values[2].uri}}">{{key}}</a></div>
                                                 {% else %}

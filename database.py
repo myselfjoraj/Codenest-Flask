@@ -69,7 +69,7 @@ class Database:
 
     def FetchFilesByRepo(self, username, repo):
         cur = self.mysql.connection.cursor()
-        cur.execute("SELECT * FROM file_details where username=%s and repo_name=%s", (username,repo,))
+        cur.execute("SELECT * FROM file_details where username=%s and repo_name=%s", (username, repo,))
         data = cur.fetchall()
         cur.close()
         model_instances = []
@@ -178,21 +178,39 @@ class Database:
         return files
 
     # FILE OPERATIONS ///
-    def CreateStarred(self, repo_name):
+    def ChangeStarred(self, repo_name, starred):
         username = session['username']
         cursor = self.mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('''UPDATE file_details SET type= 'star' WHERE username = %s and repo_name = %s''',
-                       (username, repo_name,))
+        if starred == "star":
+            cursor.execute('''UPDATE file_details SET type= 'notstar' WHERE username = %s and repo_name = %s''',
+                           (username, repo_name,))
+            print("changed star")
+        else:
+            cursor.execute('''UPDATE file_details SET type= 'star' WHERE username = %s and repo_name = %s''',
+                           (username, repo_name,))
+            print("made star")
         self.mysql.connection.commit()
 
-    def RemoveStarred(self, repo_name):
+    def MakePrivatePublic(self, repo_name, mode):
         username = session['username']
         cursor = self.mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('''UPDATE file_details SET type= 'notstar' WHERE username = %s and repo_name = %s''',
-                       (username, repo_name,))
+        if mode == "Private":
+            cursor.execute('''UPDATE file_details SET mode= 'Public' WHERE username = %s and repo_name = %s''',
+                           (username, repo_name,))
+            print("made public")
+        else:
+            cursor.execute('''UPDATE file_details SET mode= 'Private' WHERE username = %s and repo_name = %s''',
+                           (username, repo_name,))
+            print("made private")
         self.mysql.connection.commit()
 
-
+    def DeleteRepo(self, repo_name):
+        username = session['username']
+        cursor = self.mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('''DELETE FROM file_details WHERE username = %s and repo_name = %s''',
+                           (username, repo_name,))
+        print("deleted "+repo_name)
+        self.mysql.connection.commit()
 
     def getDiscussionsTableCreationStatement():
         return ''' create table discussions(id int primary key auto_increment,username varchar(22),message varchar(22),timestamp varchar(22)); '''
