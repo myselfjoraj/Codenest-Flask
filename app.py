@@ -466,18 +466,20 @@ def delete_a_repo(repo_name):
     return "success", 200
 
 
-@app.route('/download-folder/<path:folder_path>')
-def download_folder(folder_path):
-    try:
-        # Download the folder from Firebase Storage
-        zip_file_path = download_folder_from_firebase(bucket,  folder_path)
+@app.route('/download/<repo_name>')
+def download_folder(repo_name):
+    username = session['username']
+    return render_template('download-page.html', username=username, repo_name=repo_name)
 
-        # Return the ZIP archive as a downloadable file
-        return send_file(zip_file_path, as_attachment=True)
 
-    except Exception as e:
-        print("Error:", e)
-        return "Error downloading folder"
+@app.route('/temp')
+def new_temp():
+    return render_template('temp.html')
+
+
+@app.route('/new-temp')
+def new_temp2():
+    return render_template('download-page.html')
 
 
 def hello():

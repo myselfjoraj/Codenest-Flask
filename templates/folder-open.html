@@ -343,15 +343,10 @@
                                         <td>{{values[2].modified}}</td>
                                         <td>{{values[1]}} KB</td>
                                         <td>
-                                            <div class="dropdown">
-                                                <span class="dropdown-toggle" id="dropdownMenuButton10" data-toggle="dropdown">
-                                                    <i class="ri-more-fill"></i>
-                                                </span>
-                                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton10">
-                                                    <a class="dropdown-item" href="#"><i class="ri-delete-bin-6-fill mr-2"></i>Delete</a>
-                                                    <a class="dropdown-item" href="#"><i class="ri-file-download-fill mr-2"></i>Download</a>
-                                                </div>
-                                            </div>
+                                            {% if values[2].file_name == key %}
+                                            <a href="{{values[2].uri}}" target="_blank"><i class="ri-file-download-fill mr-2"></i></a>
+
+                                            {% endif %}
                                         </td>
                                     </tr>
 

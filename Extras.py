@@ -10,8 +10,33 @@ def get_media_type(name):
     media_type, _ = mimetypes.guess_type(f"file.{file_extension}")
     return media_type
 
+def download_folder_from_firebase(bucket, folder_path):
 
-def download_folder_from_firebase(bucket, folder_path: str) -> str:
+    blobs = bucket.list_blobs(prefix=folder_path)
+
+    # Download files
+    download_folder = tempfile.mkdtemp()
+    os.makedirs(download_folder, exist_ok=True)
+    for blob in blobs:
+        local_file_path = os.path.join(download_folder, blob.name)
+        try:
+            blob.download_to_filename(local_file_path)
+        except Exception as e:
+            print(f'Error downloading file {blob.name}: {e}')
+        if blob.name.endswith('/'):
+            os.makedirs(local_file_path, exist_ok=True)
+
+    # Zip downloaded files
+    zip_file_path = os.path.join(download_folder, 'downloaded_files.zip')
+    with zipfile.ZipFile(zip_file_path, 'w') as zip_file:
+        for root, dirs, files in os.walk(download_folder):
+            for file in files:
+                file_path = os.path.join(root, file)
+                zip_file.write(file_path, os.path.relpath(file_path, download_folder))
+    return zip_file_path
+
+
+def download_folder_from_firebase1(bucket, folder_path: str) -> str:
     temp_dir = tempfile.mkdtemp()
 
     # Download the entire folder and its contents
