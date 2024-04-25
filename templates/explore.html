@@ -342,7 +342,6 @@
                                     <h5 class="mb-2">
                                         {{key}}
                                         {% if values[2].mode == "Public" %}<small>(public)</small>{% endif %}
-                                         &#9733;
                                     </h5>
                                     {% else %}
                                     <h5 class="mb-2">
@@ -397,7 +396,7 @@
                                                     <i class="ri-file-excel-line"></i>
                                                 </div>
                                                 {% if values[2].type == "star" %}
-                                                <a href="/repo/{{key}}">{{key}} &#9733;</a></div>
+                                                <a href="/repo/{{key}}">{{key}}</a></div>
                                                 {% else %}
                                                 <a href="/repo/{{key}}">{{key}}</a></div>
                                                 {% endif %}

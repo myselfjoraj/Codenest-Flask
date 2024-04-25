@@ -503,7 +503,7 @@ def download_folder(repo_name):
 
 @app.route('/temp')
 def new_temp():
-    return render_template('confirm-page.html')
+    return render_template('temp.html')
 
 
 @app.route('/new-temp')

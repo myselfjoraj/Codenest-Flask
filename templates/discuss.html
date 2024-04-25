@@ -600,20 +600,34 @@
 <script>
    document.addEventListener('DOMContentLoaded', function() {
     // JavaScript code to manipulate the DOM
+       function scrollToBottom() {
+           const messagesDiv = document.getElementById('msg-page');
+           if (messagesDiv) {
+               messagesDiv.scrollTop = messagesDiv.scrollHeight;
+           } else {
+               console.error('Element with id "msg-page" not found.');
+           }
+       }
+
+
+       // Variable to store the previous message count
+    let prevMessageCount = 0;
+
     function fetchMessages() {
         // Fetch messages from the server
         fetch('/fetch_messages')
             .then(response => response.json())
             .then(messages => {
+            const currentMessageCount = messages.length;
                 const messagesDiv = document.getElementById('msg-page');
                 if (messagesDiv) {
-                    messagesDiv.innerHTML = ''; // Clear previous messages
-                    messages.forEach(message => {
-                        console.log(message);
-                        // Create a new message element
-                        const msgElement = document.createElement('div');
-                        msgElement.className = 'received-chats';
-                        msgElement.innerHTML = `
+                    if (currentMessageCount > prevMessageCount) {
+                        messagesDiv.innerHTML = ''; // Clear previous messages
+                        messages.forEach(message => {
+                            // Create a new message element
+                            const msgElement = document.createElement('div');
+                            msgElement.className = 'received-chats';
+                            msgElement.innerHTML = `
                             <div class="received-chats-img">
                                 <img src="static/assets/images/avatar.png" class="image-holder" />
                             </div>
@@ -624,9 +638,16 @@
                                 </div>
                             </div>
                         `;
-                        // Append the message element to the messages container
-                        messagesDiv.appendChild(msgElement);
-                    });
+                            // Append the message element to the messages container
+                            messagesDiv.appendChild(msgElement);
+
+
+                            scrollToBottom();
+                            prevMessageCount = currentMessageCount;
+                            console.log("called");
+
+                        });
+                    }
 
                 } else {
                     console.error('Element with id "msg-page" not found.');
@@ -669,8 +690,6 @@
 
     // Fetch messages initially
     fetchMessages();
-    const messagesDiv = document.getElementById('msg-page');
-        messagesDiv.scrollTop = messagesDiv.scrollHeight;
 
     // Fetch messages periodically (every 2 seconds)
     setInterval(fetchMessages, 2000);
@@ -679,8 +698,6 @@
     const sendButton = document.getElementById('sendButton');
     if (sendButton) {
         sendButton.addEventListener('click', sendMessage);
-        const messagesDiv = document.getElementById('msg-page');
-        messagesDiv.scrollTop = messagesDiv.scrollHeight;
     } else {
         console.error('Send button not found.');
     }
