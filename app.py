@@ -370,17 +370,24 @@ def upload_repository():
 
 @app.route('/repo/<repo_name>')
 def show_folders(repo_name):
+    exist = Database(mysql).CheckForFolderName(session['username'], repo_name)
+    if not exist:
+        return render_template("404.html")
     username = session['username']
-    file_array = Database(mysql).FetchFilesByRepo(username, repo_name)
-    file_map = ParseFileData.ParseFileData().remakeRepo(file_array, 1)
-    # print(file_map.get("a-repo"))
-    array_size = 0
-    if file_array is None:
+    try:
+        file_array = Database(mysql).FetchFilesByRepo(username, repo_name)
+        file_map = ParseFileData.ParseFileData().remakeRepo(file_array, 1)
+        # print(file_map.get("a-repo"))
         array_size = 0
-    else:
-        array_size = file_map.size()
+        if file_array is None:
+            array_size = 0
+        else:
+            array_size = file_map.size()
 
-    return render_template('folder-open.html', file_map=file_map, array_size=array_size, repo_name=repo_name, f_no=2)
+        return render_template('folder-open.html', file_map=file_map, array_size=array_size, repo_name=repo_name,
+                               f_no=2)
+    except Exception as e:
+        return render_template("404.html")
 
 
 @app.route('/repo/<repo_name>/<file_name>/<no>')
@@ -447,10 +454,16 @@ def upload_file():
     return jsonify({'message': 'Files uploaded successfully'}), 200
 
 
-@app.route('/star/<repo_name>/<st>', methods=['POST'])
+@app.route('/star/<repo_name>/<st>', methods=['POST', 'GET'])
 def star_a_file(repo_name, st):
     Database(mysql).ChangeStarred(repo_name, st)
     return "success", 200
+
+
+@app.route('/star/<repo_name>/<st>/<return_page>', methods=['POST', 'GET'])
+def star_a_file_page(repo_name, st, return_page):
+    Database(mysql).ChangeStarred(repo_name, st)
+    return redirect('/' + return_page)
 
 
 @app.route('/chmod/<repo_name>/<st>', methods=['POST'])
@@ -459,11 +472,24 @@ def mode_a_file(repo_name, st):
     return "success", 200
 
 
+@app.route('/chmod/<repo_name>/<st>/<return_page>', methods=['POST', 'GET'])
+def mode_a_file_page(repo_name, st, return_page):
+    Database(mysql).MakePrivatePublic(repo_name, st)
+    return redirect('/' + return_page)
+
+
 @app.route('/delete/<repo_name>', methods=['POST'])
 def delete_a_repo(repo_name):
     print("triggered delete for " + repo_name)
     Database(mysql).DeleteRepo(repo_name)
     return "success", 200
+
+
+@app.route('/delete/<repo_name>/<return_page>', methods=['POST', 'GET'])
+def delete_a_repo_page(repo_name, return_page):
+    print("triggered delete for " + repo_name)
+    Database(mysql).DeleteRepo(repo_name)
+    return redirect('/' + return_page)
 
 
 @app.route('/download/<repo_name>')
@@ -474,7 +500,7 @@ def download_folder(repo_name):
 
 @app.route('/temp')
 def new_temp():
-    return render_template('temp.html')
+    return render_template('confirm-page.html')
 
 
 @app.route('/new-temp')

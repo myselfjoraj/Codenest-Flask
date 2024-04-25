@@ -1,9 +1,10 @@
 document.addEventListener('DOMContentLoaded', function(){
 
     // starring a file
-    document.getElementById('makeStar').addEventListener('click', function(event) {
+    document.getElementById('makeStar1').addEventListener('click', function(event) {
         const values = JSON.parse(document.getElementById('makeStar').getAttribute("data-values"));
         var star = values.value2;
+        alert("star clicked");
         fetch('/star/'+values.value1+'/'+star, {
             method: 'POST'
         }).then(response => {
@@ -12,10 +13,13 @@ document.addEventListener('DOMContentLoaded', function(){
             } else {
                  location.href ='/'+values.value3
             }
+            console.log("making star "+response)
         }).catch(error => {
             //alert("error");
+            console.log("error")
         });
     });
+
     // starring a file
     document.getElementById('makeStar1').addEventListener('click', function(event) {
         const values = JSON.parse(document.getElementById('makeStar').getAttribute("data-values"));
