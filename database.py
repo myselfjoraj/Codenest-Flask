@@ -90,9 +90,9 @@ class Database:
             model_instances.append(file_instance)
         return model_instances
 
-    def FetchExplore(self, username):
+    def FetchExplore(self):
         cur = self.mysql.connection.cursor()
-        cur.execute("SELECT * FROM file_details where username=%s", (username,))
+        cur.execute("SELECT * FROM file_details")
         data = cur.fetchall()
         cur.close()
         model_instances = []
@@ -107,16 +107,15 @@ class Database:
             formatted_date2 = timestamp_dt2.strftime("%d/%m/%Y %I:%M %p")
             file_instance.modified = formatted_date2
 
-            size = float(file_instance.size);
-            size = size / (1000 * 1000)
-            file_instance.size = str(size) + " MB"
+            size = float(file_instance.size)
+            # file_instance.size = str(size)
 
             model_instances.append(file_instance)
         return model_instances
 
     def FetchStarred(self, username):
         cur = self.mysql.connection.cursor()
-        cur.execute("SELECT * FROM file_details where username=%s", (username,))
+        cur.execute("SELECT * FROM file_details where username=%s and type='star' ", (username,))
         data = cur.fetchall()
         cur.close()
         model_instances = []

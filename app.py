@@ -137,11 +137,13 @@ def my_projects():
         storage = 0
         per = 10
         file_array = Database(mysql).FetchFiles(username)
+        file_map = ParseFileData.ParseFileData().remake(file_array)
+        # print(file_map.get("a-repo"))
         array_size = 0
         if file_array is None:
             array_size = 0
         else:
-            array_size = len(file_array)
+            array_size = file_map.size()
         if 'usedStorage' in session:
             storage = session['usedStorage']
             if storage is not None:
@@ -157,7 +159,7 @@ def my_projects():
                 pChar = a[0]
         return render_template("my-projects.html", storage=storage,
                                per=per, fname=gName, uname=username,
-                               email=email, letter=pChar, file_array=file_array, array_size=array_size)
+                               email=email, letter=pChar, file_map=file_map, array_size=array_size)
     else:
         return redirect('/login')
 
@@ -176,15 +178,14 @@ def explore():
         gName = username
         storage = 0
         per = 10
-        file_array = Database(mysql).FetchExplore(username)
-        print(file_array[-1].file_name)
+        file_array = Database(mysql).FetchExplore()
         file_map = ParseFileData.ParseFileData().remake(file_array)
+        # print(file_map.get("a-repo"))
         array_size = 0
         if file_array is None:
             array_size = 0
         else:
             array_size = file_map.size()
-
         if 'usedStorage' in session:
             storage = session['usedStorage']
             if storage is not None:
@@ -220,11 +221,13 @@ def starred_projects():
         storage = 0
         per = 10
         file_array = Database(mysql).FetchStarred(username)
+        file_map = ParseFileData.ParseFileData().remake(file_array)
+        # print(file_map.get("a-repo"))
         array_size = 0
         if file_array is None:
             array_size = 0
         else:
-            array_size = len(file_array)
+            array_size = file_map.size()
         if 'usedStorage' in session:
             storage = session['usedStorage']
             if storage is not None:
@@ -240,7 +243,7 @@ def starred_projects():
                 pChar = a[0]
         return render_template("starred.html", storage=storage,
                                per=per, fname=gName, uname=username,
-                               email=email, letter=pChar, file_array=file_array, array_size=array_size)
+                               email=email, letter=pChar, file_map=file_map, array_size=array_size)
     else:
         return redirect('/login')
 
