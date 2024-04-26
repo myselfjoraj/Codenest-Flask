@@ -501,7 +501,7 @@ def search_my_repo(repo_name):
         return redirect('/login')
 
 @app.route('/search/users/<name>')
-def search_my_repo(repo_name):
+def search_codenext_users(name):
     if 'loggedin' in session:
         var = session['loggedin']
     else:
