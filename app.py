@@ -445,7 +445,7 @@ def search_codenext_repo(repo_name):
         email = session['email']
         pChar = username[0]
         gName = username
-        file_array = Database(mysql).FetchFilesByName(username, repo_name,False)
+        file_array = Database(mysql).FetchFilesByName(username, repo_name, False)
         file_map = ParseFileData.ParseFileData().remake(file_array)
         array_size = 0
         desc = "Search Codenext"
@@ -479,7 +479,7 @@ def search_my_repo(repo_name):
         email = session['email']
         pChar = username[0]
         gName = username
-        file_array = Database(mysql).FetchFilesByName(username, repo_name,True)
+        file_array = Database(mysql).FetchFilesByName(username, repo_name, True)
         file_map = ParseFileData.ParseFileData().remake(file_array)
         array_size = 0
         desc = "Search Repositories"
@@ -500,6 +500,7 @@ def search_my_repo(repo_name):
     else:
         return redirect('/login')
 
+
 @app.route('/search/users/<name>')
 def search_codenext_users(name):
     if 'loggedin' in session:
@@ -512,24 +513,22 @@ def search_codenext_users(name):
         email = session['email']
         pChar = username[0]
         gName = username
-        file_array = Database(mysql).FetchFilesByName(username, repo_name,True)
-        file_map = ParseFileData.ParseFileData().remake(file_array)
+        user_array = Database(mysql).FetchUser(name)
         array_size = 0
-        desc = "Search Repositories"
-        if file_array is None:
+        desc = "Search Users"
+        if user_array is None:
             array_size = 0
         else:
-            array_size = file_map.size()
-            desc = "Found " + str(array_size) + " file(s) from your repositories"
+            array_size = len(user_array)
+            desc = "Found " + str(array_size) + " user(s) on Codenext"
 
         if 'first_name' in session:
             a = session['first_name']
             if a is not None:
                 gName = a
                 pChar = a[0]
-        return render_template("search-files.html", fname=gName, uname=username, repo_name=repo_name,
-                               email=email, letter=pChar, file_map=file_map, array_size=array_size,
-                               desc=desc, isMine=1)
+        return render_template("search-users.html", fname=gName, uname=username, name=name, desc=desc,
+                               email=email, letter=pChar, array_size=array_size, user_array=user_array)
     else:
         return redirect('/login')
 
