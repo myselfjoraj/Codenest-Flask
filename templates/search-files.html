@@ -4,8 +4,8 @@
   <head>
     <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-      <title>Code Next | Dashboard</title>
-      
+      <title>Code Next | Search</title>
+
       <!-- Favicon -->
       <link rel="shortcut icon" href="/static/assets/images/favicon.ico" />
 
@@ -16,14 +16,14 @@
 <script type="module" src="https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js"></script>
 <script type="module" src="https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore.js"></script>
 <script type="module" src="https://www.gstatic.com/firebasejs/10.10.0/firebase-analytics.js"></script>
-      
+
       <link rel="stylesheet" href="/static/assets/css/backend-plugin.min.css">
       <link rel="stylesheet" href="/static/assets/css/backend.css?v=1.0.0">
-      
+
       <link rel="stylesheet" href="/static/assets/vendor/@fortawesome/fontawesome-free/css/all.min.css">
       <link rel="stylesheet" href="/static/assets/vendor/line-awesome/dist/line-awesome/css/line-awesome.min.css">
       <link rel="stylesheet" href="/static/assets/vendor/remixicon/fonts/remixicon.css">
-      
+
       <!-- Viewer Plugin -->
         <!--PDF-->
         <link rel="stylesheet" href="/static/assets/vendor/doc-viewer/include/pdf/pdf.viewer.css">
@@ -49,7 +49,7 @@
     <!-- loader END -->
     <!-- Wrapper Start -->
     <div class="wrapper">
-      
+
       <div class="iq-sidebar  sidebar-default ">
           <div class="iq-sidebar-logo d-flex align-items-center justify-content-between">
               <a href="/dashboard" class="header-logo">
@@ -71,21 +71,19 @@
                           <li><div class="item"><i class="ri-folder-add-line pr-3"></i><a href="/create-project">New Repository</a></div></li>
 
                           <li><div class="item" ><i class="ri-file-upload-line pr-3"></i><a href="/upload-repository">Upload Repository</a></div></li>
-
-                    
                       </ul>
                   </div>
               </div>
               <nav class="iq-sidebar-menu">
                 <ul id="iq-sidebar-toggle" class="iq-menu">
-                    <li class="active">
+                    <li class=" ">
                            <a href="/dashboard" class="">
                                <i class="las la-home iq-arrow-left"></i><span>Dashboard</span>
                            </a>
                        <ul id="dashboard" class="iq-submenu collapse" data-parent="#iq-sidebar-toggle">
                        </ul>
                     </li>
-                    
+
                     <li class="">
                            <a href="/my-projects" class="">
                                <i class="lar la-file-alt iq-arrow-left"></i><span>My Projects</span>
@@ -121,7 +119,7 @@
                  <ul id="page-delete" class="iq-submenu collapse" data-parent="#iq-sidebar-toggle">
                     </ul>
                  </li>
-    
+
                   </ul>
               </nav>
 
@@ -150,64 +148,24 @@
                   </a>
               </div>
                   <div class="iq-search-bar device-search">
-                      <form id="searchForm" action="">
+
+                      <form>
                           <div class="input-prepend input-append">
                               <div class="btn-group">
                                   <label class="dropdown-toggle searchbox" data-toggle="dropdown">
-                                  <input id="searchInput" class="dropdown-toggle  text search-input" type="text"  placeholder="Type here to search...">
+                                  <input class="dropdown-toggle search-query text search-input" type="text" value="{{repo_name}}"  placeholder="Type here to search..."><span class="search-replace"></span>
                                   <a class="search-link" href="#"><i class="ri-search-line"></i></a>
                                   <span class="caret"><!--icon--></span>
                                   </label>
                                   <ul class="dropdown-menu">
-                                      <li><a id="my-repo" href="#" ><div class="item">Search in my repositories</div></a></li>
-                                      <li><a id="all-repo" href="#" ><div class="item">Search in codenext repositories</div></a></li>
-                                      <li><a id="all-users" href="#" ><div class="item">Search for codenext users</div></a></li>
+                                      <li><a href="#"><div class="item">My Repositories</div></a></li>
+                                      <li><a href="#"><div class="item">Code Next Repositories</div></a></li>
                                   </ul>
                               </div>
                           </div>
                       </form>
                   </div>
-                  <script>
-                     document.addEventListener('DOMContentLoaded', function() {
-                         const searchInput = document.getElementById('searchInput');
-                         const searchMy   = document.getElementById('my-repo');
-                         const searchRepo = document.getElementById('all-repo');
-                         const searchUser = document.getElementById('all-users');
-                         const searchForm = document.getElementById('searchForm');
 
-                         searchInput.addEventListener('input', function() {
-                             const inputValue = searchInput.value.trim();
-                             event.preventDefault(); // Prevent default link behavior
-                             searchForm.action = `/search/me/${encodeURIComponent(inputValue)}`; // Set form action
-                         });
-
-                         // Attach event listeners to the dropdown links
-                         searchMy.addEventListener('click', function(event) {
-                             const inputValue = searchInput.value.trim();
-                             event.preventDefault(); // Prevent default link behavior
-                             searchForm.action = `/search/me/${encodeURIComponent(inputValue)}`; // Set form action
-                             searchForm.submit(); // Submit the form
-                         });
-
-                         searchRepo.addEventListener('click', function(event) {
-                             const inputValue = searchInput.value.trim();
-                             event.preventDefault(); // Prevent default link behavior
-                             searchForm.action = `/search/codenext/${encodeURIComponent(inputValue)}`; // Set form action
-                             searchForm.submit(); // Submit the form
-                         });
-
-                         searchUser.addEventListener('click', function(event) {
-                             const inputValue = searchInput.value.trim();
-                             event.preventDefault(); // Prevent default link behavior
-                             searchForm.action = `/search/users/${encodeURIComponent(inputValue)}`; // Set form action
-                             searchForm.submit(); // Submit the form
-                         });
-
-                     });
-
-
-                  </script>
-      
                   <div class="d-flex align-items-center">
                       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"  aria-label="Toggle navigation">
                       <i class="ri-menu-3-line"></i>
@@ -222,18 +180,18 @@
                                   <form action="#" class="searchbox p-2">
                                       <div class="form-group mb-0 position-relative">
                                       <input type="text" class="text search-input font-size-12" placeholder="type here to search...">
-                                      <a href="#" class="search-link"><i class="las la-search"></i></a> 
+                                      <a href="#" class="search-link"><i class="las la-search"></i></a>
                                       </div>
                                   </form>
                               </div>
-                          </li> 
-                       
-                          <li class="nav-item nav-icon dropdown"> 
+                          </li>
+
+                          <li class="nav-item nav-icon dropdown">
                               <a href="/settings" class="search-toggle dropdown-toggle" id="dropdownMenuButton02" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
                               <i class="ri-settings-3-line"></i>
                               </a>
-                              
-                            
+
+
                           </li>
                           <li class="nav-item nav-icon dropdown caption-content">
                               <a href="#" class="search-toggle dropdown-toggle" id="dropdownMenuButton03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
@@ -251,9 +209,9 @@
                                           <div class="profile-header">
                                               <div class="cover-container text-center">
                                                   <div class="rounded-circle profile-icon bg-primary mx-auto d-block">
-                                                      {{letter}}                                                    
+                                                      {{letter}}
                                                       <a href="">
-                                                          
+
                                                       </a>
                                                   </div>
                                                   <div class="profile-detail mt-3">
@@ -262,14 +220,14 @@
                                                   </div>
                                                   <a href="/logout" class="btn btn-primary">Sign Out</a>
                                               </div>
-                                            
+
                                           </div>
                                       </div>
                                   </div>
                               </div>
                           </li>
-                          </ul>                     
-                      </div> 
+                          </ul>
+                      </div>
                   </div>
               </nav>
           </div>
@@ -285,45 +243,24 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="card-transparent card-block card-stretch card-height mb-3">
-                        <div class="d-flex justify-content-between">                             
+                        <div class="d-flex justify-content-between">
                             <div class="select-dropdown input-prepend input-append">
                                 <div class="btn-group">
                                     <div data-toggle="dropdown">
-                                    <div class="dropdown-toggle search-query">Welcome {{fname}},</div><span class="search-replace"></span>
+                                    <div class="dropdown-toggle search-query">{{desc}}</div>
+                                        <span class="search-replace"></span>
                                     <span class="caret"><!--icon--></span>
                                     </div>
-                                    <ul class="dropdown-menu">
-                                        <li><div class="item"><i class="ri-folder-add-line pr-3"></i>New Folder</div></li>
-                                        <li><div class="item"><i class="ri-file-upload-line pr-3"></i>Upload Files</div></li>
-                                        <li><div class="item"><i class="ri-folder-upload-line pr-3"></i>Upload Folders</div></li>
-                                    </ul>
+
                                 </div>
                             </div>
                             <div class="dashboard1-dropdown d-flex align-items-center">
-                                <div class="dashboard1-info">
-                                    <a href="#calander" class="collapsed" data-toggle="collapse" aria-expanded="false">
-                                        <i class="ri-arrow-down-s-line"></i>
-                                    </a>
-                                    <ul id="calander" class="iq-dropdown collapse list-inline m-0 p-0 mt-2">
-                                        <li class="mb-2">
-                                            <a href="#" data-toggle="tooltip" data-placement="right" title="Calander"><i
-                                                    class="las la-calendar iq-arrow-left"></i></a>
-                                        </li>
-                                        <li class="mb-2">
-                                            <a href="#" data-toggle="tooltip" data-placement="right" title="Keep"><i
-                                                    class="las la-lightbulb iq-arrow-left"></i></a>
-                                        </li>
-                                        <li>
-                                            <a href="#" data-toggle="tooltip" data-placement="right" title="Tasks"><i
-                                                    class="las la-tasks iq-arrow-left"></i></a>
-                                        </li>                                        
-                                    </ul>
-                                 </div>
+
                             </div>
                         </div>
                     </div>
                 </div>
-                
+
 
 
 
@@ -331,11 +268,11 @@
                     <div class="card card-block card-stretch card-transparent">
                         <div class="card-header d-flex justify-content-between pb-0">
                             <div class="header-title">
-                            
+
                                 {% if array_size == 0 %}
-                                 <h3 class="card-title" style="margin-left: 500px; margin-top: 100px;">No files available</h3>
+                                 <h3 class="card-title" style="margin-left: 400px; margin-top: 100px;">No files found with name &quot;{{repo_name}}&quot;</h3>
                                  {% else %}
-                                 <h4 class="card-title">Recents,</h4>
+                                 <h4 class="card-title">     </h4>
                                  {% endif %}
 
 
@@ -358,13 +295,13 @@
                     </div>
                 </div>
 
-               
+
                 {% for key, values in file_map.map.items() %}
 
 
                 <div class="col-md-6 col-sm-6 col-lg-3">
                     <div class="card card-block card-stretch card-height">
-                        <div class="card-body">                            
+                        <div class="card-body">
                                 <div class="d-flex justify-content-between">
                                     <a href="/repo/{{key}}" class="folder">
                                         <div class="icon-small bg-danger rounded mb-4">
@@ -377,6 +314,7 @@
                                                 <i class="ri-more-2-fill"></i>
                                             </span>
                                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton2">
+                                                {% if isMine == 1%}
                                                 <a class="dropdown-item" href="/chmod/{{key}}/{{values[2].mode}}/dashboard" ><i class="ri-eye-fill mr-2"></i>
                                                     {% if values[2].mode == "Private" %}Make Public{% else %}Make Private{% endif %}
                                                 </a>
@@ -384,21 +322,22 @@
                                                 <a class="dropdown-item" href="/star/{{key}}/{{values[2].type}}/dashboard" ><i class="las la-star mr-2"></i>
                                                     {% if values[2].type == "star" %}Remove Star{% else %}Star{% endif %}
                                                 </a>
+                                                {% endif %}
                                                 <a class="dropdown-item" href="/download/{{key}}"><i class="ri-file-download-fill mr-2"></i>&nbsp;Download</a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <a href="/repo/{{key}}" class="folder">
-                                    {% if values[2].type == "star" %}
+                                    {% if values[2].type == "star" and isMine == 1  %}
                                     <h5 class="mb-2">
                                         {{key}}
-                                        {% if values[2].mode == "Public" %}<small>(public)</small>{% endif %}
+                                        {% if values[2].mode == "Public" and isMine == 1 %}<small>(public)</small>{% endif %}
                                          &#9733;
                                     </h5>
                                     {% else %}
                                     <h5 class="mb-2">
-                                        {{key}} {% if values[2].mode == "Public" %}<small>(public)</small>{% endif %}
+                                        {{key}} {% if values[2].mode == "Public" and isMine == 1 %}<small>(public)</small>{% endif %}
                                     </h5>
                                     {% endif %}
                                     <p class="mb-2"><i class="lar la-clock text-danger mr-2 font-size-20"></i> {{values[2].timestamp}}</p>
@@ -409,86 +348,7 @@
                 </div>
 
                 {% endfor %}
-                                      
-                
-                
 
-                {% if array_size > 0 %}
-
-                <div class="col-lg-12">
-                    <div class="card card-block card-stretch card-height">
-                        <div class="card-body">
-                            <div class="col-lg-12">
-                                <div class="card card-block card-stretch card-transparent">
-                                    <div class="card-header d-flex justify-content-between pb-0">
-                                        <div class="header-title">
-                                            <h4 class="card-title">All Repositories</h4>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="table-responsive">
-                                <table class="table mb-0 table-borderless tbl-server-info">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">Name</th>
-                                        <th scope="col">Mode</th>
-                                        <th scope="col">Last Edit</th>
-                                        <th scope="col">File Size</th>
-                                        <th scope="col"></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    
-                                    {% for key, values in file_map.map.items() %}
-
-                                    <tr>
-                                        <td>
-                                            <div class="d-flex align-items-center">
-                                                <div class="icon-small bg-danger rounded mr-3">
-                                                    <i class="ri-file-excel-line"></i>
-                                                </div>
-                                                {% if values[2].type == "star" %}
-                                                <a href="/repo/{{key}}">{{key}} &#9733;</a></div>
-                                                {% else %}
-                                                <a href="/repo/{{key}}">{{key}}</a></div>
-                                                {% endif %}
-
-                                        </td>
-                                        <td>{% if values[2].mode == "Private" %}Private{% else %}Public{% endif %}</td>
-                                        <td>{{values[2].modified}}</td>
-                                        <td>{{values[1]}} KB</td>
-                                        <td>
-                                            <div class="dropdown">
-                                                <span class="dropdown-toggle" id="dropdownMenuButton10" data-toggle="dropdown">
-                                                    <i class="ri-more-fill"></i>
-                                                </span>
-                                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton10">
-                                                  <a class="dropdown-item" href="/chmod/{{key}}/{{values[2].mode}}/dashboard" id="publicPrivate"><i class="ri-eye-fill mr-2"></i>
-                                                    {% if values[2].mode == "Private" %}Make Public{% else %}Make Private{% endif %}
-                                                </a>
-                                                <a class="dropdown-item" href="/delete/{{key}}/dashboard" id="delete" ><i class="ri-delete-bin-6-fill mr-2"></i>&nbsp;Delete</a>
-                                                <a class="dropdown-item" href="/star/{{key}}/{{values[2].type}}/dashboard" id="makeStar"><i class="las la-star mr-2"></i>
-                                                    {% if values[2].type == "star" %}Remove Star{% else %}Star{% endif %}
-                                                </a>
-                                                <a class="dropdown-item" href="/download/{{key}}"><i class="ri-file-download-fill mr-2"></i>&nbsp;Download</a>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-
-                                    {% endfor %}
-                                    
-                                    
-                                </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                {% endif %}
-                
 
             </div>
         </div>
@@ -512,19 +372,19 @@
     </footer>
     <!-- Backend Bundle JavaScript -->
     <script src="/static/assets/js/backend-bundle.min.js"></script>
-    
+
     <!-- Chart Custom JavaScript -->
     <script src="/static/assets/js/customizer.js"></script>
-    
+
     <!-- Chart Custom JavaScript -->
     <script src="/static/assets/js/chart-custom.js"></script>
-    
+
     <!--PDF-->
     <script src="/static/vendor/doc-viewer/include/pdf/pdf.js"></script>
-    
+
     <script src="/static/vendor/doc-viewer/include/docx/jszip-utils.js"></script>
     <script src="/static/vendor/doc-viewer/include/docx/mammoth.browser.min.js"></script>
-    
+
     <script src="/static/vendor/doc-viewer/include/PPTXjs/js/filereader.js"></script>
     <script src="/static/vendor/doc-viewer/include/PPTXjs/js/d3.min.js"></script>
     <script src="/static/vendor/doc-viewer/include/PPTXjs/js/nv.d3.min.js"></script>

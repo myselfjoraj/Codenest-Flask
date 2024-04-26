@@ -92,31 +92,19 @@ def dashboard():
         email = session['email']
         pChar = username[0]
         gName = username
-        storage = 0
-        per = 10
         file_array = Database(mysql).FetchFiles(username)
         file_map = ParseFileData.ParseFileData().remake(file_array)
-        #print(file_map.get("a-repo"))
-        array_size = 0
         if file_array is None:
             array_size = 0
         else:
             array_size = file_map.size()
-        if 'usedStorage' in session:
-            storage = session['usedStorage']
-            if storage is not None:
-                storage = int(storage)
-                per = (storage / 20) * 100
-            else:
-                storage = 0
 
         if 'first_name' in session:
             a = session['first_name']
             if a is not None:
                 gName = a
                 pChar = a[0]
-        return render_template("dashboard.html", storage=storage,
-                               per=per, fname=gName, uname=username,
+        return render_template("dashboard.html", fname=gName, uname=username,
                                email=email, letter=pChar, file_map=file_map, array_size=array_size)
     else:
         return redirect('/login')
@@ -445,6 +433,74 @@ def show_folder_files(repo_name, file_name, no):
                            f_no=int(no) + 1)
 
 
+@app.route('/search/codenext/<repo_name>')
+def search_codenext_repo(repo_name):
+    if 'loggedin' in session:
+        var = session['loggedin']
+    else:
+        var = False
+
+    if var:
+        username = session['username']
+        email = session['email']
+        pChar = username[0]
+        gName = username
+        file_array = Database(mysql).FetchFilesByName(username, repo_name,False)
+        file_map = ParseFileData.ParseFileData().remake(file_array)
+        array_size = 0
+        desc = "Search Codenext"
+        if file_array is None:
+            array_size = 0
+        else:
+            array_size = file_map.size()
+            desc = "Found " + str(array_size) + " file(s) from Codenext Repositories"
+
+        if 'first_name' in session:
+            a = session['first_name']
+            if a is not None:
+                gName = a
+                pChar = a[0]
+        return render_template("search-files.html", fname=gName, uname=username, repo_name=repo_name,
+                               email=email, letter=pChar, file_map=file_map, array_size=array_size,
+                               desc=desc, isMine=0)
+    else:
+        return redirect('/login')
+
+
+@app.route('/search/me/<repo_name>')
+def search_my_repo(repo_name):
+    if 'loggedin' in session:
+        var = session['loggedin']
+    else:
+        var = False
+
+    if var:
+        username = session['username']
+        email = session['email']
+        pChar = username[0]
+        gName = username
+        file_array = Database(mysql).FetchFilesByName(username, repo_name,True)
+        file_map = ParseFileData.ParseFileData().remake(file_array)
+        array_size = 0
+        desc = "Search Repositories"
+        if file_array is None:
+            array_size = 0
+        else:
+            array_size = file_map.size()
+            desc = "Found " + str(array_size) + " file(s) from your repositories"
+
+        if 'first_name' in session:
+            a = session['first_name']
+            if a is not None:
+                gName = a
+                pChar = a[0]
+        return render_template("search-files.html", fname=gName, uname=username, repo_name=repo_name,
+                               email=email, letter=pChar, file_map=file_map, array_size=array_size,
+                               desc=desc, isMine=1)
+    else:
+        return redirect('/login')
+
+
 @app.route('/send_message', methods=['POST'])
 def send_message():
     if request.method == 'POST':
@@ -476,7 +532,7 @@ def send_ai_message():
             is_mine = True
 
         if message:
-            Database(mysql).CreateAiMessage(message,is_mine)
+            Database(mysql).CreateAiMessage(message, is_mine)
             return jsonify({'status': 'Message sent successfully'}), 200
         else:
             return jsonify({'status': 'Message not provided'}), 400

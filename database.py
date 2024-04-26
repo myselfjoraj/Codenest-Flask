@@ -25,6 +25,29 @@ class Database:
         account = cursor.fetchone()
         return account
 
+    def FetchUsers(self):
+        cur = self.mysql.connection.cursor()
+        cur.execute("SELECT * FROM users")
+        data = cur.fetchall()
+        cur.close()
+        model_instances = []
+        for row in data:
+            file_instance = FileModel.FileModel(*row)
+
+            timestamp_dt = datetime.fromtimestamp(float(file_instance.timestamp))
+            formatted_date = timestamp_dt.strftime("%d/%m/%Y %I:%M %p")
+            file_instance.timestamp = formatted_date
+
+            timestamp_dt2 = datetime.fromtimestamp(float(file_instance.modified))
+            formatted_date2 = timestamp_dt2.strftime("%d/%m/%Y %I:%M %p")
+            file_instance.modified = formatted_date2
+
+            size = float(file_instance.size)
+            # file_instance.size = str(size)
+
+            model_instances.append(file_instance)
+        return model_instances
+
     def CreateRepository(self, file_name, mode):
         username = session['username']
         timestamp = time.time()
@@ -92,7 +115,7 @@ class Database:
 
     def FetchExplore(self):
         cur = self.mysql.connection.cursor()
-        cur.execute("SELECT * FROM file_details")
+        cur.execute("SELECT * FROM file_details where mode='Public'")
         data = cur.fetchall()
         cur.close()
         model_instances = []
@@ -116,6 +139,33 @@ class Database:
     def FetchStarred(self, username):
         cur = self.mysql.connection.cursor()
         cur.execute("SELECT * FROM file_details where username=%s and type='star' ", (username,))
+        data = cur.fetchall()
+        cur.close()
+        model_instances = []
+        for row in data:
+            file_instance = FileModel.FileModel(*row)
+
+            timestamp_dt = datetime.fromtimestamp(float(file_instance.timestamp))
+            formatted_date = timestamp_dt.strftime("%d/%m/%Y %I:%M %p")
+            file_instance.timestamp = formatted_date
+
+            timestamp_dt2 = datetime.fromtimestamp(float(file_instance.modified))
+            formatted_date2 = timestamp_dt2.strftime("%d/%m/%Y %I:%M %p")
+            file_instance.modified = formatted_date2
+
+            size = int(file_instance.size);
+            size = size / (1000 * 1000)
+            file_instance.size = str(size) + " MB"
+
+            model_instances.append(file_instance)
+        return model_instances
+
+    def FetchFilesByName(self, username, name, is_mine):
+        cur = self.mysql.connection.cursor()
+        if is_mine:
+            cur.execute("SELECT * FROM file_details WHERE username = %s and repo_name LIKE %s", (username, '%' + name + '%',))
+        else:
+            cur.execute("SELECT * FROM file_details WHERE repo_name LIKE %s and mode = 'Public' ", ('%' + name + '%',))
         data = cur.fetchall()
         cur.close()
         model_instances = []
