@@ -7,6 +7,8 @@ import Message
 from datetime import datetime
 import time
 
+import UserModel
+
 
 class Database:
 
@@ -25,27 +27,15 @@ class Database:
         account = cursor.fetchone()
         return account
 
-    def FetchUsers(self):
+    def FetchUser(self, name):
         cur = self.mysql.connection.cursor()
-        cur.execute("SELECT * FROM users")
+        cur.execute("SELECT * FROM users where username=%s or first_name like %s", (name, '%' + name + '%',))
         data = cur.fetchall()
         cur.close()
         model_instances = []
         for row in data:
-            file_instance = FileModel.FileModel(*row)
-
-            timestamp_dt = datetime.fromtimestamp(float(file_instance.timestamp))
-            formatted_date = timestamp_dt.strftime("%d/%m/%Y %I:%M %p")
-            file_instance.timestamp = formatted_date
-
-            timestamp_dt2 = datetime.fromtimestamp(float(file_instance.modified))
-            formatted_date2 = timestamp_dt2.strftime("%d/%m/%Y %I:%M %p")
-            file_instance.modified = formatted_date2
-
-            size = float(file_instance.size)
-            # file_instance.size = str(size)
-
-            model_instances.append(file_instance)
+            user_instance = UserModel.UserModel(*row)
+            model_instances.append(user_instance)
         return model_instances
 
     def CreateRepository(self, file_name, mode):
@@ -163,7 +153,8 @@ class Database:
     def FetchFilesByName(self, username, name, is_mine):
         cur = self.mysql.connection.cursor()
         if is_mine:
-            cur.execute("SELECT * FROM file_details WHERE username = %s and repo_name LIKE %s", (username, '%' + name + '%',))
+            cur.execute("SELECT * FROM file_details WHERE username = %s and repo_name LIKE %s",
+                        (username, '%' + name + '%',))
         else:
             cur.execute("SELECT * FROM file_details WHERE repo_name LIKE %s and mode = 'Public' ", ('%' + name + '%',))
         data = cur.fetchall()
@@ -223,7 +214,7 @@ class Database:
     def CreateAiMessage(self, message, isMine):
         username = session['username']
         if not isMine:
-            username = username+"-ai"
+            username = username + "-ai"
         timestamp = time.time()
         cursor = self.mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('''INSERT INTO ai_message(username,message,timestamp) VALUES 
@@ -233,7 +224,7 @@ class Database:
     def FetchAiMessages(self):
         username = session['username']
         cur = self.mysql.connection.cursor()
-        cur.execute("select * from ai_message where username = %s or username = %s;", (username, username+"-ai",))
+        cur.execute("select * from ai_message where username = %s or username = %s;", (username, username + "-ai",))
         data = cur.fetchall()
         cur.close()
         model_instances = []
@@ -292,8 +283,8 @@ class Database:
         username = session['username']
         cursor = self.mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('''DELETE FROM file_details WHERE username = %s and repo_name = %s''',
-                           (username, repo_name,))
-        print("deleted "+repo_name)
+                       (username, repo_name,))
+        print("deleted " + repo_name)
         self.mysql.connection.commit()
 
     def getDiscussionsTableCreationStatement():

@@ -500,6 +500,39 @@ def search_my_repo(repo_name):
     else:
         return redirect('/login')
 
+@app.route('/search/users/<name>')
+def search_my_repo(repo_name):
+    if 'loggedin' in session:
+        var = session['loggedin']
+    else:
+        var = False
+
+    if var:
+        username = session['username']
+        email = session['email']
+        pChar = username[0]
+        gName = username
+        file_array = Database(mysql).FetchFilesByName(username, repo_name,True)
+        file_map = ParseFileData.ParseFileData().remake(file_array)
+        array_size = 0
+        desc = "Search Repositories"
+        if file_array is None:
+            array_size = 0
+        else:
+            array_size = file_map.size()
+            desc = "Found " + str(array_size) + " file(s) from your repositories"
+
+        if 'first_name' in session:
+            a = session['first_name']
+            if a is not None:
+                gName = a
+                pChar = a[0]
+        return render_template("search-files.html", fname=gName, uname=username, repo_name=repo_name,
+                               email=email, letter=pChar, file_map=file_map, array_size=array_size,
+                               desc=desc, isMine=1)
+    else:
+        return redirect('/login')
+
 
 @app.route('/send_message', methods=['POST'])
 def send_message():
