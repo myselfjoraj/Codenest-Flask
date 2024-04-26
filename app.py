@@ -513,9 +513,11 @@ def search_codenext_users(name):
         email = session['email']
         pChar = username[0]
         gName = username
+        name = name.replace("?","")
         user_array = Database(mysql).FetchUser(name)
         array_size = 0
         desc = "Search Users"
+
         if user_array is None:
             array_size = 0
         else:
@@ -527,6 +529,7 @@ def search_codenext_users(name):
             if a is not None:
                 gName = a
                 pChar = a[0]
+
         return render_template("search-users.html", fname=gName, uname=username, name=name, desc=desc,
                                email=email, letter=pChar, array_size=array_size, user_array=user_array)
     else:
