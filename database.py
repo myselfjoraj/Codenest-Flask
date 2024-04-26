@@ -170,6 +170,41 @@ class Database:
         # return model_instances
         return json_data
 
+    def CreateAiMessage(self, message, isMine):
+        username = session['username']
+        if not isMine:
+            username = username+"-ai"
+        timestamp = time.time()
+        cursor = self.mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('''INSERT INTO ai_message(username,message,timestamp) VALUES 
+                       (% s, % s, % s)''', (username, message, timestamp))
+        self.mysql.connection.commit()
+
+    def FetchAiMessages(self):
+        username = session['username']
+        cur = self.mysql.connection.cursor()
+        cur.execute("select * from ai_message where username = %s or username = %s;", (username, username+"-ai",))
+        data = cur.fetchall()
+        cur.close()
+        model_instances = []
+        for row in data:
+            message_instance = Message.Message(*row)
+            timestamp_dt = datetime.fromtimestamp(float(message_instance.timestamp))
+            formatted_date = timestamp_dt.strftime("%d/%m/%Y %I:%M %p")
+            message_instance.timestamp = formatted_date
+
+            if message_instance.username == username:
+                message_instance.isMine = True
+            else:
+                message_instance.isMine = False
+
+            model_instances.append(message_instance)
+        messages_dict = [message.to_dict() for message in model_instances]
+        json_data = json.dumps(messages_dict)
+
+        # return model_instances
+        return json_data
+
     def CheckForFolderName(self, username, file_name):
         cursor = self.mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('SELECT * FROM file_details WHERE username = % s AND repo_name= % s', (username, file_name,))
@@ -212,7 +247,10 @@ class Database:
         self.mysql.connection.commit()
 
     def getDiscussionsTableCreationStatement():
-        return ''' create table discussions(id int primary key auto_increment,username varchar(22),message varchar(22),timestamp varchar(22)); '''
+        return ''' create table discussions(id int primary key auto_increment,username varchar(22),message text,timestamp varchar(22)); '''
+
+    def getAiMessageTableCreationStatement():
+        return ''' create table ai_message(id int primary key auto_increment,username varchar(22),message text,timestamp varchar(22)); '''
 
     def getUsersTableCreationStatement():
         return '''create table users(username varchar(22) 

@@ -250,13 +250,49 @@ def starred_projects():
 
 @app.route('/discussions')
 def discussions():
-    return render_template('discuss.html')
+    if 'loggedin' in session:
+        var = session['loggedin']
+    else:
+        var = False
+
+    if var:
+        username = session['username']
+        email = session['email']
+        pChar = username[0]
+        gName = username
+
+        if 'first_name' in session:
+            a = session['first_name']
+            if a is not None:
+                gName = a
+                pChar = a[0]
+        return render_template("discuss.html", fname=gName, uname=username, email=email, letter=pChar)
+    else:
+        return redirect('/login')
 
 
 # CODENEXT AI PAGE ROUTER
 @app.route('/codenext-ai')
 def ai_chat():
-    return render_template("codenext-ai.html")
+    if 'loggedin' in session:
+        var = session['loggedin']
+    else:
+        var = False
+
+    if var:
+        username = session['username']
+        email = session['email']
+        pChar = username[0]
+        gName = username
+
+        if 'first_name' in session:
+            a = session['first_name']
+            if a is not None:
+                gName = a
+                pChar = a[0]
+        return render_template("codenext-ai.html", fname=gName, uname=username, email=email, letter=pChar)
+    else:
+        return redirect('/login')
 
 
 @app.route('/create-project')
@@ -427,6 +463,30 @@ def send_message():
 @app.route('/fetch_messages', methods=['GET', 'POST'])
 def fetch_message():
     return Database(mysql).FetchMessages()
+
+
+@app.route('/send_ai_message', methods=['POST'])
+def send_ai_message():
+    if request.method == 'POST':
+        data = request.json  # Access JSON data from the request
+        message = data.get('message')  # Get the 'message' value from JSON data
+        m_user = data.get('user')
+        is_mine = False
+        if m_user == "me":
+            is_mine = True
+
+        if message:
+            Database(mysql).CreateAiMessage(message,is_mine)
+            return jsonify({'status': 'Message sent successfully'}), 200
+        else:
+            return jsonify({'status': 'Message not provided'}), 400
+    else:
+        return jsonify({'status': 'Invalid request method'}), 405
+
+
+@app.route('/fetch_ai_messages', methods=['GET', 'POST'])
+def fetch_ai_message():
+    return Database(mysql).FetchAiMessages()
 
 
 @app.route('/upload', methods=['POST'])
