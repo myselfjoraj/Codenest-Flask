@@ -300,12 +300,38 @@ def my_settings():
 
 @app.route('/my-profile')
 def my_profile():
-    return;
+    if 'loggedin' in session:
+        var = session['loggedin']
+    else:
+        var = False
 
+    if var:
+        username = session['username']
+        email = session['email']
+        pChar = username[0]
+        gName = username
+        username = username.replace("?", "")
+        user = Database(mysql).FetchSingleUser(username)
 
-@app.route('/search')
-def search():
-    return;
+        file_array = Database(mysql).FetchFiles(username)
+        file_map = ParseFileData.ParseFileData().remake(file_array)
+
+        if file_array is None:
+            array_size = 0
+        else:
+            array_size = file_map.size()
+
+        if 'first_name' in session:
+            a = session['first_name']
+            if a is not None:
+                gName = a
+                pChar = a[0]
+
+        return render_template("user-profile.html", fname=gName, uname=username,
+                               email=email, letter=pChar, array_size=array_size, user=user, file_map=file_map)
+    else:
+        return redirect('/login')
+
 
 
 @app.route('/logout')
@@ -412,7 +438,7 @@ def show_folders(repo_name):
             array_size = file_map.size()
 
         return render_template('folder-open.html', file_map=file_map, array_size=array_size, repo_name=repo_name,
-                               f_no=2)
+                               f_no=2, uname=None)
     except Exception as e:
         return render_template("404.html")
 
@@ -430,7 +456,43 @@ def show_folder_files(repo_name, file_name, no):
         array_size = file_map.size()
 
     return render_template('folder-open.html', file_map=file_map, array_size=array_size, repo_name=repo_name,
-                           f_no=int(no) + 1)
+                           f_no=int(no) + 1, uname=None)
+
+
+@app.route('/<username>/repo/<repo_name>')
+def show_folders_of_user(username, repo_name):
+    exist = Database(mysql).CheckForFolderName(username, repo_name)
+    if not exist:
+        return render_template("404.html")
+    try:
+        file_array = Database(mysql).FetchFilesByUserRepo(username, repo_name)
+        file_map = ParseFileData.ParseFileData().remakeRepo(file_array, 1)
+        # print(file_map.get("a-repo"))
+        array_size = 0
+        if file_array is None:
+            array_size = 0
+        else:
+            array_size = file_map.size()
+
+        return render_template('folder-open.html', file_map=file_map, array_size=array_size, repo_name=repo_name,
+                               f_no=2, uname=username)
+    except Exception as e:
+        return render_template("404.html")
+
+
+@app.route('/<username>/repo/<repo_name>/<file_name>/<no>')
+def show_folder_files_of_user(username, repo_name, file_name, no):
+    file_array = Database(mysql).FetchFilesByUserRepo(username, repo_name)
+    file_map = ParseFileData.ParseFileData().remakeRepoByName(file_array, file_name, int(no))
+    # print(file_map.get("a-repo"))
+    array_size = 0
+    if file_array is None:
+        array_size = 0
+    else:
+        array_size = file_map.size()
+
+    return render_template('folder-open.html', file_map=file_map, array_size=array_size, repo_name=repo_name,
+                           f_no=int(no) + 1, uname=username)
 
 
 @app.route('/search/codenext/<repo_name>')
@@ -684,6 +746,11 @@ def delete_a_repo_page(repo_name, return_page):
 @app.route('/download/<repo_name>')
 def download_folder(repo_name):
     username = session['username']
+    return render_template('download-page.html', username=username, repo_name=repo_name)
+
+
+@app.route('/<username>/download/<repo_name>')
+def download_folder_of_user(username, repo_name):
     return render_template('download-page.html', username=username, repo_name=repo_name)
 
 

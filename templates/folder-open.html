@@ -334,6 +334,8 @@
                                                 {% endif %}
                                                 {% if values[2].file_name == key %}
                                                     <a href="/view/{{key}}/{{values[2].uri}}">{{key}}</a></div>
+                                                {% elif uname is not none%}
+                                                <a href="/{{uname}}/repo/{{repo_name}}/{{key}}/{{f_no}}">{{key}}</a></div>
                                                 {% else %}
                                                     <a href="/repo/{{repo_name}}/{{key}}/{{f_no}}">{{key}}</a></div>
                                                 {% endif %}

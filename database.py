@@ -111,6 +111,29 @@ class Database:
             model_instances.append(file_instance)
         return model_instances
 
+    def FetchFilesByUserRepo(self, username, repo):
+        cur = self.mysql.connection.cursor()
+        cur.execute("SELECT * FROM file_details where username=%s and repo_name=%s and mode='Public'", (username, repo,))
+        data = cur.fetchall()
+        cur.close()
+        model_instances = []
+        for row in data:
+            file_instance = FileModel.FileModel(*row)
+
+            timestamp_dt = datetime.fromtimestamp(float(file_instance.timestamp))
+            formatted_date = timestamp_dt.strftime("%d/%m/%Y %I:%M %p")
+            file_instance.timestamp = formatted_date
+
+            timestamp_dt2 = datetime.fromtimestamp(float(file_instance.modified))
+            formatted_date2 = timestamp_dt2.strftime("%d/%m/%Y %I:%M %p")
+            file_instance.modified = formatted_date2
+
+            size = float(file_instance.size)
+            #file_instance.size = str(size)
+
+            model_instances.append(file_instance)
+        return model_instances
+
     def FetchExplore(self):
         cur = self.mysql.connection.cursor()
         cur.execute("SELECT * FROM file_details where mode='Public'")

@@ -323,12 +323,20 @@
                                                     {% if values[2].type == "star" %}Remove Star{% else %}Star{% endif %}
                                                 </a>
                                                 {% endif %}
+                                                {% if isMine == 1%}
                                                 <a class="dropdown-item" href="/download/{{key}}"><i class="ri-file-download-fill mr-2"></i>&nbsp;Download</a>
+                                                {% else %}
+                                                <a class="dropdown-item" href="/{{values[2].username}}/download/{{key}}"><i class="ri-file-download-fill mr-2"></i>&nbsp;Download</a>
+                                                {% endif %}
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <a href="/repo/{{key}}" class="folder">
+                                    {% if isMine == 1 %}
+                                     <a href="/repo/{{key}}" class="folder">
+                                    {% else %}
+                                    <a href="/{{values[2].username}}/repo/{{key}}" class="folder">
+                                    {% endif %}
                                     {% if values[2].type == "star" and isMine == 1  %}
                                     <h5 class="mb-2">
                                         {{key}}
