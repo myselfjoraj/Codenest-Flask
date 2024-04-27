@@ -38,6 +38,14 @@ class Database:
             model_instances.append(user_instance)
         return model_instances
 
+    def FetchSingleUser(self, name):
+        cur = self.mysql.connection.cursor()
+        cur.execute("SELECT * FROM users where username=%s", (name,))
+        data = cur.fetchall()
+        cur.close()
+        for row in data:
+            return UserModel.UserModel(*row)
+
     def CreateRepository(self, file_name, mode):
         username = session['username']
         timestamp = time.time()
@@ -143,7 +151,7 @@ class Database:
             formatted_date2 = timestamp_dt2.strftime("%d/%m/%Y %I:%M %p")
             file_instance.modified = formatted_date2
 
-            size = int(file_instance.size);
+            size = int(file_instance.size)
             size = size / (1000 * 1000)
             file_instance.size = str(size) + " MB"
 
@@ -174,6 +182,26 @@ class Database:
             size = int(file_instance.size);
             size = size / (1000 * 1000)
             file_instance.size = str(size) + " MB"
+
+            model_instances.append(file_instance)
+        return model_instances
+
+    def FetchFilesByPublicUser(self, username):
+        cur = self.mysql.connection.cursor()
+        cur.execute("SELECT * FROM file_details where username=%s and mode='Public'", (username,))
+        data = cur.fetchall()
+        cur.close()
+        model_instances = []
+        for row in data:
+            file_instance = FileModel.FileModel(*row)
+
+            timestamp_dt = datetime.fromtimestamp(float(file_instance.timestamp))
+            formatted_date = timestamp_dt.strftime("%d/%m/%Y %I:%M %p")
+            file_instance.timestamp = formatted_date
+
+            timestamp_dt2 = datetime.fromtimestamp(float(file_instance.modified))
+            formatted_date2 = timestamp_dt2.strftime("%d/%m/%Y %I:%M %p")
+            file_instance.modified = formatted_date2
 
             model_instances.append(file_instance)
         return model_instances

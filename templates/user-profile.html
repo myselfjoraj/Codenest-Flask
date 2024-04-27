@@ -1,10 +1,11 @@
 
+
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-      <title>Code Next | Search</title>
+      <title>Code Next | Profile</title>
 
       <!-- Favicon -->
       <link rel="shortcut icon" href="/static/assets/images/favicon.ico" />
@@ -238,106 +239,161 @@
 
 
 
+
+
       <div class="content-page">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="card-transparent card-block card-stretch card-height mb-3">
-                        <div class="d-flex justify-content-between">
-                            <div class="select-dropdown input-prepend input-append">
-                                <div class="btn-group">
-                                    <div data-toggle="dropdown">
-                                    <div class="dropdown-toggle search-query">{{desc}}</div>
-                                        <span class="search-replace"></span>
-                                    <span class="caret"><!--icon--></span>
-                                    </div>
+      <div class="container-fluid">
+         <div class="row">
+            <div class="col-lg-12">
+               <div class="card car-transparent">
+                  <div class="card-body p-0" style="margin-left: 0%;">
+                     <div class="position-relative" style="border: 50%; border-radius: 50%; padding: 20px;">
+                         {% if user.url is none%}
+                        <img src="/static/assets/images/avatar.png" class="" alt="" style=" height:200px;width:200px; border-radius: 50%;">
+                         {% else %}
+                         <img src="{{user.url}}" class="" alt="" style=" height:200px;width:200px; border-radius: 50%;">
+                         {% endif %}
+                     </div>
+                     <div class="profile-overly">
+<!--                        <h2>{{user.username}}</h2>-->
+<!--                        <span>@{{user.username}}</span>-->
+                     </div>
+                  </div>
 
-                                </div>
-                            </div>
-                            <div class="dashboard1-dropdown d-flex align-items-center">
-
-                            </div>
-                        </div>
+                  <div class="card-header">
+                    <div class="header-title">
+                        {% if user.first_name is none%}
+                       <h4 class="card-title">{{user.username}}</h4>
+                        {% elif user.last_name is none %}
+                        <h4 class="card-title">{{user.first_name}}</h4>
+                        {% else %}
+                        <h4 class="card-title">{{user.first_name}} {{user.last_name}}</h4>
+                        {% endif %}
                     </div>
-                </div>
+                 </div>
 
+                 <div class="card-body">
+                    <ul class="list-inline p-0 m-0 iq-contact-rest">
 
+                        <li class="mb-3 d-flex">
+                          <span><i class="fas fa-at mr-3 font-size-20"></i></span>
+                          <p class="mb-0 font-size-16 line-height">{{user.username}}</p>
+                       </li>
 
+                        {% if user.city is not none%}
+                       <li class="mb-3 d-flex">
+                          <span><i class="fas fa-map-marker-alt mr-3 font-size-20"></i></span>
+                          <p class="mb-0 font-size-16 line-height">{{user.city}}</p>
+                       </li>
+                        {% endif %}
 
-                <div class="col-lg-12">
-                    <div class="card card-block card-stretch card-transparent">
-                        <div class="card-header d-flex justify-content-between pb-0">
-                            <div class="header-title">
+                        {% if user.number is not none%}
+                       <li class="mb-3 d-flex">
+                          <span><i class="fas fa-phone-volume mr-3 font-size-20"></i></span>
+                          <p class="mb-0 font-size-16 line-height">{{user.number}}</p>
+                       </li>
+                        {% endif %}
 
-                                {% if array_size == 0 %}
-                                 <h3 class="card-title" style="margin-left: 400px; margin-top: 100px;">No users found with name &quot;{{name}}&quot;</h3>
-                                 {% else %}
-                                 <h4 class="card-title">     </h4>
-                                 {% endif %}
+                       <li class="mb-3 d-flex">
+                          <span><i class="fas fa-envelope-open mr-3 font-size-20"></i></span>
+                          <p class="mb-0 font-size-16 line-height">{{user.email}}</p>
+                       </li>
+<!--                       <li class="mb-3 d-flex">-->
+<!--                          <a href="javascript:void(0);" class="d-flex">-->
+<!--                             <i class="fas fa-link  mr-3 font-size-20"></i>-->
+<!--                             <p class="mb-0 font-size-16 line-height">http://www.yourwebsitename.com </p>-->
+<!--                          </a>-->
+<!--                       </li>-->
+                    </ul>
+                 </div>
 
-
-                            </div>
-                            <!-- <div class="card-header-toolbar d-flex align-items-center">
-                                <div class="dropdown">
-                                    <span class="dropdown-toggle dropdown-bg btn bg-white" id="dropdownMenuButton1"
-                                        data-toggle="dropdown">
-                                        Name<i class="ri-arrow-down-s-line ml-1"></i>
-                                    </span>
-                                    <div class="dropdown-menu dropdown-menu-right shadow-none"
-                                        aria-labelledby="dropdownMenuButton1">
-                                        <a class="dropdown-item" href="#">Last modified</a>
-                                        <a class="dropdown-item" href="#">Last modifiedby me</a>
-                                        <a class="dropdown-item" href="#">Last opened by me</a>
-                                    </div>
-                                </div>
-                            </div> -->
-                        </div>
-                    </div>
-                </div>
-
-
-                {% for value in user_array %}
-
-
-                <div class="col-md-6 col-sm-6 col-lg-3">
-                    <div class="card card-block card-stretch card-height">
-                        <div class="card-body">
-                                <div class="d-flex justify-content-between">
-                                    <a href="/repo/{{value.username}}" class="folder">
-                                        <div class="">
-                                            <i class="">
-                                                {% if value.url is none %}
-                                                <img src="/static/assets/images/avatar.png" style="height:50px; width:50px; margin-bottom:10px; corner:50%">
-                                                {% else %}
-                                                <img src="{{ value.url }}" style="height:50px; width:50px; margin-bottom:10px; corner:50%">
-                                                {% endif %}
-                                            </i>
-                                        </div>
-                                    </a>
-
-                                </div>
-                                <a href="/repo/{{value.username}}" class="folder">
-                                    {% if value.first_name is none %}
-                                    <h5 class="mb-2">
-                                        {{value.username}}
-                                    </h5>
-                                    {% else %}
-                                    <h5 class="mb-2">
-                                        {{value.first_name}}
-                                    </h5>
-                                    {% endif %}
-                                    <p class="mb-2"><i class="las la-at text-danger mr-2 font-size-20"></i>{{ value.username }}</p>
-                                    <p class="mb-0"><i class="las la-envelope text-danger mr-2 font-size-20"></i>{{ value.email }}</p>
-                                </a>
-                        </div>
-                    </div>
-                </div>
-
-                {% endfor %}
-
-
+               </div>
             </div>
-        </div>
+        
+               </div>
+            </div>
+
+
+
+            
+
+
+        
+
+            <div class="col-lg-12">
+                <div class="card card-block card-stretch card-height">
+                    <div class="card-body">
+                        <div class="col-lg-12">
+                            <div class="card card-block card-stretch card-transparent">
+                                <div class="card-header d-flex justify-content-between pb-0">
+                                    <div class="header-title">
+                                        {% if array_size > 0%}
+                                        <h4 class="card-title">All Repositories</h4>
+                                        {% else %}
+                                        <h4 class="card-title">No Public Repositories Available</h4>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table mb-0 table-borderless tbl-server-info">
+                            <thead>
+                            {% if array_size > 0%}
+                                <tr>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Owner</th>
+                                    <th scope="col">Last Edit</th>
+                                    <th scope="col">File Size</th>
+                                    <th scope="col"></th>
+                                </tr>
+                            {% endif %}
+                            </thead>
+                            <tbody>
+
+
+                                <!--      new row     -->
+                                {% for key, values in file_map.map.items() %}
+
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="icon-small bg-danger rounded mr-3">
+                                                    <i class="ri-file-excel-line"></i>
+                                                </div>
+                                                <a href="/repo/{{key}}">{{key}}</a></div>
+
+                                        </td>
+                                        <td>{{uname}}</td>
+                                        <td>{{values[2].modified}}</td>
+                                        <td>{{values[1]}} KB</td>
+                                        <td>
+                                            <div class="dropdown">
+                                                <span class="dropdown-toggle" id="dropdownMenuButton10" data-toggle="dropdown">
+                                                    <i class="ri-more-fill"></i>
+                                                </span>
+                                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton10">
+                                                <a class="dropdown-item" href="/download/{{key}}"><i class="ri-file-download-fill mr-2"></i>&nbsp;Download</a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    {% endfor %}
+
+
+
+                                <!--      new row     -->
+                            </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+         </div>
+      </div>
       </div>
     </div>
     <!-- Wrapper End-->

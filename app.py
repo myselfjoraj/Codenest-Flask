@@ -513,7 +513,7 @@ def search_codenext_users(name):
         email = session['email']
         pChar = username[0]
         gName = username
-        name = name.replace("?","")
+        name = name.replace("?", "")
         user_array = Database(mysql).FetchUser(name)
         array_size = 0
         desc = "Search Users"
@@ -532,6 +532,41 @@ def search_codenext_users(name):
 
         return render_template("search-users.html", fname=gName, uname=username, name=name, desc=desc,
                                email=email, letter=pChar, array_size=array_size, user_array=user_array)
+    else:
+        return redirect('/login')
+
+
+@app.route('/user/<username>')
+def user_profile(username):
+    if 'loggedin' in session:
+        var = session['loggedin']
+    else:
+        var = False
+
+    if var:
+        username = session['username']
+        email = session['email']
+        pChar = username[0]
+        gName = username
+        username = username.replace("?", "")
+        user = Database(mysql).FetchSingleUser(username)
+
+        file_array = Database(mysql).FetchFilesByPublicUser(username)
+        file_map = ParseFileData.ParseFileData().remake(file_array)
+
+        if file_array is None:
+            array_size = 0
+        else:
+            array_size = file_map.size()
+
+        if 'first_name' in session:
+            a = session['first_name']
+            if a is not None:
+                gName = a
+                pChar = a[0]
+
+        return render_template("user-profile.html", fname=gName, uname=username,
+                               email=email, letter=pChar, array_size=array_size, user=user, file_map=file_map)
     else:
         return redirect('/login')
 
