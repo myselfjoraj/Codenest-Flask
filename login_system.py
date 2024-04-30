@@ -44,7 +44,7 @@ class LoginSystem:
             password = request.form['password']
             email = request.form['email']
 
-            account = Database(self.mysql).CheckForUser(username, password)
+            account = Database(self.mysql).FetchSingleUser(username)
 
             if account:
                 msg = 1

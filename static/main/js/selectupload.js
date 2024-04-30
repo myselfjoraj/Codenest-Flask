@@ -33,6 +33,17 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    document.getElementById('file-input').addEventListener('change', function(event) {
+        files = event.target.files; // Get the selected files
+        if (files && files.length > 0) {
+            // Perform actions with the selected files, such as uploading to the server
+            console.log('Selected files:', files);
+            uploadSingle(files);
+        } else {
+            console.log('No files selected.');
+        }
+    });
+
     // Add event listener to handle file selection
     document.getElementById('btn-primary').addEventListener('click', function(event) {
         validate();
@@ -58,6 +69,48 @@ document.addEventListener('DOMContentLoaded', function() {
         formData.append('repo-name',reponame);
 
         fetch('/upload', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => {
+            if (response.ok) {
+                console.log('Files uploaded successfully.');
+                document.getElementById("loader").setAttribute("style","display:none;")
+                document.getElementById("upload-prog-desc").innerHTML= "Repository uploaded successfully";
+                //location.href = '/dashboard'
+                if (confirm('Uploaded Successfully!')){
+                    location.href = '/dashboard'
+                }
+            } else {
+                console.error('Error uploading files.');
+                document.getElementById("loader").setAttribute("style","display:none;")
+                document.getElementById("upload-prog-desc").innerHTML= "Error uploading repository";
+                if (confirm('Error uploading repository!')){
+                    location.href = '/upload-repository'
+                }
+
+            }
+        })
+            .catch(error => {
+            console.error('Error uploading files:', error);
+        });
+    }
+
+    function uploadSingle(files) {
+        const formData = new FormData();
+        for (const file of files) {
+            const fileName = file.name;
+            const fileSize = (file.size/(1000));
+            formData.append('files[]', file);
+            formData.append('filepath[]', file.webkitRelativePath);
+            formData.append('filename[]', file.name);
+            formData.append('filesize[]', fileSize);
+            formData.append('fileextension[]', fileName.split('.').pop());
+        }
+
+        formData.append('repo-name',reponame);
+
+        fetch('/upload-single', {
             method: 'POST',
             body: formData
         })

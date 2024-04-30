@@ -5,17 +5,17 @@
     <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
       <title>Code Nest | Discussions</title>
-      
+
       <!-- Favicon -->
       <link rel="shortcut icon" href="/static/assets/images/favicon.ico" />
-      
+
       <link rel="stylesheet" href="/static/assets/css/backend-plugin.min.css">
       <link rel="stylesheet" href="/static/assets/css/backend.css?v=1.0.0">
-      
+
       <link rel="stylesheet" href="/static/assets/vendor/@fortawesome/fontawesome-free/css/all.min.css">
       <link rel="stylesheet" href="/static/assets/vendor/line-awesome/dist/line-awesome/css/line-awesome.min.css">
       <link rel="stylesheet" href="/static/assets/vendor/remixicon/fonts/remixicon.css">
-      
+
       <!-- Viewer Plugin -->
         <!--PDF-->
         <link rel="stylesheet" href="/static/assets/vendor/doc-viewer/include/pdf/pdf.viewer.css">
@@ -38,7 +38,7 @@
             box-sizing: border-box;
             font-family: 'Roboto', sans-serif;
         }
-        
+
         /* Styling the main container */
         .container {
             width: 80%;
@@ -48,7 +48,7 @@
             letter-spacing: 0.5px;
             height: 80%;
         }
-        
+
         .image-holder {
             width: 50px;
             vertical-align: middle;
@@ -72,15 +72,15 @@
             margin-left: 2%;
             float: left;
         }
-        
+
         .container1 {
             width: 270px;
-            height: auto; 
+            height: auto;
             float: left;
             margin-left: 100px;
-        
+
         }
-        
+
         /* styling user-name */
         .active1 {
             width: 150px;
@@ -89,29 +89,29 @@
             font-weight: bold;
             margin: 0 0 0 5px;
             height: 10%;
-         
+
         }
         /* Styling the inbox */
         .chat-page {
             padding: 0 0 50px 0;
         }
-        
+
         .msg-inbox {
             overflow: hidden;
             border-bottom-left-radius: 20px;
             border-bottom-right-radius: 20px;
         }
-        
-        
+
+
         .chats {
             padding: 30px 15px 0 25px;
         }
-        
+
         .msg-page {
             max-height: 500px;
             overflow-y: auto;
         }
-        
+
         /* Styling the msg-bottom container */
          .msg-bottom {
                 border-top: 1px solid #ccc;
@@ -133,14 +133,14 @@
                 flex-wrap: wrap;
                 align-items: stretch;
             }
-            
+
             .input-group>.form-control {
                 position: relative;
                 flex: 1 1 auto;
                 width: 1%;
                 margin-bottom: 0;
             }
-            
+
             .form-control {
                 border: none !important;
                 /*border-radius: 20px !important;*/
@@ -154,7 +154,7 @@
                 background-clip: padding-box;
                 transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
             }
-            
+
             .input-group-text {
                 background: transparent !important;
                 border: none !important;
@@ -174,24 +174,24 @@
                 font-weight: bold !important;
                 cursor: pointer;
             }
-            
+
             input:focus {
                 outline: none;
                 border: none !important;
                 box-shadow: none !important;
             }
-            
+
             .send-icon {
                 font-weight: bold !important;
             }
-        
+
         /* Styling the avatar  */
         .received-chats-img {
             display: inline-block;
             width: 50px;
             float: left;
         }
-        
+
         .received-msg {
             display: inline-block;
             padding: 0 0 0 10px;
@@ -201,7 +201,7 @@
         .received-msg-inbox {
             width: 57%;
         }
-        
+
         .received-msg-inbox p {
             background: #efefef none repeat scroll 0 0;
             border-radius: 10px;
@@ -215,7 +215,7 @@
             p {
             overflow-wrap: break-word;
         }
-        
+
         /* Styling the msg-sent time  */
         .time {
             color: #777;
@@ -227,7 +227,7 @@
             overflow: hidden;
             margin: 26px 20px;
         }
-        
+
         .outgoing-chats-msg p {
             background-color: #46D4DA;
             /* background-image: linear-gradient(45deg, #ee087f 0%, #DD2A7B 25%, #9858ac 50%, #8134AF 75%, #515BD4 100%); */
@@ -244,7 +244,7 @@
                 float: right;
                 width: 46%;
             }
-        
+
         /* Styling the avatar */
         .outgoing-chats-img {
             display: inline-block;
@@ -273,7 +273,7 @@
                 font-size: 28px;
             }
         }
-        
+
         @media only screen and (max-device-width: 450px) {
             *,
             .time {
@@ -295,9 +295,9 @@
                 font-size: 28px;
             }
         }
-        
-        
-        
+
+
+
             </style>
 
 
@@ -310,7 +310,7 @@
     <!-- loader END -->
     <!-- Wrapper Start -->
     <div class="wrapper">
-      
+
         <div class="iq-sidebar  sidebar-default ">
             <div class="iq-sidebar-logo d-flex align-items-center justify-content-between">
                 <a href="/dashboard" class="header-logo">
@@ -329,9 +329,9 @@
                         </div>
                         <ul class="dropdown-menu">
                             <li><div class="item"><i class="ri-folder-add-line pr-3"></i><a href="/create-project">New Repository</a></div></li>
-                            
+
                             <li><div class="item"><i class="ri-file-upload-line pr-3"></i><a href="/upload-project">Upload Repository</a></div></li>
-                      
+
                         </ul>
                     </div>
                 </div>
@@ -344,7 +344,7 @@
                          <ul id="dashboard" class="iq-submenu collapse" data-parent="#iq-sidebar-toggle">
                          </ul>
                       </li>
-                      
+
                       <li class="">
                              <a href="/my-projects" class="">
                                  <i class="lar la-file-alt iq-arrow-left"></i><span>My Projects</span>
@@ -380,7 +380,7 @@
                    <ul id="page-delete" class="iq-submenu collapse" data-parent="#iq-sidebar-toggle">
                       </ul>
                    </li>
-      
+
                     </ul>
                 </nav>
 
@@ -397,7 +397,7 @@
                     </a>
                 </div>
                     <div class="iq-search-bar device-search">
-                        
+
                         <form>
                             <div class="input-prepend input-append">
                                 <div class="btn-group">
@@ -414,7 +414,7 @@
                             </div>
                         </form>
                     </div>
-        
+
                     <div class="d-flex align-items-center">
                         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"  aria-label="Toggle navigation">
                         <i class="ri-menu-3-line"></i>
@@ -429,18 +429,18 @@
                                     <form action="#" class="searchbox p-2">
                                         <div class="form-group mb-0 position-relative">
                                         <input type="text" class="text search-input font-size-12" placeholder="type here to search...">
-                                        <a href="#" class="search-link"><i class="las la-search"></i></a> 
+                                        <a href="#" class="search-link"><i class="las la-search"></i></a>
                                         </div>
                                     </form>
                                 </div>
-                            </li> 
-                         
-                            <li class="nav-item nav-icon dropdown"> 
+                            </li>
+
+                            <li class="nav-item nav-icon dropdown">
                                 <a href="/settings" class="search-toggle dropdown-toggle" id="dropdownMenuButton02" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
                                 <i class="ri-settings-3-line"></i>
                                 </a>
-                                
-        
+
+
                             </li>
                             <li class="nav-item nav-icon dropdown caption-content">
                                 <a href="#" class="search-toggle dropdown-toggle" id="dropdownMenuButton03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
@@ -458,9 +458,9 @@
                                             <div class="profile-header">
                                                 <div class="cover-container text-center">
                                                     <div class="rounded-circle profile-icon bg-primary mx-auto d-block">
-                                                        {{letter}}                                                    
+                                                        {{letter}}
                                                         <a href="">
-                                                            
+
                                                         </a>
                                                     </div>
                                                     <div class="profile-detail mt-3">
@@ -469,14 +469,14 @@
                                                     </div>
                                                     <a href="/logout" class="btn btn-primary">Sign Out</a>
                                                 </div>
-                                              
+
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </li>
-                            </ul>                     
-                        </div> 
+                            </ul>
+                        </div>
                     </div>
                 </nav>
             </div>
@@ -495,7 +495,7 @@
           </div>
         </div>
         <!-- msg-header section ends -->
-  
+
         <!-- Chat inbox  -->
         <div class="chat-page">
           <div class="msg-inbox">
@@ -513,9 +513,9 @@
                             </div>
               </div>
             </div>
-  
+
             <!-- msg-bottom section -->
-  
+
             <div class="msg-bottom">
     <div class="input-group">
         <input id="messageInput11" style="margin-bottom: 10px;"
@@ -566,7 +566,7 @@
                             <div class="received-msg">
                                 <div class="received-msg-inbox">
                                     <p><b>${message.username}</b><br><br>${message.text}</p>
-                                    <span class="time">${message.timestamp}</span>
+                                    <span class="time">${message.timestamp} <a href="#">Delete Message</a></span>
                                     <br><br>
                                 </div>
                             </div>
@@ -638,16 +638,16 @@
 
 </script>
 
-    
+
     <!-- Backend Bundle JavaScript -->
     <script src="/static/assets/js/backend-bundle.min.js"></script>
-    
+
     <!-- Chart Custom JavaScript -->
     <script src="/static/assets/js/customizer.js"></script>
-    
+
     <!-- Chart Custom JavaScript -->
     <script src="/static/assets/js/chart-custom.js"></script>
-    
+
     <!--PDF-->
     <script src="/static/assets/vendor/doc-viewer/include/pdf/pdf.js"></script>
     <!--Docs-->

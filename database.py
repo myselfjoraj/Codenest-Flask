@@ -21,6 +21,93 @@ class Database:
                        (username, password, email,))
         self.mysql.connection.commit()
 
+    def InsertUserName(self, username):
+        uname = session['username']
+        cursor = self.mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('UPDATE users SET username=% s WHERE username=%s',
+                       (username, uname))
+        session['username'] = username
+        self.mysql.connection.commit()
+
+    def InsertPassword(self, password):
+        uname = session['username']
+        cursor = self.mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('UPDATE users SET password=% s WHERE username=%s',
+                       (password, uname))
+        self.mysql.connection.commit()
+
+    def InsertEmail(self, email):
+        uname = session['username']
+        cursor = self.mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('UPDATE users SET email=% s WHERE username=%s',
+                       (email, uname))
+        session['email'] = email
+        self.mysql.connection.commit()
+
+    def InsertFirstName(self, name):
+        uname = session['username']
+        cursor = self.mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('UPDATE users SET first_name=% s WHERE username=%s',
+                       (name, uname))
+        session['first_name'] = name
+        self.mysql.connection.commit()
+
+    def InsertLastName(self, name):
+        uname = session['username']
+        cursor = self.mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('UPDATE users SET last_name=% s WHERE username=%s',
+                       (name, uname))
+        self.mysql.connection.commit()
+
+    def InsertCity(self, name):
+        uname = session['username']
+        cursor = self.mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('UPDATE users SET city=% s WHERE username=%s',
+                       (name, uname))
+        self.mysql.connection.commit()
+
+    def InsertGender(self, name):
+        uname = session['username']
+        cursor = self.mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('UPDATE users SET gender=% s WHERE username=%s',
+                       (name, uname))
+        self.mysql.connection.commit()
+
+    def InsertDOB(self, name):
+        uname = session['username']
+        cursor = self.mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('UPDATE users SET dob=% s WHERE username=%s',
+                       (name, uname))
+        self.mysql.connection.commit()
+
+    def InsertMartialStatus(self, name):
+        uname = session['username']
+        cursor = self.mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('UPDATE users SET martial_status=% s WHERE username=%s',
+                       (name, uname))
+        self.mysql.connection.commit()
+
+    def InsertAge(self, name):
+        uname = session['username']
+        cursor = self.mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('UPDATE users SET age=% s WHERE username=%s',
+                       (name, uname))
+        self.mysql.connection.commit()
+
+    def InsertPhone(self, name):
+        uname = session['username']
+        cursor = self.mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('UPDATE users SET number=% s WHERE username=%s',
+                       (name, uname))
+        self.mysql.connection.commit()
+
+    def InsertProfileImage(self, name):
+        uname = session['username']
+        cursor = self.mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('UPDATE users SET url=% s WHERE username=%s',
+                       (name, uname))
+        self.mysql.connection.commit()
+
     def CheckForUser(self, username, password):
         cursor = self.mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('SELECT * FROM users WHERE username = % s AND password = % s', (username, password,))
@@ -38,6 +125,17 @@ class Database:
             model_instances.append(user_instance)
         return model_instances
 
+    def FetchEveryUser(self):
+        cur = self.mysql.connection.cursor()
+        cur.execute("SELECT * FROM users")
+        data = cur.fetchall()
+        cur.close()
+        model_instances = []
+        for row in data:
+            user_instance = UserModel.UserModel(*row)
+            model_instances.append(user_instance)
+        return model_instances
+
     def FetchSingleUser(self, name):
         cur = self.mysql.connection.cursor()
         cur.execute("SELECT * FROM users where username=%s", (name,))
@@ -45,6 +143,22 @@ class Database:
         cur.close()
         for row in data:
             return UserModel.UserModel(*row)
+
+    def InitializeSessionVar(self, username, password):
+        account = Database(self.mysql).CheckForUser(username, password)
+        if account:
+            session['loggedin'] = True
+            session['username'] = account['username']
+            session['email'] = account['email']
+            session['first_name'] = account['first_name']
+            session['last_name'] = account['last_name']
+            session['city'] = account['city']
+            session['gender'] = account['gender']
+            session['dob'] = account['dob']
+            session['martial_status'] = account['martial_status']
+            session['age'] = account['age']
+            session['number'] = account['number']
+            session['url'] = account['url']
 
     def CreateRepository(self, file_name, mode):
         username = session['username']
@@ -113,7 +227,8 @@ class Database:
 
     def FetchFilesByUserRepo(self, username, repo):
         cur = self.mysql.connection.cursor()
-        cur.execute("SELECT * FROM file_details where username=%s and repo_name=%s and mode='Public'", (username, repo,))
+        cur.execute("SELECT * FROM file_details where username=%s and repo_name=%s and mode='Public'",
+                    (username, repo,))
         data = cur.fetchall()
         cur.close()
         model_instances = []

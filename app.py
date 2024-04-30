@@ -3,7 +3,7 @@ import time
 from urllib.parse import urlparse, quote
 
 import requests
-from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify, send_file
+from flask import Flask, Blueprint,render_template, request, redirect, url_for, session, flash, jsonify, send_file
 from flask_mysqldb import MySQL
 import MySQLdb.cursors
 import re
@@ -16,11 +16,13 @@ from firebase_admin import credentials, storage
 from werkzeug.utils import secure_filename
 
 import ParseFileData
+import admin_app
 import constants as ckey
-from Extras import get_media_type, download_folder_from_firebase
+from Extras import get_media_type
 
 from database import Database
 from login_system import LoginSystem
+
 
 app = Flask(__name__)
 
@@ -40,6 +42,8 @@ firebase_admin.initialize_app(cred, {
 
 bucket = storage.bucket()
 
+def getMysql():
+    return mysql
 
 # LANDING PAGE ROUTER
 
@@ -57,7 +61,10 @@ def login():
         msg = "Incorrect Username or Password!"
         return render_template("login.html", msg=msg)
     elif re == 1:
-        return redirect('/dashboard')
+        if session['username'] == "admin":
+            return redirect('/admin')
+        else:
+            return redirect('/dashboard')
 
     if 'loginMsg' in session:
         msg = session['loginMsg']
@@ -89,6 +96,8 @@ def dashboard():
 
     if var:
         username = session['username']
+        if username == "admin":
+            return redirect('/admin/dashboard')
         email = session['email']
         pChar = username[0]
         gName = username
@@ -122,7 +131,6 @@ def my_projects():
         email = session['email']
         pChar = username[0]
         gName = username
-        storage = 0
         per = 10
         file_array = Database(mysql).FetchFiles(username)
         file_map = ParseFileData.ParseFileData().remake(file_array)
@@ -132,20 +140,13 @@ def my_projects():
             array_size = 0
         else:
             array_size = file_map.size()
-        if 'usedStorage' in session:
-            storage = session['usedStorage']
-            if storage is not None:
-                storage = int(storage)
-                per = (storage / 20) * 100
-            else:
-                storage = 0
 
         if 'first_name' in session:
             a = session['first_name']
             if a is not None:
                 gName = a
                 pChar = a[0]
-        return render_template("my-projects.html", storage=storage,
+        return render_template("my-projects.html",
                                per=per, fname=gName, uname=username,
                                email=email, letter=pChar, file_map=file_map, array_size=array_size)
     else:
@@ -254,7 +255,10 @@ def discussions():
             if a is not None:
                 gName = a
                 pChar = a[0]
-        return render_template("discuss.html", fname=gName, uname=username, email=email, letter=pChar)
+        if username == "admin":
+            return render_template("admin-discuss.html", fname=gName, uname=username, email=email, letter=pChar)
+        else:
+            return render_template("discuss.html", fname=gName, uname=username, email=email, letter=pChar)
     else:
         return redirect('/login')
 
@@ -295,7 +299,129 @@ def create_project():
 
 @app.route('/settings')
 def my_settings():
-    return;
+    if 'loggedin' in session:
+        var = session['loggedin']
+    else:
+        var = False
+
+    if var:
+        username = session['username']
+        email = session['email']
+        pChar = username[0]
+        gName = username
+        username = username.replace("?", "")
+        user = Database(mysql).FetchSingleUser(username)
+
+        file_array = Database(mysql).FetchFiles(username)
+        file_map = ParseFileData.ParseFileData().remake(file_array)
+
+        if file_array is None:
+            array_size = 0
+        else:
+            array_size = file_map.size()
+
+        al = None
+        if 'settingsAlert' in session:
+            al = session['settingsAlert']
+            session.pop('settingsAlert', None)
+
+        if 'first_name' in session:
+            a = session['first_name']
+            if a is not None:
+                gName = a
+                pChar = a[0]
+        return render_template("user-settings.html", fname=gName, uname=username,
+                               email=email, letter=pChar, array_size=array_size, user=user, file_map=file_map, al=al)
+    else:
+        return redirect('/login')
+
+
+@app.route('/edit-profile', methods=['GET', 'POST'])
+def edit_profile():
+    if request.method == 'POST':
+
+        first_name = request.form.get("firstName")
+        last_name = request.form.get("lastName")
+        user_name = request.form.get("username")
+        city = request.form.get("city")
+        genderM = request.form.get("male")
+        genderF = request.form.get("female")
+        dob = request.form.get("dob")
+        status = request.form.get("martial")
+        age = request.form.get("age")
+
+        if user_name is not None and not user_name == session['username']:
+            nm = Database(mysql).FetchSingleUser(user_name)
+            if nm:
+                session['settingsAlert'] = "Username already exists!"
+                return redirect('/settings')
+            else:
+                Database(mysql).InsertUserName(user_name)
+
+        if first_name is not None:
+            Database(mysql).InsertFirstName(first_name)
+        if last_name is not None:
+            Database(mysql).InsertLastName(last_name)
+        if city is not None:
+            Database(mysql).InsertCity(city)
+        if genderM is not None:
+            Database(mysql).InsertGender("Male")
+        if genderF is not None:
+            Database(mysql).InsertGender("Female")
+        if dob is not None:
+            Database(mysql).InsertDOB(dob)
+        if status is not None:
+            Database(mysql).InsertMartialStatus(status)
+        if age is not None:
+            if age == "12-18":
+                ag = 1
+            elif age == "19-32":
+                ag = 2
+            elif age == "33-45":
+                ag = 3
+            elif age == "46-62":
+                ag = 4
+            else:
+                ag = 5
+            Database(mysql).InsertAge(ag)
+        return redirect('/settings')
+    return request.method
+
+
+@app.route('/edit-password', methods=['GET', 'POST'])
+def edit_password():
+    npass = request.form.get("npass")
+    vpass = request.form.get("vpass")
+    if npass is None:
+        session['settingsAlert'] = "Please enter a password!"
+        return redirect('/settings')
+    elif vpass is None:
+        session['settingsAlert'] = "Please verify the password!"
+        return redirect('/settings')
+    elif npass != vpass:
+        session['settingsAlert'] = "Passwords does not match!"
+        return redirect('/settings')
+    else:
+        Database(mysql).InsertPassword(npass)
+        session['settingsAlert'] = "Password changed successfully!"
+        return redirect('/settings')
+
+
+@app.route('/edit-contact', methods=['GET', 'POST'])
+def edit_contact():
+    regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b'
+    email = request.form.get('email')
+    phone = request.form.get('phone')
+    print(phone + "")
+    if email is not None:
+        if re.fullmatch(regex, email):
+            Database(mysql).InsertEmail(email)
+        else:
+            session['settingsAlert'] = "Incorrect email format!"
+    if phone is not None:
+        Database(mysql).InsertPhone(phone)
+        print(phone + "")
+    return redirect('/settings')
 
 
 @app.route('/my-profile')
@@ -331,7 +457,6 @@ def my_profile():
                                email=email, letter=pChar, array_size=array_size, user=user, file_map=file_map)
     else:
         return redirect('/login')
-
 
 
 @app.route('/logout')
@@ -705,6 +830,27 @@ def upload_file():
     return jsonify({'message': 'Files uploaded successfully'}), 200
 
 
+@app.route('/upload-single', methods=['POST'])
+def upload_single_file():
+    if 'files[]' not in request.files:
+        return jsonify({'error': 'No files found in request'}), 400
+
+    files = request.files.getlist('files[]')
+
+    i = 0
+    for file in files:
+        # Upload file to Firebase Storage
+        my_path = "profileimage/" + session['username']
+        blob = bucket.blob(f'{my_path}/{session['username']}')
+        blob.upload_from_file(file)
+        expiration_time = datetime.datetime.now() + datetime.timedelta(days=365)  # Set expiration to 1 year from now
+        url = blob.generate_signed_url(expiration=expiration_time)
+        Database(mysql).InsertProfileImage(url)
+        i = i + 1
+
+    return jsonify({'message': 'Files uploaded successfully'}), 200
+
+
 @app.route('/star/<repo_name>/<st>', methods=['POST', 'GET'])
 def star_a_file(repo_name, st):
     Database(mysql).ChangeStarred(repo_name, st)
@@ -754,21 +900,19 @@ def download_folder_of_user(username, repo_name):
     return render_template('download-page.html', username=username, repo_name=repo_name)
 
 
-@app.route('/temp')
-def new_temp():
-    return render_template('temp.html')
+# Admin routers
+@app.route('/admin')
+@app.route('/admin/dashboard')
+def admin_dash():
+    if session['username'] != "admin":
+        return redirect('/login')
+    return admin_app.admin_dashboard(mysql)
 
-
-@app.route('/new-temp')
-def new_temp2():
-    return render_template('download-page.html')
-
-
-def hello():
-    ins = Database(mysql)
-    ins.InsertUsers()
-    return 'HELLO'
-
+@app.route('/admin/delete')
+def admin_delete():
+    if session['username'] != "admin":
+        return redirect('/login')
+    return admin_app.admin_delete(mysql)
 
 if __name__ == '__main__':
     app.run(debug=True)
