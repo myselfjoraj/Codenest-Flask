@@ -3,7 +3,7 @@ import time
 from urllib.parse import urlparse, quote
 
 import requests
-from flask import Flask, Blueprint,render_template, request, redirect, url_for, session, flash, jsonify, send_file
+from flask import Flask, Blueprint, render_template, request, redirect, url_for, session, flash, jsonify, send_file
 from flask_mysqldb import MySQL
 import MySQLdb.cursors
 import re
@@ -23,7 +23,6 @@ from Extras import get_media_type
 from database import Database
 from login_system import LoginSystem
 
-
 app = Flask(__name__)
 
 app.secret_key = ckey.getSecretKey()
@@ -42,8 +41,10 @@ firebase_admin.initialize_app(cred, {
 
 bucket = storage.bucket()
 
+
 def getMysql():
     return mysql
+
 
 # LANDING PAGE ROUTER
 
@@ -580,8 +581,8 @@ def show_folder_files(repo_name, file_name, no):
     else:
         array_size = file_map.size()
 
-    return render_template('folder-open.html', file_map=file_map, array_size=array_size, repo_name=repo_name,
-                           f_no=int(no) + 1, uname=None)
+    return render_template('folder-open.html', file_map=file_map, array_size=array_size,
+                           repo_name=repo_name, f_no=int(no) + 1, uname=None)
 
 
 @app.route('/<username>/repo/<repo_name>')
@@ -723,8 +724,8 @@ def search_codenext_users(name):
         return redirect('/login')
 
 
-@app.route('/user/<username>')
-def user_profile(username):
+@app.route('/user/<uname>')
+def user_profile(uname):
     if 'loggedin' in session:
         var = session['loggedin']
     else:
@@ -736,9 +737,9 @@ def user_profile(username):
         pChar = username[0]
         gName = username
         username = username.replace("?", "")
-        user = Database(mysql).FetchSingleUser(username)
+        user = Database(mysql).FetchSingleUser(uname)
 
-        file_array = Database(mysql).FetchFilesByPublicUser(username)
+        file_array = Database(mysql).FetchFilesByPublicUser(uname)
         file_map = ParseFileData.ParseFileData().remake(file_array)
 
         if file_array is None:
@@ -900,6 +901,10 @@ def download_folder_of_user(username, repo_name):
     return render_template('download-page.html', username=username, repo_name=repo_name)
 
 
+
+
+
+
 # Admin routers
 @app.route('/admin')
 @app.route('/admin/dashboard')
@@ -908,11 +913,26 @@ def admin_dash():
         return redirect('/login')
     return admin_app.admin_dashboard(mysql)
 
+
 @app.route('/admin/delete')
 def admin_delete():
     if session['username'] != "admin":
         return redirect('/login')
     return admin_app.admin_delete(mysql)
+
+
+@app.route('/admin/user/<uname>')
+def admin_user_profile(uname):
+    return admin_app.admin_show_profile(mysql, uname)
+
+@app.route('/admin/<username>/repo/<repo_name>/<file_name>/<no>')
+def admin_folder_open(username,repo_name,file_name,no):
+    return admin_app.show_folder_files_of_user(username,repo_name,file_name,no,mysql)
+
+@app.route('/admin/<username>/repo/<repo_name>')
+def admin_show_files_of_user(username,repo_name):
+    return admin_app.show_folders_of_user(username,repo_name,mysql)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
