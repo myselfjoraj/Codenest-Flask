@@ -908,18 +908,24 @@ def download_folder_of_user(username, repo_name):
 
 # Admin routers
 @app.route('/admin')
-@app.route('/admin/dashboard')
+@app.route('/admin/dashboard', methods=['GET', 'POST'])
 def admin_dash():
     if session['username'] != "admin":
         return redirect('/login')
-    return admin_app.admin_dashboard(mysql)
+    if request.method == 'GET':
+        value = request.args.get('username')
+        return admin_app.admin_dashboard(mysql, value)
+    return admin_app.admin_dashboard(mysql, None)
 
 
-@app.route('/admin/delete')
+@app.route('/admin/delete', methods=['GET', 'POST'])
 def admin_delete():
     if session['username'] != "admin":
         return redirect('/login')
-    return admin_app.admin_delete(mysql)
+    if request.method == 'GET':
+        value = request.args.get('username')
+        return admin_app.admin_delete(mysql, value)
+    return admin_app.admin_delete(mysql, None)
 
 
 @app.route('/admin/user/<uname>')
@@ -941,8 +947,9 @@ def admin_show_files_of_user(username, repo_name):
 def admin_display_file(file_name, link):
     return admin_app.display_file(file_name, link, bucket)
 
+
 @app.route('/admin/<username>/delete/<repo_name>', methods=['POST'])
-def admin_delete_a_repo(repo_name,username):
+def admin_delete_a_repo(repo_name, username):
     print("triggered delete for " + repo_name)
     Database(mysql).DeleteAdminRepo(repo_name, username)
     return "success", 200
@@ -953,6 +960,29 @@ def admin_delete_a_repo_page(repo_name, return_page, username):
     print("triggered delete for " + repo_name)
     Database(mysql).DeleteAdminRepo(repo_name, username)
     return redirect('/' + return_page)
+
+
+@app.route('/admin/user/add')
+def admin_add_user_view():
+    return render_template('admin-add-user.html')
+
+@app.route('/admin/add-user', methods=['GET', 'POST'])
+def admin_add_user():
+    username = request.form['username']
+    password = request.form['password']
+    r_password = request.form['repeatpassword']
+    first_name = request.form['firstname']
+    last_name = request.form['lastname']
+    phone = request.form['phone']
+    email = request.form['email']
+
+    return request.form
+
+
+
+@app.route('/test', methods=['GET', 'POST'])
+def test():
+    return request.form
 
 
 if __name__ == '__main__':

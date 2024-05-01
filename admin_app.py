@@ -23,13 +23,19 @@ from database import Database
 from login_system import LoginSystem
 
 
-def admin_dashboard(mysql):
-    user_array = Database(mysql).FetchEveryUser()
+def admin_dashboard(mysql, name):
+    if name is not None:
+        user_array = Database(mysql).FetchUser(name)
+    else:
+        user_array = Database(mysql).FetchEveryUser()
     return render_template('admin-dash.html', user_array=user_array)
 
 
-def admin_delete(mysql):
-    user_array = Database(mysql).FetchEveryUser()
+def admin_delete(mysql, name):
+    if name is not None:
+        user_array = Database(mysql).FetchUser(name)
+    else:
+        user_array = Database(mysql).FetchEveryUser()
     return render_template('admin-delete.html', user_array=user_array)
 
 

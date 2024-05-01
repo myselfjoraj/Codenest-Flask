@@ -214,9 +214,9 @@
                            <div class="row justify-content-between">
                               <div class="col-sm-6 col-md-6">
                                  <div id="user_list_datatable_info" class="dataTables_filter">
-                                    <form class="mr-3 position-relative">
+                                    <form class="mr-3 position-relative" action="/admin/delete" method="get">
                                        <div class="form-group mb-0">
-                                          <input type="search" class="form-control" id="exampleInputSearch" placeholder="Search" aria-controls="user-list-table">
+                                          <input type="search" name="username" class="form-control" id="exampleInputSearch" placeholder="Search" aria-controls="user-list-table">
                                        </div>
                                     </form>
                                  </div>
@@ -252,7 +252,7 @@
                                         <td class="text-center"><img class="rounded img-fluid avatar-40" src="{{user.url}}" alt="profile"></td>
                                         {% endif %}
 
-                                       <td>{{user.username}}</td>
+                                       <td><a href="/admin/user/{{user.username}}">{{user.username}}</a></td>
                                        <td>{{user.email}}</td>
                                        <td>{{user.first_name}}</td>
                                         <td>{{user.last_name}}</td>
@@ -260,7 +260,19 @@
                                         <td>{{user.gender}}</td>
                                         <td>{{user.dob}}</td>
                                         <td>{{user.martial_status}}</td>
-                                        <td>{{user.age}}</td>
+                                        {% if user.age is not none and user.age == 1 %}
+                                           <td>12-18</td>
+                                           {% elif user.age is not none and user.age == 2 %}
+                                           <td>19-32</td>
+                                           {% elif user.age is not none and user.age == 3 %}
+                                           <td>33-45</td>
+                                           {% elif user.age is not none and user.age == 4 %}
+                                           <td>46-62</td>
+                                           {% elif user.age is not none and user.age == 5 %}
+                                           <td>63 > </td>
+                                           {% else %}
+                                           <td>{{user.age}}</td>
+                                           {% endif %}
                                         <td>{{user.number}}</td>
                                        <td>
                                           <div class="flex align-items-center list-user-action">

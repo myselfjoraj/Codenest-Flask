@@ -15,6 +15,13 @@ class Database:
     def __init__(self, sql):
         self.mysql = sql
 
+    def InsertUserAdmin(self, username, password, email, first_name, last_name, phone):
+        cursor = self.mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('INSERT INTO users(username,password,email,first_name,last_name,number) VALUES (% s, % s, % s,'
+                       '% s, % s, % s)',
+                       (username, password, email, first_name, last_name, phone))
+        self.mysql.connection.commit()
+
     def InsertUsers(self, username, password, email):
         cursor = self.mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('INSERT INTO users(username,password,email) VALUES (% s, % s, % s)',
