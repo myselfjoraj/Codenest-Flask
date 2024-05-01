@@ -941,6 +941,19 @@ def admin_show_files_of_user(username, repo_name):
 def admin_display_file(file_name, link):
     return admin_app.display_file(file_name, link, bucket)
 
+@app.route('/admin/<username>/delete/<repo_name>', methods=['POST'])
+def admin_delete_a_repo(repo_name,username):
+    print("triggered delete for " + repo_name)
+    Database(mysql).DeleteAdminRepo(repo_name, username)
+    return "success", 200
+
+
+@app.route('/admin/<username>/delete/<repo_name>/<return_page>', methods=['POST', 'GET'])
+def admin_delete_a_repo_page(repo_name, return_page, username):
+    print("triggered delete for " + repo_name)
+    Database(mysql).DeleteAdminRepo(repo_name, username)
+    return redirect('/' + return_page)
+
 
 if __name__ == '__main__':
     app.run(debug=True)

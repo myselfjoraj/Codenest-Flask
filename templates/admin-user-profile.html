@@ -348,7 +348,7 @@
                                                 </span>
                                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton10">
                                                     {% if uname == user.username or uname == "admin"%}
-                                                <a class="dropdown-item" href="/delete/{{key}}/dashboard" id="delete" ><i class="ri-delete-bin-6-fill mr-2"></i>&nbsp;Delete</a>
+                                                <a class="dropdown-item" href="/admin/{{values[2].username}}/delete/{{key}}/dashboard" id="delete" ><i class="ri-delete-bin-6-fill mr-2"></i>&nbsp;Delete</a>
                                                     {% endif %}
                                                 <a class="dropdown-item" href="/{{user.username}}/download/{{key}}"><i class="ri-file-download-fill mr-2"></i>&nbsp;Download</a>
                                                 </div>

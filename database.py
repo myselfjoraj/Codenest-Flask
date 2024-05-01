@@ -477,6 +477,13 @@ class Database:
         print("deleted " + repo_name)
         self.mysql.connection.commit()
 
+    def DeleteAdminRepo(self, repo_name, username):
+        cursor = self.mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('''DELETE FROM file_details WHERE username = %s and repo_name = %s''',
+                       (username, repo_name,))
+        print("deleted " + repo_name)
+        self.mysql.connection.commit()
+
     def getDiscussionsTableCreationStatement():
         return ''' create table discussions(id int primary key auto_increment,username varchar(22),message text,timestamp varchar(22)); '''
 
