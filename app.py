@@ -484,7 +484,7 @@ def logout():
 @app.route('/view/<file_name>/<path:link>')
 def display_file(file_name, link):
     if session['username'] == 'admin':
-        return redirect('/admin/view/'+ file_name +'/'+link)
+        return redirect('/admin/view/' + file_name + '/' + link)
     type_media = "application"
     tm_link = link
     try:
@@ -935,6 +935,7 @@ def admin_folder_open(username, repo_name, file_name, no):
 @app.route('/admin/<username>/repo/<repo_name>')
 def admin_show_files_of_user(username, repo_name):
     return admin_app.show_folders_of_user(username, repo_name, mysql)
+
 
 @app.route('/admin/view/<file_name>/<path:link>')
 def admin_display_file(file_name, link):
