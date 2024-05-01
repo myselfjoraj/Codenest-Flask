@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot Example</title>
+</head>
+<body>
+    <div id="chat-container">
+        <div id="chat-box"></div>
+        <input type="text" id="user-input" placeholder="Type your message...">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+
+    <script>
+        async function sendMessage() {
+    const userInput = document.getElementById('user-input').value;
+    const chatBox = document.getElementById('chat-box');
+
+    // Display user input
+    chatBox.innerHTML += `<p>You: ${userInput}</p>`;
+
+    // Call BrainShop API via CORS proxy
+    const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+    const apiUrl = `http://api.brainshop.ai/get?bid=181681&key=cpsSyYyIGcb8jAny&uid=abhijith&msg=${encodeURIComponent(userInput)}`;
+    const response = await fetch(proxyUrl + apiUrl,{
+      headers: {
+      'Access-Control-Allow-Origin': '*',
+      Accept: 'application/json',
+    },
+    });
+
+    const responseData = await response.json();
+
+    // Display chatbot response
+    chatBox.innerHTML += `<p>Chatbot: ${responseData.cnt}</p>`;
+
+    // Clear input field
+    document.getElementById('user-input').value = '';
+}
+    </script>
+</body>
+</html>
