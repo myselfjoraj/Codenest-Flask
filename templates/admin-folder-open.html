@@ -89,13 +89,6 @@
                        <ul id="page-files" class="iq-submenu collapse" data-parent="#iq-sidebar-toggle">
                        </ul>
                     </li>
-                    <li class="">
-                           <a href="/explore" class="">
-                               <i class="las la-stopwatch iq-arrow-left"></i><span>Codenext Repo</span>
-                           </a>
-                       <ul id="page-folders" class="iq-submenu collapse" data-parent="#iq-sidebar-toggle">
-                       </ul>
-                    </li>
                     <li class=" ">
                            <a href="/discussions" class="">
                              <i class="las la-envelope-square"></i><span>Discussions</span>
@@ -139,63 +132,10 @@
                   </a>
               </div>
                   <div class="iq-search-bar device-search">
-                      <form id="searchForm" action="">
-                          <div class="input-prepend input-append">
-                              <div class="btn-group">
-                                  <label class="dropdown-toggle searchbox" data-toggle="dropdown">
-                                  <input id="searchInput" class="dropdown-toggle  text search-input" type="text"  placeholder="Type here to search...">
-                                  <a class="search-link" href="#"><i class="ri-search-line"></i></a>
-                                  <span class="caret"><!--icon--></span>
-                                  </label>
-                                  <ul class="dropdown-menu">
-                                      <li><a id="my-repo" href="#" ><div class="item">Search in my repositories</div></a></li>
-                                      <li><a id="all-repo" href="#" ><div class="item">Search in codenext repositories</div></a></li>
-                                      <li><a id="all-users" href="#" ><div class="item">Search for codenext users</div></a></li>
-                                  </ul>
-                              </div>
-                          </div>
-                      </form>
+
+
                   </div>
-                  <script>
-                     document.addEventListener('DOMContentLoaded', function() {
-                         const searchInput = document.getElementById('searchInput');
-                         const searchMy   = document.getElementById('my-repo');
-                         const searchRepo = document.getElementById('all-repo');
-                         const searchUser = document.getElementById('all-users');
-                         const searchForm = document.getElementById('searchForm');
 
-                         searchInput.addEventListener('input', function() {
-                             const inputValue = searchInput.value.trim();
-                             event.preventDefault(); // Prevent default link behavior
-                             searchForm.action = `/search/me/${encodeURIComponent(inputValue)}`; // Set form action
-                         });
-
-                         // Attach event listeners to the dropdown links
-                         searchMy.addEventListener('click', function(event) {
-                             const inputValue = searchInput.value.trim();
-                             event.preventDefault(); // Prevent default link behavior
-                             searchForm.action = `/search/me/${encodeURIComponent(inputValue)}`; // Set form action
-                             searchForm.submit(); // Submit the form
-                         });
-
-                         searchRepo.addEventListener('click', function(event) {
-                             const inputValue = searchInput.value.trim();
-                             event.preventDefault(); // Prevent default link behavior
-                             searchForm.action = `/search/codenext/${encodeURIComponent(inputValue)}`; // Set form action
-                             searchForm.submit(); // Submit the form
-                         });
-
-                         searchUser.addEventListener('click', function(event) {
-                             const inputValue = searchInput.value.trim();
-                             event.preventDefault(); // Prevent default link behavior
-                             searchForm.action = `/search/users/${encodeURIComponent(inputValue)}`; // Set form action
-                             searchForm.submit(); // Submit the form
-                         });
-
-                     });
-
-
-                  </script>
 
                   <div class="d-flex align-items-center">
                       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"  aria-label="Toggle navigation">

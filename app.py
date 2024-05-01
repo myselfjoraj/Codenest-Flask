@@ -283,7 +283,10 @@ def ai_chat():
             if a is not None:
                 gName = a
                 pChar = a[0]
-        return render_template("codenext-ai.html", fname=gName, uname=username, email=email, letter=pChar)
+        if username == 'admin':
+            return render_template("admin-codenext-ai.html", fname=gName, uname=username, email=email, letter=pChar)
+        else:
+            return render_template("codenext-ai.html", fname=gName, uname=username, email=email, letter=pChar)
     else:
         return redirect('/login')
 
@@ -480,6 +483,8 @@ def logout():
 
 @app.route('/view/<file_name>/<path:link>')
 def display_file(file_name, link):
+    if session['username'] == 'admin':
+        return redirect('/admin/view/'+ file_name +'/'+link)
     type_media = "application"
     tm_link = link
     try:
@@ -901,10 +906,6 @@ def download_folder_of_user(username, repo_name):
     return render_template('download-page.html', username=username, repo_name=repo_name)
 
 
-
-
-
-
 # Admin routers
 @app.route('/admin')
 @app.route('/admin/dashboard')
@@ -925,13 +926,19 @@ def admin_delete():
 def admin_user_profile(uname):
     return admin_app.admin_show_profile(mysql, uname)
 
+
 @app.route('/admin/<username>/repo/<repo_name>/<file_name>/<no>')
-def admin_folder_open(username,repo_name,file_name,no):
-    return admin_app.show_folder_files_of_user(username,repo_name,file_name,no,mysql)
+def admin_folder_open(username, repo_name, file_name, no):
+    return admin_app.show_folder_files_of_user(username, repo_name, file_name, no, mysql)
+
 
 @app.route('/admin/<username>/repo/<repo_name>')
-def admin_show_files_of_user(username,repo_name):
-    return admin_app.show_folders_of_user(username,repo_name,mysql)
+def admin_show_files_of_user(username, repo_name):
+    return admin_app.show_folders_of_user(username, repo_name, mysql)
+
+@app.route('/admin/view/<file_name>/<path:link>')
+def admin_display_file(file_name, link):
+    return admin_app.display_file(file_name, link, bucket)
 
 
 if __name__ == '__main__':

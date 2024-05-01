@@ -62,7 +62,7 @@
               <div class="new-create select-dropdown input-prepend input-append">
                   <div class="btn-group">
                       <div data-toggle="dropdown">
-                      <div class="search-query selet-caption"><i class="las la-plus pr-2"></i>add a user</div><span class="search-replace"></span>
+                      <div class="search-query selet-caption"><i class="las la-plus pr-2"></i>Create</div><span class="search-replace"></span>
                       <span class="caret"><!--icon--></span>
                       </div>
                       <input type="file" id="fileInput" directory="directory" multiple webkitdirectory="webkitdirectory" style="display: none;">
@@ -74,7 +74,7 @@
               </div>
               <nav class="iq-sidebar-menu">
                 <ul id="iq-sidebar-toggle" class="iq-menu">
-                    <li class=" active">
+                    <li class=" ">
                            <a href="/dashboard" class="">
                                <i class="las la-home iq-arrow-left"></i><span>Dashboard</span>
                            </a>
@@ -82,7 +82,7 @@
                        </ul>
                     </li>
 
-                    <li class="">
+                    <li class="active">
                            <a href="/admin/delete" class="">
                                <i class="lar la-file-alt iq-arrow-left"></i><span>Delete Users</span>
                            </a>
@@ -207,177 +207,89 @@
 
 
 
-
-
       <div class="content-page">
-      <div class="container-fluid">
-         <div class="row">
-            <div class="col-lg-12">
-               <div class="card car-transparent">
-                  <div class="card-body p-0" style="margin-left: 0%;">
-                     <div class="position-relative" style="border: 50%; border-radius: 50%; padding: 20px;">
-                         {% if user.url is none%}
-                        <img src="/static/assets/images/avatar.png" class="" alt="" style=" height:200px;width:200px; border-radius: 50%;">
-                         {% else %}
-                         <img src="{{user.url}}" class="" alt="" style=" height:200px;width:200px; border-radius: 50%;">
-                         {% endif %}
-                     </div>
-                     <div class="profile-overly">
-<!--                        <h2>{{user.username}}</h2>-->
-<!--                        <span>@{{user.username}}</span>-->
-                     </div>
-                  </div>
-
-                  <div class="card-header">
-                    <div class="header-title">
-                        {% if user.first_name is none%}
-                       <h4 class="card-title">{{user.username}}</h4>
-                        {% elif user.last_name is none %}
-                        <h4 class="card-title">{{user.first_name}}</h4>
-                        {% else %}
-                        <h4 class="card-title">{{user.first_name}} {{user.last_name}}</h4>
-                        {% endif %}
-                    </div>
-                 </div>
-
-                 <div class="card-body">
-                    <ul class="list-inline p-0 m-0 iq-contact-rest">
-
-                        <li class="mb-3 d-flex">
-                          <span><i class="fas fa-at mr-3 font-size-20"></i></span>
-                          <p class="mb-0 font-size-16 line-height">{{user.username}}</p>
-                       </li>
-
-                        {% if user.city is not none%}
-                       <li class="mb-3 d-flex">
-                          <span><i class="fas fa-map-marker-alt mr-3 font-size-20"></i></span>
-                          <p class="mb-0 font-size-16 line-height">{{user.city}}</p>
-                       </li>
-                        {% endif %}
-
-                        {% if user.number is not none%}
-                       <li class="mb-3 d-flex">
-                          <span><i class="fas fa-phone-volume mr-3 font-size-20"></i></span>
-                          <p class="mb-0 font-size-16 line-height">{{user.number}}</p>
-                       </li>
-                        {% endif %}
-
-                       <li class="mb-3 d-flex">
-                          <span><i class="fas fa-envelope-open mr-3 font-size-20"></i></span>
-                          <p class="mb-0 font-size-16 line-height">{{user.email}}</p>
-                       </li>
-<!--                       <li class="mb-3 d-flex">-->
-<!--                          <a href="javascript:void(0);" class="d-flex">-->
-<!--                             <i class="fas fa-link  mr-3 font-size-20"></i>-->
-<!--                             <p class="mb-0 font-size-16 line-height">http://www.yourwebsitename.com </p>-->
-<!--                          </a>-->
-<!--                       </li>-->
-                    </ul>
-                 </div>
-
-               </div>
-            </div>
-
-               </div>
-            </div>
-
-
-
-
-            <div class="col-lg-12">
-                <div class="card card-block card-stretch card-height">
-                    <div class="card-body">
-                        <div class="col-lg-12">
-                            <div class="card card-block card-stretch card-transparent">
-                                <div class="card-header d-flex justify-content-between pb-0">
-                                    <div class="header-title">
-                                        {% if array_size > 0%}
-                                        <h4 class="card-title">All Repositories</h4>
-                                        {% else %}
-                                        {% if uname == user.username%}
-                                        <h4 class="card-title">No Repositories Available</h4>
-                                        {% else %}
-                                        <h4 class="card-title">No Public Repositories Available</h4>
-                                        {% endif %}
-                                        {% endif %}
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card-transparent card-block card-stretch card-height mb-3">
+                        <div class="d-flex justify-content-between">
+                            <div class="select-dropdown input-prepend input-append">
+                                <div class="btn-group">
+                                    <div data-toggle="dropdown">
+<!--                                    <div class="dropdown-toggle search-query">Welcome {{uname}},</div><span class="search-replace"></span>-->
+                                    <span class="caret"><!--icon--></span>
                                     </div>
+                                    <ul class="dropdown-menu">
+                                        <li><div class="item"><i class="ri-folder-add-line pr-3"></i>New Folder</div></li>
+                                        <li><div class="item"><i class="ri-file-upload-line pr-3"></i>Upload Files</div></li>
+                                        <li><div class="item"><i class="ri-folder-upload-line pr-3"></i>Upload Folders</div></li>
+                                    </ul>
                                 </div>
                             </div>
-                        </div>
-                        <div class="table-responsive">
-                            <table class="table mb-0 table-borderless tbl-server-info">
-                            <thead>
-                            {% if array_size > 0%}
-                                <tr>
-                                    <th scope="col">Name</th>
-                                    {% if uname == user.username or uname == "admin"%}
-                                    <th scope="col">Mode</th>
-                                    {% else %}
-                                    <th scope="col">Owner</th>
-                                    {% endif %}
-                                    <th scope="col">Last Edit</th>
-                                    <th scope="col">File Size</th>
-                                    <th scope="col"></th>
-                                </tr>
-                            {% endif %}
-                            </thead>
-                            <tbody>
-
-
-                                <!--      new row     -->
-                                {% for key, values in file_map.map.items() %}
-
-                                    <tr>
-                                        <td>
-                                            <div class="d-flex align-items-center">
-                                                <div class="icon-small bg-danger rounded mr-3">
-                                                    <i class="ri-file-excel-line"></i>
-                                                </div>
-                                                {% if uname == user.username %}
-                                                <a href="/repo/{{key}}">{{key}}</a></div>
-                                                {% else %}
-                                                <a href="/admin/{{user.username}}/repo/{{key}}">{{key}}</a></div>
-                                                {% endif %}
-
-
-                                        </td>
-                                        {% if uname == user.username or uname == "admin"%}
-                                        <td>{{values[2].mode}}</td>
-                                        {% else %}
-                                        <td>{{uname}}</td>
-                                        {% endif %}
-                                        <td>{{values[2].modified}}</td>
-                                        <td>{{values[1]}} KB</td>
-                                        <td>
-                                            <div class="dropdown">
-                                                <span class="dropdown-toggle" id="dropdownMenuButton10" data-toggle="dropdown">
-                                                    <i class="ri-more-fill"></i>
-                                                </span>
-                                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton10">
-                                                    {% if uname == user.username or uname == "admin"%}
-                                                <a class="dropdown-item" href="/delete/{{key}}/dashboard" id="delete" ><i class="ri-delete-bin-6-fill mr-2"></i>&nbsp;Delete</a>
-                                                    {% endif %}
-                                                <a class="dropdown-item" href="/{{user.username}}/download/{{key}}"><i class="ri-file-download-fill mr-2"></i>&nbsp;Download</a>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-
-                                    {% endfor %}
-
-
-
-                                <!--      new row     -->
-                            </tbody>
-                            </table>
+                            <div class="dashboard1-dropdown d-flex align-items-center">
+                                <div class="dashboard1-info">
+                                    <a href="#calander" class="collapsed" data-toggle="collapse" aria-expanded="false">
+                                        <i class="ri-arrow-down-s-line"></i>
+                                    </a>
+                                    <ul id="calander" class="iq-dropdown collapse list-inline m-0 p-0 mt-2">
+                                        <li class="mb-2">
+                                            <a href="#" data-toggle="tooltip" data-placement="right" title="Calander"><i
+                                                    class="las la-calendar iq-arrow-left"></i></a>
+                                        </li>
+                                        <li class="mb-2">
+                                            <a href="#" data-toggle="tooltip" data-placement="right" title="Keep"><i
+                                                    class="las la-lightbulb iq-arrow-left"></i></a>
+                                        </li>
+                                        <li>
+                                            <a href="#" data-toggle="tooltip" data-placement="right" title="Tasks"><i
+                                                    class="las la-tasks iq-arrow-left"></i></a>
+                                        </li>
+                                    </ul>
+                                 </div>
+                            </div>
                         </div>
                     </div>
                 </div>
+
+
+
+
+
+
+
+
+
+
+
+
+                <div class="col-lg-12">
+                    <div class="card card-block card-stretch card-height">
+                        <div class="card-body">
+                            <div class="col-lg-12">
+                                <div class="card card-block card-stretch card-transparent">
+                                    <div class="card-header d-flex justify-content-between pb-0">
+                                        <div class="header-title">
+                                            <h4 class="card-title">{{ file_name }}</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {% if media_type == "image" %}
+                            <img style="width:100%; height:80%;" src="{{ file_link }}">
+                            {% else %}
+                            <pre>{{ file_content }}</pre>
+                            {% endif %}
+                            <br>
+                            <a href="{{ file_link }}">Download File</a>
+
+                        </div>
+                    </div>
+                </div>
+
+
             </div>
-
-
-         </div>
-      </div>
+        </div>
       </div>
     </div>
     <!-- Wrapper End-->
@@ -386,8 +298,8 @@
             <div class="row">
                 <div class="col-lg-6">
                     <ul class="list-inline mb-0">
-                        <li class="list-inline-item"><a href="/privacy-policy">Privacy Policy</a></li>
-                        <li class="list-inline-item"><a href="/terms-of-service">Terms of Use</a></li>
+                        <li class="list-inline-item"><a href="../backend/privacy-policy.html">Privacy Policy</a></li>
+                        <li class="list-inline-item"><a href="../backend/terms-of-service.html">Terms of Use</a></li>
                     </ul>
                 </div>
                 <div class="col-lg-6 text-right">
@@ -406,16 +318,16 @@
     <script src="/static/assets/js/chart-custom.js"></script>
 
     <!--PDF-->
-    <script src="/static/vendor/doc-viewer/include/pdf/pdf.js"></script>
-
-    <script src="/static/vendor/doc-viewer/include/docx/jszip-utils.js"></script>
-    <script src="/static/vendor/doc-viewer/include/docx/mammoth.browser.min.js"></script>
-
-    <script src="/static/vendor/doc-viewer/include/PPTXjs/js/filereader.js"></script>
-    <script src="/static/vendor/doc-viewer/include/PPTXjs/js/d3.min.js"></script>
-    <script src="/static/vendor/doc-viewer/include/PPTXjs/js/nv.d3.min.js"></script>
-    <script src="/static/vendor/doc-viewer/include/PPTXjs/js/pptxjs.js"></script>
-    <script src="/static/vendor/doc-viewer/include/PPTXjs/js/divs2slides.js"></script>
+    <script src="/static/assets/vendor/doc-viewer/include/pdf/pdf.js"></script>
+    <!--Docs-->
+    <script src="/static/assets/vendor/doc-viewer/include/docx/jszip-utils.js"></script>
+    <script src="/static/assets/vendor/doc-viewer/include/docx/mammoth.browser.min.js"></script>
+    <!--PPTX-->
+    <script src="/static/assets/vendor/doc-viewer/include/PPTXjs/js/filereader.js"></script>
+    <script src="/static/assets/vendor/doc-viewer/include/PPTXjs/js/d3.min.js"></script>
+    <script src="/static/assets/vendor/doc-viewer/include/PPTXjs/js/nv.d3.min.js"></script>
+    <script src="/static/assets/vendor/doc-viewer/include/PPTXjs/js/pptxjs.js"></script>
+    <script src="/static/assets/vendor/doc-viewer/include/PPTXjs/js/divs2slides.js"></script>
     <!--All Spreadsheet -->
     <script src="/static/assets/vendor/doc-viewer/include/SheetJS/handsontable.full.min.js"></script>
     <script src="/static/assets/vendor/doc-viewer/include/SheetJS/xlsx.full.min.js"></script>
@@ -426,9 +338,6 @@
     <script src="/static/assets/js/doc-viewer.js"></script>
     <!-- app JavaScript -->
     <script src="/static/assets/js/app.js"></script>
-
-    <script type="module"  src="/static/main/js/selectupload.js"></script>
-<!--    <script type="module"  src="/static/main/js/file-actions.js"></script>-->
      <!-- Modal -->
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-xl" role="document">

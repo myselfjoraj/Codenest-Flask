@@ -343,7 +343,7 @@
               </div>
               <nav class="iq-sidebar-menu">
                 <ul id="iq-sidebar-toggle" class="iq-menu">
-                    <li class="">
+                    <li class=" ">
                            <a href="/dashboard" class="">
                                <i class="las la-home iq-arrow-left"></i><span>Dashboard</span>
                            </a>
@@ -358,14 +358,14 @@
                        <ul id="page-files" class="iq-submenu collapse" data-parent="#iq-sidebar-toggle">
                        </ul>
                     </li>
-                    <li class=" active">
+                    <li class=" ">
                            <a href="/discussions" class="">
                              <i class="las la-envelope-square"></i><span>Discussions</span>
                            </a>
                        <ul id="page-delete" class="iq-submenu collapse" data-parent="#iq-sidebar-toggle">
                        </ul>
                     </li>
-                    <li class=" ">
+                    <li class="active">
                      <a href="/codenext-ai" class="">
                        <i class="las la-cubes"></i><span>CodeNext Ai</span>
                      </a>
@@ -477,7 +477,7 @@
           <div class="container1">
             <!-- <img src="../assets/images/avatar.png" class="msgimg image-holder" /> -->
             <div class="" hidden>
-              <p style=" margin-top: 15px; font-weight: bolder; margin-left: 5px;"># D I S C U S S I O N S</p>
+              <p style=" margin-top: 15px; font-weight: bolder; margin-left: 5px;"># A  I</p>
             </div>
           </div>
         </div>
@@ -489,17 +489,18 @@
             <div class="chats">
               <!-- Message container -->
               <div id="msg-page" class="msg-page">
-                  <div class="received-chats-img">
+                <!-- Incoming messages -->
+
+                <div class="received-chats-img">
                                 <img src="static/assets/images/avatar.png" class="image-holder" />
                             </div>
-                <div class="received-msg">
+                            <div class="received-msg">
                                 <div class="received-msg-inbox">
-                                    <p><b>Codenext</b><br><br>Hi! Send a message to start a discussion.</p>
+                                    <p><b>Codenext Ai</b><br><br>Hi! Send a message to start.</p>
                                     <span class="time"></span>
                                 </div>
                             </div>
               </div>
-            </div>
 
             <!-- msg-bottom section -->
 
@@ -534,7 +535,7 @@
 
     function fetchMessages() {
         // Fetch messages from the server
-        fetch('/fetch_messages')
+        fetch('/fetch_ai_messages')
             .then(response => response.json())
             .then(messages => {
             const currentMessageCount = messages.length;
@@ -546,15 +547,22 @@
                             // Create a new message element
                             const msgElement = document.createElement('div');
                             msgElement.className = 'received-chats';
+                            var user_name = message.username
+                            if ( user_name != "{{uname}}"){
+                                user_name = "Codenext Ai"
+                            }
                             msgElement.innerHTML = `
                             <div class="received-chats-img">
                                 <img src="static/assets/images/avatar.png" class="image-holder" />
                             </div>
                             <div class="received-msg">
                                 <div class="received-msg-inbox">
-                                    <p><b>${message.username}</b><br><br>${message.text}</p>
-                                    <span class="time">${message.timestamp} <a href="#">Delete Message</a></span>
-                                    <br><br>
+                                    <p>
+                                    <b>${user_name}</b>
+                                    <br>
+                                    <br>${message.text}
+                                    </p>
+                                    <span class="time">${message.timestamp}</span>
                                 </div>
                             </div>
                         `;
@@ -587,12 +595,12 @@
         // Check if the message is not empty
         if (message !== '') {
             // Send the message to the server
-            fetch('/send_message', {
+            fetch('/send_ai_message', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ message: message })
+                body: JSON.stringify({ message: message, user: "me" })
             })
             .then(response => response.json())
             .then(data => {
@@ -601,12 +609,50 @@
                 messageInput.value = '';
                 // Fetch messages again to update the message list
                 fetchMessages();
+                sendMessageToAi(message);
             })
             .catch(error => {
                 console.error('Error sending message:', error);
             });
         }
     }
+
+       async function sendMessageToAi(message) {
+           // Call BrainShop API via CORS proxy
+           const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+           const apiUrl = `http://api.brainshop.ai/get?bid=181681&key=cpsSyYyIGcb8jAny&uid=abhijith&msg=${encodeURIComponent(message)}`;
+           const response = await fetch(proxyUrl + apiUrl,{
+               headers: {
+                   'Access-Control-Allow-Origin': '*',
+                   Accept: 'application/json',
+               },
+           });
+
+           const responseData = await response.json();
+
+           sendToDb(responseData.cnt);
+
+       }
+
+       function sendToDb(message){
+           fetch('/send_ai_message', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ message: message, user: "ai" })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Message sent successfully:', data);
+                // Clear the input field after sending the message
+                // Fetch messages again to update the message list
+                fetchMessages();
+            })
+            .catch(error => {
+                console.error('Error sending message:', error);
+            });
+       }
 
     // Fetch messages initially
     fetchMessages();

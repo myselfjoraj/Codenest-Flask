@@ -67,7 +67,7 @@ def admin_show_profile(mysql, uname):
         return redirect('/login')
 
 
-def show_folders_of_user(username, repo_name,mysql):
+def show_folders_of_user(username, repo_name, mysql):
     exist = Database(mysql).CheckForFolderName(username, repo_name)
     if not exist:
         return render_template("404.html")
@@ -95,3 +95,39 @@ def show_folder_files_of_user(username, repo_name, file_name, no, mysql):
 
     return render_template('admin-folder-open.html', file_map=file_map, array_size=array_size, repo_name=repo_name,
                            f_no=int(no) + 1, uname=username)
+
+
+def display_file(file_name, link, bucket):
+    type_media = "application"
+    tm_link = link
+    try:
+        expires = request.args.get('Expires')
+        google_access_id = request.args.get('GoogleAccessId')
+        signature = request.args.get('Signature')
+        signature = quote(signature, safe='')
+        tm_link = f"{link}?Expires={expires}&GoogleAccessId={google_access_id}&Signature={signature}"
+        parsed_url = urlparse(link)
+        file_path = parsed_url.path
+        file_path = file_path.replace("/codenext-d476c.appspot.com/", "")
+        print("File path:", file_path)
+        blob = bucket.blob(file_path)
+        # Save the file to a temporary location
+        media_type = get_media_type(file_path)
+        if media_type is not None:
+            media_type = media_type.split("/")[0]
+            print("Media Type:", media_type)
+            type_media = media_type
+        temp_file = tempfile.NamedTemporaryFile(delete=False)
+        blob.download_to_filename(temp_file.name)
+        # Open the file using the appropriate module or library based on the file type
+        # For example, if it's a text file, you can open it using the following code:
+        with open(temp_file.name, 'r') as f:
+            content = f.read()
+            print(content)
+            return render_template('admin-display.html', file_content=content, file_name=file_name, file_link=tm_link,
+                                   media_type=media_type)
+    except Exception as e:
+        print("Error:", e)
+        content = "Raw file cannot be displayed"
+        return render_template('admin-display.html', file_content=content, file_name=file_name, file_link=tm_link,
+                               media_type=type_media)
