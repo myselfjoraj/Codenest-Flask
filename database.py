@@ -36,7 +36,7 @@ class Database:
         session['username'] = username
         self.mysql.connection.commit()
 
-    def InsertAdminUserName(self,uname, username):
+    def InsertAdminUserName(self, uname, username):
         cursor = self.mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('UPDATE users SET username=% s WHERE username=%s',
                        (username, uname))
@@ -49,7 +49,7 @@ class Database:
                        (password, uname))
         self.mysql.connection.commit()
 
-    def InsertAdminPassword(self,uname,password):
+    def InsertAdminPassword(self, uname, password):
         cursor = self.mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('UPDATE users SET password=% s WHERE username=%s',
                        (password, uname))
@@ -63,7 +63,7 @@ class Database:
         session['email'] = email
         self.mysql.connection.commit()
 
-    def InsertAdminEmail(self,uname, email):
+    def InsertAdminEmail(self, uname, email):
         cursor = self.mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('UPDATE users SET email=% s WHERE username=%s',
                        (email, uname))
@@ -77,7 +77,7 @@ class Database:
         session['first_name'] = name
         self.mysql.connection.commit()
 
-    def InsertAdminFirstName(self,uname, name):
+    def InsertAdminFirstName(self, uname, name):
         cursor = self.mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('UPDATE users SET first_name=% s WHERE username=%s',
                        (name, uname))
@@ -90,7 +90,7 @@ class Database:
                        (name, uname))
         self.mysql.connection.commit()
 
-    def InsertAdminLastName(self,uname, name):
+    def InsertAdminLastName(self, uname, name):
         cursor = self.mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('UPDATE users SET last_name=% s WHERE username=%s',
                        (name, uname))
@@ -103,7 +103,7 @@ class Database:
                        (name, uname))
         self.mysql.connection.commit()
 
-    def InsertAdminCity(self,uname, name):
+    def InsertAdminCity(self, uname, name):
         cursor = self.mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('UPDATE users SET city=% s WHERE username=%s',
                        (name, uname))
@@ -116,7 +116,7 @@ class Database:
                        (name, uname))
         self.mysql.connection.commit()
 
-    def InsertAdminGender(self,uname, name):
+    def InsertAdminGender(self, uname, name):
         cursor = self.mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('UPDATE users SET gender=% s WHERE username=%s',
                        (name, uname))
@@ -129,7 +129,7 @@ class Database:
                        (name, uname))
         self.mysql.connection.commit()
 
-    def InsertAdminDOB(self,uname, name):
+    def InsertAdminDOB(self, uname, name):
         cursor = self.mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('UPDATE users SET dob=% s WHERE username=%s',
                        (name, uname))
@@ -142,7 +142,7 @@ class Database:
                        (name, uname))
         self.mysql.connection.commit()
 
-    def InsertAdminMartialStatus(self,uname, name):
+    def InsertAdminMartialStatus(self, uname, name):
         cursor = self.mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('UPDATE users SET martial_status=% s WHERE username=%s',
                        (name, uname))
@@ -195,7 +195,8 @@ class Database:
 
     def FetchUser(self, name):
         cur = self.mysql.connection.cursor()
-        cur.execute("SELECT * FROM users where not username='admin' and username=%s or first_name like %s", (name, '%' + name + '%',))
+        cur.execute("SELECT * FROM users where not username='admin' and username=%s or first_name like %s",
+                    (name, '%' + name + '%',))
         data = cur.fetchall()
         cur.close()
         model_instances = []
@@ -523,6 +524,15 @@ class Database:
     def CheckForFolderName(self, username, file_name):
         cursor = self.mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('SELECT * FROM file_details WHERE username = % s AND repo_name= % s', (username, file_name,))
+        files = cursor.fetchone()
+        return files
+
+    def CheckForRepoExistence(self, file_name):
+        cursor = self.mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        # Ensure file_name is properly formatted for SQL query
+        formatted_file_name = file_name.strip()  # Remove leading and trailing whitespace
+        # Execute the query with proper formatting
+        cursor.execute('SELECT * FROM file_details WHERE repo_name = %s', (formatted_file_name,))
         files = cursor.fetchone()
         return files
 

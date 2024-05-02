@@ -33,16 +33,19 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    document.getElementById('file-input').addEventListener('change', function(event) {
-        files = event.target.files; // Get the selected files
-        if (files && files.length > 0) {
-            // Perform actions with the selected files, such as uploading to the server
-            console.log('Selected files:', files);
-            uploadSingle(files);
-        } else {
-            console.log('No files selected.');
-        }
-    });
+    const inp = document.getElementById('file-input');
+    if (inp != null){
+        inp.addEventListener('change', function(event) {
+            files = event.target.files; // Get the selected files
+            if (files && files.length > 0) {
+                // Perform actions with the selected files, such as uploading to the server
+                console.log('Selected files:', files);
+                uploadSingle(files);
+            } else {
+                console.log('No files selected.');
+            }
+        });
+    }
 
     // Add event listener to handle file selection
     document.getElementById('btn-primary').addEventListener('click', function(event) {

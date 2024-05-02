@@ -328,7 +328,11 @@
                                                 {% endif %}
 
                                         </td>
+                                        {% if uname is none%}
+                                        <td>Me</td>
+                                        {% else %}
                                         <td>{{uname}}</td>
+                                        {% endif %}
                                         <td>{{values[2].modified}}</td>
                                         <td>{{values[1]}} KB</td>
                                         <td>

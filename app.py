@@ -548,7 +548,7 @@ def create_repos():
 
 @app.route('/check-repo-exists/<name>', methods=['GET', 'POST'])
 def check_repo_existence(name):
-    exist = Database(mysql).CheckForFolderName(session['username'], name)
+    exist = Database(mysql).CheckForRepoExistence(name)
     if exist:
         return jsonify({'status': 'Folder exists'}), 400
     else:
