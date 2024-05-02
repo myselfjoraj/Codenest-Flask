@@ -195,7 +195,7 @@ class Database:
 
     def FetchUser(self, name):
         cur = self.mysql.connection.cursor()
-        cur.execute("SELECT * FROM users where username=%s or first_name like %s", (name, '%' + name + '%',))
+        cur.execute("SELECT * FROM users where not username='admin' and username=%s or first_name like %s", (name, '%' + name + '%',))
         data = cur.fetchall()
         cur.close()
         model_instances = []
@@ -206,7 +206,7 @@ class Database:
 
     def FetchEveryUser(self):
         cur = self.mysql.connection.cursor()
-        cur.execute("SELECT * FROM users")
+        cur.execute("SELECT * FROM users where not username='admin'")
         data = cur.fetchall()
         cur.close()
         model_instances = []
@@ -479,6 +479,11 @@ class Database:
 
         # return model_instances
         return json_data
+
+    def DeleteMessage(self, username, id):
+        cursor = self.mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('''Delete from discussions where username=%s and id=%s''', (username, id))
+        self.mysql.connection.commit()
 
     def CreateAiMessage(self, message, isMine):
         username = session['username']

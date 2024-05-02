@@ -324,7 +324,7 @@
                                 <div class="card-header d-flex justify-content-between pb-0">
                                     <div class="header-title">
                                         {% if array_size > 0%}
-                                        <h4 class="card-title">All Repositories</h4>
+                                        <h4 class="card-title">Repositories</h4>
                                         {% else %}
                                         {% if uname == user.username%}
                                         <h4 class="card-title">No Repositories Available</h4>
@@ -376,7 +376,7 @@
                                         {% if uname == user.username %}
                                         <td>{{values[2].mode}}</td>
                                         {% else %}
-                                        <td>{{uname}}</td>
+                                        <td>{{user.username}}</td>
                                         {% endif %}
                                         <td>{{values[2].modified}}</td>
                                         <td>{{values[1]}} KB</td>

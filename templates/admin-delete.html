@@ -207,7 +207,7 @@
                   <div class="card">
                      <div class="card-header d-flex justify-content-between">
                         <div class="header-title">
-                           <h4 class="card-title">All Users</h4>
+                           <h4 class="card-title">Delete Users</h4>
                         </div>
                      </div>
                      <div class="card-body">
@@ -276,7 +276,7 @@
                                         <td>{{user.number}}</td>
                                        <td>
                                           <div class="flex align-items-center list-user-action">
-                                             <a class="iq-bg-primary" data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete" href="#"><i class="ri-delete-bin-line"></i></a>
+                                             <a class="iq-bg-primary deleteClick" href="/admin/delete/confirm/{{user.username}}"><i class="ri-delete-bin-line"></i></a>
                                           </div>
                                        </td>
                                     </tr>

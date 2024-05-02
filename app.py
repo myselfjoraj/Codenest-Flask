@@ -487,6 +487,15 @@ def display_file(file_name, link):
         return redirect('/admin/view/' + file_name + '/' + link)
     type_media = "application"
     tm_link = link
+
+    un = session['username']
+    pChar = un[0]
+    gName = un
+    if 'first_name' in session:
+        a = session['first_name']
+        if a is not None:
+            gName = a
+            pChar = a[0]
     try:
         expires = request.args.get('Expires')
         google_access_id = request.args.get('GoogleAccessId')
@@ -511,12 +520,12 @@ def display_file(file_name, link):
         with open(temp_file.name, 'r') as f:
             content = f.read()
             print(content)
-            return render_template('display.html', file_content=content, file_name=file_name, file_link=tm_link,
+            return render_template('display.html',fname=gName,letter=pChar, file_content=content, file_name=file_name, file_link=tm_link,
                                    media_type=media_type)
     except Exception as e:
         print("Error:", e)
         content = "Raw file cannot be displayed"
-        return render_template('display.html', file_content=content, file_name=file_name, file_link=tm_link,
+        return render_template('display.html',fname=gName,letter=pChar, file_content=content, file_name=file_name, file_link=tm_link,
                                media_type=type_media)
 
 
@@ -558,6 +567,15 @@ def show_folders(repo_name):
     if not exist:
         return render_template("404.html")
     username = session['username']
+    un = session['username']
+    pChar = un[0]
+    gName = un
+
+    if 'first_name' in session:
+        a = session['first_name']
+        if a is not None:
+            gName = a
+            pChar = a[0]
     try:
         file_array = Database(mysql).FetchFilesByRepo(username, repo_name)
         file_map = ParseFileData.ParseFileData().remakeRepo(file_array, 1)
@@ -568,7 +586,7 @@ def show_folders(repo_name):
         else:
             array_size = file_map.size()
 
-        return render_template('folder-open.html', file_map=file_map, array_size=array_size, repo_name=repo_name,
+        return render_template('folder-open.html',fname=gName,letter=pChar, file_map=file_map, array_size=array_size, repo_name=repo_name,
                                f_no=2, uname=None)
     except Exception as e:
         return render_template("404.html")
@@ -581,12 +599,21 @@ def show_folder_files(repo_name, file_name, no):
     file_map = ParseFileData.ParseFileData().remakeRepoByName(file_array, file_name, int(no))
     # print(file_map.get("a-repo"))
     array_size = 0
+    un = session['username']
+    pChar = un[0]
+    gName = un
+
+    if 'first_name' in session:
+        a = session['first_name']
+        if a is not None:
+            gName = a
+            pChar = a[0]
     if file_array is None:
         array_size = 0
     else:
         array_size = file_map.size()
 
-    return render_template('folder-open.html', file_map=file_map, array_size=array_size,
+    return render_template('folder-open.html', file_map=file_map,fname=gName,letter=pChar ,array_size=array_size,
                            repo_name=repo_name, f_no=int(no) + 1, uname=None)
 
 
@@ -600,12 +627,21 @@ def show_folders_of_user(username, repo_name):
         file_map = ParseFileData.ParseFileData().remakeRepo(file_array, 1)
         # print(file_map.get("a-repo"))
         array_size = 0
+        un = session['username']
+        pChar = un[0]
+        gName = un
+
+        if 'first_name' in session:
+            a = session['first_name']
+            if a is not None:
+                gName = a
+                pChar = a[0]
         if file_array is None:
             array_size = 0
         else:
             array_size = file_map.size()
 
-        return render_template('folder-open.html', file_map=file_map, array_size=array_size, repo_name=repo_name,
+        return render_template('folder-open.html',fname=gName,letter=pChar,file_map=file_map, array_size=array_size, repo_name=repo_name,
                                f_no=2, uname=username)
     except Exception as e:
         return render_template("404.html")
@@ -622,7 +658,17 @@ def show_folder_files_of_user(username, repo_name, file_name, no):
     else:
         array_size = file_map.size()
 
-    return render_template('folder-open.html', file_map=file_map, array_size=array_size, repo_name=repo_name,
+    un = session['username']
+    pChar = un[0]
+    gName = un
+
+    if 'first_name' in session:
+        a = session['first_name']
+        if a is not None:
+            gName = a
+            pChar = a[0]
+
+    return render_template('folder-open.html', file_map=file_map,letter=pChar, fname=gName, array_size=array_size, repo_name=repo_name,
                            f_no=int(no) + 1, uname=username)
 
 
@@ -653,6 +699,7 @@ def search_codenext_repo(repo_name):
             if a is not None:
                 gName = a
                 pChar = a[0]
+
         return render_template("search-files.html", fname=gName, uname=username, repo_name=repo_name,
                                email=email, letter=pChar, file_map=file_map, array_size=array_size,
                                desc=desc, isMine=0)
@@ -898,12 +945,30 @@ def delete_a_repo_page(repo_name, return_page):
 @app.route('/download/<repo_name>')
 def download_folder(repo_name):
     username = session['username']
-    return render_template('download-page.html', username=username, repo_name=repo_name)
+    un = session['username']
+    pChar = un[0]
+    gName = un
+
+    if 'first_name' in session:
+        a = session['first_name']
+        if a is not None:
+            gName = a
+            pChar = a[0]
+    return render_template('download-page.html',fname=gName, letter=pChar, username=username, repo_name=repo_name)
 
 
 @app.route('/<username>/download/<repo_name>')
 def download_folder_of_user(username, repo_name):
-    return render_template('download-page.html', username=username, repo_name=repo_name)
+    un = session['username']
+    pChar = un[0]
+    gName = un
+
+    if 'first_name' in session:
+        a = session['first_name']
+        if a is not None:
+            gName = a
+            pChar = a[0]
+    return render_template('download-page.html',fname=gName,letter=pChar, username=username, repo_name=repo_name)
 
 
 # Admin routers
@@ -988,26 +1053,38 @@ def admin_user_edit(name):
 
 @app.route('/admin/upload/<name>', methods=['POST'])
 def admin_upload_single_file(name):
-    return admin_app.admin_upload_single_file(request,name,bucket,mysql)
+    return admin_app.admin_upload_single_file(request, name, bucket, mysql)
 
 
 @app.route('/admin/<uname>/edit-profile', methods=['GET', 'POST'])
 def admin_edit_profile(uname):
-    return admin_app.admin_edit_profile(request,uname,mysql)
+    return admin_app.admin_edit_profile(request, uname, mysql)
 
 
 @app.route('/admin/<uname>/edit-password', methods=['GET', 'POST'])
 def admin_edit_password(uname):
-    return admin_app.admin_edit_password(request,uname,mysql)
+    return admin_app.admin_edit_password(request, uname, mysql)
 
 
 @app.route('/admin/<uname>/edit-contact', methods=['GET', 'POST'])
 def admin_edit_contact(uname):
     return admin_app.admin_edit_contact(request, uname, mysql)
 
+
 @app.route('/admin/delete/<uname>', methods=['GET', 'POST'])
 def admin_delete_user(uname):
-    return admin_app.admin_delete()
+    return admin_app.admin_delete_user(uname, mysql)
+
+
+@app.route('/admin/delete/confirm/<uname>', methods=['GET', 'POST'])
+def admin_delete_confirm_user(uname):
+    return render_template('admin-delete-confirm.html', username=uname)
+
+
+@app.route('/admin/delete/message/<username>/<int:id>')
+def admin_delete_message(username, id):
+    Database(mysql).DeleteMessage(username, id)
+    return redirect('/discussions')
 
 
 @app.route('/test', methods=['GET', 'POST'])
