@@ -51,16 +51,11 @@
           <div class="data-scrollbar" data-scroll="1">
               <div class="new-create select-dropdown input-prepend input-append">
                   <div class="btn-group">
-                      <div data-toggle="dropdown">
-                      <div class="search-query selet-caption"><i class="las la-plus pr-2"></i>Create</div><span class="search-replace"></span>
+                      <div>
+                          <div class="search-query selet-caption"><i class="las la-plus pr-2"></i><a href="/upload-repository">Create</a></div><span class="search-replace"></span>
                       <span class="caret"><!--icon--></span>
                       </div>
-                      <ul class="dropdown-menu">
-                          <li><div class="item"><i class="ri-folder-add-line pr-3"></i><a href="/create-project">New Repository</a></div></li>
-                          
-                          <li><div class="item"><i class="ri-file-upload-line pr-3"></i><a href="/upload-project">Upload Repository</a></div></li>
-                    
-                      </ul>
+                      <input type="file" id="fileInput" directory="directory" multiple webkitdirectory="webkitdirectory" style="display: none;">
                   </div>
               </div>
               <nav class="iq-sidebar-menu">
