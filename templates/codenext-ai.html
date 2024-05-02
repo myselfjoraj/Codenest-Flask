@@ -628,7 +628,7 @@
        async function sendMessageToAi(message) {
            // Call BrainShop API via CORS proxy
            const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
-           const apiUrl = `http://api.brainshop.ai/get?bid=181681&key=cpsSyYyIGcb8jAny&uid=abhijith&msg=${encodeURIComponent(message)}`;
+           const apiUrl = `http://api.brainshop.ai/get?bid=181681&key=cpsSyYyIGcb8jAny&uid=codenextuser&msg=${encodeURIComponent(message)}`;
            const response = await fetch(proxyUrl + apiUrl,{
                headers: {
                    'Access-Control-Allow-Origin': '*',
