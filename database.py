@@ -36,8 +36,20 @@ class Database:
         session['username'] = username
         self.mysql.connection.commit()
 
+    def InsertAdminUserName(self,uname, username):
+        cursor = self.mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('UPDATE users SET username=% s WHERE username=%s',
+                       (username, uname))
+        self.mysql.connection.commit()
+
     def InsertPassword(self, password):
         uname = session['username']
+        cursor = self.mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('UPDATE users SET password=% s WHERE username=%s',
+                       (password, uname))
+        self.mysql.connection.commit()
+
+    def InsertAdminPassword(self,uname,password):
         cursor = self.mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('UPDATE users SET password=% s WHERE username=%s',
                        (password, uname))
@@ -51,6 +63,12 @@ class Database:
         session['email'] = email
         self.mysql.connection.commit()
 
+    def InsertAdminEmail(self,uname, email):
+        cursor = self.mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('UPDATE users SET email=% s WHERE username=%s',
+                       (email, uname))
+        self.mysql.connection.commit()
+
     def InsertFirstName(self, name):
         uname = session['username']
         cursor = self.mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -59,8 +77,20 @@ class Database:
         session['first_name'] = name
         self.mysql.connection.commit()
 
+    def InsertAdminFirstName(self,uname, name):
+        cursor = self.mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('UPDATE users SET first_name=% s WHERE username=%s',
+                       (name, uname))
+        self.mysql.connection.commit()
+
     def InsertLastName(self, name):
         uname = session['username']
+        cursor = self.mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('UPDATE users SET last_name=% s WHERE username=%s',
+                       (name, uname))
+        self.mysql.connection.commit()
+
+    def InsertAdminLastName(self,uname, name):
         cursor = self.mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('UPDATE users SET last_name=% s WHERE username=%s',
                        (name, uname))
@@ -73,8 +103,20 @@ class Database:
                        (name, uname))
         self.mysql.connection.commit()
 
+    def InsertAdminCity(self,uname, name):
+        cursor = self.mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('UPDATE users SET city=% s WHERE username=%s',
+                       (name, uname))
+        self.mysql.connection.commit()
+
     def InsertGender(self, name):
         uname = session['username']
+        cursor = self.mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('UPDATE users SET gender=% s WHERE username=%s',
+                       (name, uname))
+        self.mysql.connection.commit()
+
+    def InsertAdminGender(self,uname, name):
         cursor = self.mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('UPDATE users SET gender=% s WHERE username=%s',
                        (name, uname))
@@ -87,8 +129,20 @@ class Database:
                        (name, uname))
         self.mysql.connection.commit()
 
+    def InsertAdminDOB(self,uname, name):
+        cursor = self.mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('UPDATE users SET dob=% s WHERE username=%s',
+                       (name, uname))
+        self.mysql.connection.commit()
+
     def InsertMartialStatus(self, name):
         uname = session['username']
+        cursor = self.mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('UPDATE users SET martial_status=% s WHERE username=%s',
+                       (name, uname))
+        self.mysql.connection.commit()
+
+    def InsertAdminMartialStatus(self,uname, name):
         cursor = self.mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('UPDATE users SET martial_status=% s WHERE username=%s',
                        (name, uname))
@@ -101,8 +155,20 @@ class Database:
                        (name, uname))
         self.mysql.connection.commit()
 
+    def InsertAdminAge(self, uname, name):
+        cursor = self.mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('UPDATE users SET age=% s WHERE username=%s',
+                       (name, uname))
+        self.mysql.connection.commit()
+
     def InsertPhone(self, name):
         uname = session['username']
+        cursor = self.mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('UPDATE users SET number=% s WHERE username=%s',
+                       (name, uname))
+        self.mysql.connection.commit()
+
+    def InsertAdminPhone(self, uname, name):
         cursor = self.mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('UPDATE users SET number=% s WHERE username=%s',
                        (name, uname))
@@ -113,6 +179,12 @@ class Database:
         cursor = self.mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('UPDATE users SET url=% s WHERE username=%s',
                        (name, uname))
+        self.mysql.connection.commit()
+
+    def InsertAdminProfileImage(self, url, uname):
+        cursor = self.mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('UPDATE users SET url=% s WHERE username=%s',
+                       (url, uname))
         self.mysql.connection.commit()
 
     def CheckForUser(self, username, password):
@@ -491,18 +563,26 @@ class Database:
         print("deleted " + repo_name)
         self.mysql.connection.commit()
 
+    def DeleteUser(self, username):
+        cursor = self.mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('''DELETE FROM users WHERE username = %s''',
+                       (username,))
+        print("deleted " + username)
+        self.mysql.connection.commit()
+
     def getDiscussionsTableCreationStatement():
         return ''' create table discussions(id int primary key auto_increment,username varchar(22),message text,timestamp varchar(22)); '''
 
     def getAiMessageTableCreationStatement():
-        return ''' create table ai_message(id int primary key auto_increment,username varchar(22),message text,timestamp varchar(22)); '''
+        return '''create table ai_message(id int primary key auto_increment,username varchar(22),message text,
+        timestamp varchar(22));'''
 
     def getUsersTableCreationStatement():
         return '''create table users(username varchar(22) 
         primary key,password varchar(22),email varchar(22),
         first_name varchar(22),last_name varchar(22),city varchar(22),
         gender varchar(22),dob varchar(22),martial_status varchar(22),
-        age int,number varchar(22),url varchar(500),
+        age int,number varchar(22),url TEXT,
         used_storage varchar(500));'''
 
     def getFileDetailsTableCreationStatement():

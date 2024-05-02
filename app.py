@@ -351,7 +351,7 @@ def edit_profile():
         genderM = request.form.get("male")
         genderF = request.form.get("female")
         dob = request.form.get("dob")
-        status = request.form.get("martial")
+        status = request.form.get("marital")
         age = request.form.get("age")
 
         if user_name is not None and not user_name == session['username']:
@@ -964,20 +964,50 @@ def admin_delete_a_repo_page(repo_name, return_page, username):
 
 @app.route('/admin/user/add')
 def admin_add_user_view():
-    return render_template('admin-add-user.html')
+    al = None
+    if 'addUserAlert' in session:
+        al = session['addUserAlert']
+        session.pop('addUserAlert', None)
+    return render_template('admin-add-user.html', al=al)
+
 
 @app.route('/admin/add-user', methods=['GET', 'POST'])
 def admin_add_user():
-    username = request.form['username']
-    password = request.form['password']
-    r_password = request.form['repeatpassword']
-    first_name = request.form['firstname']
-    last_name = request.form['lastname']
-    phone = request.form['phone']
-    email = request.form['email']
+    return admin_app.admin_add_user(request, mysql)
 
-    return request.form
 
+@app.route('/admin/user/edit/<name>')
+def admin_user_edit(name):
+    user = Database(mysql).FetchSingleUser(name)
+    al = None
+    if 'editUserAlert' in session:
+        al = session['editUserAlert']
+        session.pop('editUserAlert', None)
+    return render_template('admin-user-settings.html', user=user, al=al, uname=name)
+
+
+@app.route('/admin/upload/<name>', methods=['POST'])
+def admin_upload_single_file(name):
+    return admin_app.admin_upload_single_file(request,name,bucket,mysql)
+
+
+@app.route('/admin/<uname>/edit-profile', methods=['GET', 'POST'])
+def admin_edit_profile(uname):
+    return admin_app.admin_edit_profile(request,uname,mysql)
+
+
+@app.route('/admin/<uname>/edit-password', methods=['GET', 'POST'])
+def admin_edit_password(uname):
+    return admin_app.admin_edit_password(request,uname,mysql)
+
+
+@app.route('/admin/<uname>/edit-contact', methods=['GET', 'POST'])
+def admin_edit_contact(uname):
+    return admin_app.admin_edit_contact(request, uname, mysql)
+
+@app.route('/admin/delete/<uname>', methods=['GET', 'POST'])
+def admin_delete_user(uname):
+    return admin_app.admin_delete()
 
 
 @app.route('/test', methods=['GET', 'POST'])

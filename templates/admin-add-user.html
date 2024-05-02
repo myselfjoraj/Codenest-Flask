@@ -60,7 +60,7 @@
           </div>
           <div class="data-scrollbar" data-scroll="1">
               <div class="new-create select-dropdown input-prepend input-append">
-                  <div class="search-query selet-caption"><i class="las la-plus pr-2"></i><a href="#">add a user</a></div><span class="search-replace"></span>
+                  <div class="search-query selet-caption"><i class="las la-plus pr-2"></i><a href="/admin/user/add">add a user</a></div><span class="search-replace"></span>
               </div>
               <nav class="iq-sidebar-menu">
                 <ul id="iq-sidebar-toggle" class="iq-menu">
@@ -192,6 +192,11 @@
       </div>
 
 
+        {% if al is not none%}
+        <script>
+            alert("{{al}}");
+        </script>
+        {% endif %}
 
 
 

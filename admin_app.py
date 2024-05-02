@@ -137,3 +137,142 @@ def display_file(file_name, link, bucket):
         content = "Raw file cannot be displayed"
         return render_template('admin-display.html', file_content=content, file_name=file_name, file_link=tm_link,
                                media_type=type_media)
+
+
+def admin_add_user(request, mysql):
+    username = request.form['username']
+    password = request.form['password']
+    r_password = request.form['repeatpassword']
+    first_name = request.form['firstname']
+    last_name = request.form['lastname']
+    phone = request.form['phone']
+    email = request.form['email']
+    if username is None:
+        session['addUserAlert'] = "Please enter an username!"
+        return redirect('/admin/user/add')
+
+    nm = Database(mysql).FetchSingleUser(username)
+    if nm:
+        session['addUserAlert'] = "Username already exists!"
+
+    elif password != r_password:
+        session['addUserAlert'] = "Passwords does not match!"
+
+    elif email is None:
+        session['addUserAlert'] = "Please enter a email!"
+    else:
+        Database(mysql).InsertUserAdmin(username, password, email, first_name, last_name, phone)
+        session['addUserAlert'] = "User Added Successfully"
+
+    return redirect('/admin/user/add')
+
+
+def admin_upload_single_file(request, name, bucket, mysql):
+    if 'files[]' not in request.files:
+        return jsonify({'error': 'No files found in request'}), 400
+
+    files = request.files.getlist('files[]')
+
+    i = 0
+    for file in files:
+        # Upload file to Firebase Storage
+        my_path = "profileimage/" + name
+        blob = bucket.blob(f'{my_path}/{name}')
+        blob.upload_from_file(file)
+        expiration_time = datetime.datetime.now() + datetime.timedelta(days=365)  # Set expiration to 1 year from now
+        url = blob.generate_signed_url(expiration=expiration_time)
+        Database(mysql).InsertAdminProfileImage(url, name)
+        i = i + 1
+
+    return jsonify({'message': 'Files uploaded successfully'}), 200
+
+
+def admin_edit_password(request, uname, mysql):
+    npass = request.form.get("npass")
+    vpass = request.form.get("vpass")
+    if npass is None:
+        session['editUserAlert'] = "Please enter a password!"
+        return redirect('/admin/user/edit/' + uname)
+    elif vpass is None:
+        session['editUserAlert'] = "Please verify the password!"
+        return redirect('/admin/user/edit/' + uname)
+    elif npass != vpass:
+        session['editUserAlert'] = "Passwords does not match!"
+        return redirect('/admin/user/edit/' + uname)
+    else:
+        Database(mysql).InsertAdminPassword(uname, npass)
+        session['editUserAlert'] = "Password changed successfully!"
+        return redirect('/admin/user/edit/' + uname)
+
+
+def admin_edit_contact(request, uname, mysql):
+    regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b'
+    email = request.form.get('email')
+    phone = request.form.get('phone')
+    print(phone + "")
+    if email is not None:
+        if re.fullmatch(regex, email):
+            Database(mysql).InsertAdminEmail(uname, email)
+        else:
+            session['editUserAlert'] = "Incorrect email format!"
+    if phone is not None:
+        Database(mysql).InsertAdminPhone(uname, phone)
+        print(phone + "")
+    return redirect('/admin/user/edit/' + uname)
+
+
+def admin_edit_profile(request, uname, mysql):
+    if request.method == 'POST':
+
+        first_name = request.form.get("firstName")
+        last_name = request.form.get("lastName")
+        user_name = request.form.get("username")
+        city = request.form.get("city")
+        genderM = request.form.get("male")
+        genderF = request.form.get("female")
+        dob = request.form.get("dob")
+        status = request.form.get("marital")
+        age = request.form.get("age")
+
+        if user_name is not None and not user_name == uname:
+            nm = Database(mysql).FetchSingleUser(user_name)
+            if nm:
+                session['editUserAlert'] = "Username already exists!"
+                return redirect('/admin/user/edit/' + uname)
+            else:
+                Database(mysql).InsertAdminUserName(uname, user_name)
+
+        if first_name is not None:
+            Database(mysql).InsertAdminFirstName(uname, first_name)
+        if last_name is not None:
+            Database(mysql).InsertAdminLastName(uname, last_name)
+        if city is not None:
+            Database(mysql).InsertAdminCity(uname, city)
+        if genderM is not None:
+            Database(mysql).InsertAdminGender(uname, "Male")
+        if genderF is not None:
+            Database(mysql).InsertAdminGender(uname, "Female")
+        if dob is not None:
+            Database(mysql).InsertAdminDOB(uname, dob)
+        if status is not None:
+            Database(mysql).InsertAdminMartialStatus(uname, status)
+        if age is not None:
+            if age == "12-18":
+                ag = 1
+            elif age == "19-32":
+                ag = 2
+            elif age == "33-45":
+                ag = 3
+            elif age == "46-62":
+                ag = 4
+            else:
+                ag = 5
+            Database(mysql).InsertAdminAge(uname, ag)
+        session['editUserAlert'] = "Successfully updated!"
+        return redirect('/admin/user/edit/' + uname)
+    return request.form
+
+
+def admin_delete_user(uname, mysql):
+    Database(mysql).DeleteUser(uname)
+    return redirect('/admin/delete')
